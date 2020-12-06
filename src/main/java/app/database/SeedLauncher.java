@@ -1,6 +1,5 @@
 package app.database;
 
-import models.Test;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -30,18 +29,18 @@ public class SeedLauncher {
   }
 
   private static void seed(Session session) {
-    seedTests(session);
+    // seedTests(session);
   }
 
-  private static void seedTests(Session session) {
-    logSeed(Test.class);
-    DbUtils.deleteAll(session, Test.class);
-    session.persist(new Test("Test de seed #1"));
-    session.persist(new Test("Test de seed #2"));
-    session.persist(new Test("Test de seed #3"));
-    session.persist(new Test("Test de seed #4"));
-    session.persist(new Test("Test de seed #5"));
-  }
+//  private static void seedTests(Session session) {
+//    logSeed(Test.class);
+//    DbUtils.deleteAll(session, Test.class);
+//    session.persist(new Test("Test de seed #1"));
+//    session.persist(new Test("Test de seed #2"));
+//    session.persist(new Test("Test de seed #3"));
+//    session.persist(new Test("Test de seed #4"));
+//    session.persist(new Test("Test de seed #5"));
+//  }
 
   private static <T> void logSeed(Class<T> c) {
     LOGGER.info("Seed des objets " + c.getSimpleName() + ".");

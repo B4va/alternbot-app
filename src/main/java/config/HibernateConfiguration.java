@@ -1,6 +1,5 @@
 package config;
 
-import models.Test;
 import org.hibernate.cfg.Configuration;
 import utils.EnvironmentVariablesUtils;
 
@@ -29,7 +28,7 @@ public class HibernateConfiguration {
    * Référence les modèles mappés par Hibernate.
    */
   private static void registerEntities(Configuration configuration) {
-    configuration.addAnnotatedClass(Test.class);
+    // configuration.addAnnotatedClass(Test.class);
   }
 
   private static void setDatabaseConfiguration(Configuration configuration) {

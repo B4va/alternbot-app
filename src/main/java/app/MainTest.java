@@ -1,3 +1,5 @@
+package app;
+
 import app.database.MigrationsLauncher;
 import app.database.SeedLauncher;
 import models.Test;

@@ -1,0 +1,60 @@
+name: CI Dev
+
+on:
+  # CI trigger si: push sur master / pull request vers master / nouvelle release
+  push:
+    branches:
+      master
+  pull_request:
+    branches:
+      master
+  release:
+    types:
+      - created
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: alternbot
+          POSTGRES_PASSWORD: muchsecurity
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      LOG_LEVEL: DEBUG
+      DB_URL: jdbc:postgresql://localhost:5432/alternbot
+      DB_USER: postgres
+      DB_PASSWORD: muchsecurity
+      BOT_TOKEN: ${{ secrets.DISCORD_CIBOT_TOKEN }}
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v2
+
+    - name: Setup environnement Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Cache packages Maven
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Compilation
+      run: mvn -B package
+
+    - name: Tests unitaires
+      run: mvn test

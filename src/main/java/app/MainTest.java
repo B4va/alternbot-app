@@ -37,6 +37,8 @@ public class MainTest {
       LOGGER.info("L'environnement est correctement configuré.");
     } catch (Exception e) {
       e.printStackTrace();
+      // Code de retour différent de 0 pour que la CI puisse détecter l'échec du test
+      System.exit(-1);
     }
   }
 }

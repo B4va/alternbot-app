@@ -13,12 +13,9 @@ import java.util.Objects;
 /**
  * Gestion des opérations sur la base de données.
  */
-public class DbUtils {
+public abstract class DbUtils {
 
   private static SessionFactory sessionFactory;
-
-  private DbUtils() {
-  }
 
   /**
    * Instancie et/ou retourne la {@link SessionFactory}.

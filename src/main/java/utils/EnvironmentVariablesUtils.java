@@ -1,16 +1,11 @@
 package utils;
 
-import org.apache.logging.log4j.Logger;
-
 import javax.naming.ConfigurationException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-
-import static utils.LoggerUtils.buildLogger;
 
 /**
  * Accès aux variables d'environnement du programme.
@@ -25,15 +20,7 @@ public abstract class EnvironmentVariablesUtils {
   public static final String BOT_TOKEN = "BOT_TOKEN";
   public static final String ENVIRONMENT = "ENVIRONMENT";
 
-  private static final Logger LOGGER = buildLogger(EnvironmentVariablesUtils.class);
   private static final String ENVIRONMENT_VARIABLES_FILE = "ENVIRONMENT.properties";
-
-  private static final String ERR_GET_INT = "La variable d'environnement '{}' ne peut pas être convertie en Integer.";
-  private static final String ERR_GET_BOOLEAN = "La variable d'environnement '{}' ne peut pas être convertie en Boolean.";
-  private static final String ERR_READ_FILE = "La variable {} n'est pas configurée. Impossible de lire le fichier de variables d'environnement.";
-  private static final String MSG_NO_VAR = "La variable d'environnement '{}' n'est pas configurée.";
-  private static final String MSG_NO_FILE = "La variable {} n'est pas configurée. Aucun fichier de configuration des variables d'environnement.";
-  public static final String MSG_DEFAULT_VALUE = "Valeur par défaut de '{}' : {}.";
 
   /**
    * Accès à une variable d'environnement de type {@link Integer} ou à sa valeur par défaut.
@@ -45,14 +32,11 @@ public abstract class EnvironmentVariablesUtils {
   public static int getInt(String variable, int defaultValue) {
     String var = get(variable);
     if (Objects.isNull(var)) {
-      LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
       return defaultValue;
     } else {
       try {
         return Integer.parseInt(get(variable));
       } catch (NumberFormatException e) {
-        LOGGER.error(ERR_GET_INT, variable);
-        LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
         return defaultValue;
       }
     }
@@ -78,7 +62,6 @@ public abstract class EnvironmentVariablesUtils {
   public static boolean getBoolean(String variable, boolean defaultValue) {
     String var = get(variable);
     if (Objects.isNull(var)) {
-      LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
       return defaultValue;
     } else {
       var = var.toLowerCase().trim();
@@ -87,8 +70,6 @@ public abstract class EnvironmentVariablesUtils {
       } else if (var.equals("false")) {
         return false;
       } else {
-        LOGGER.error(ERR_GET_BOOLEAN, variable);
-        LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
         return defaultValue;
       }
     }
@@ -114,7 +95,6 @@ public abstract class EnvironmentVariablesUtils {
   public static String getString(String variable, String defaultValue) {
     String var = get(variable);
     if (Objects.isNull(var)) {
-      LOGGER.warn(MSG_DEFAULT_VALUE, variable, defaultValue);
       return defaultValue;
     } else {
       return var;
@@ -145,13 +125,8 @@ public abstract class EnvironmentVariablesUtils {
         return Optional.ofNullable(prop.getProperty(variable))
           .orElseThrow(ConfigurationException::new);
       }
-    } catch (IOException ioException) {
-      LOGGER.warn(ERR_READ_FILE, variable);
-    } catch (NullPointerException nullPointerException) {
-      LOGGER.warn(MSG_NO_FILE, variable);
-    } catch (ConfigurationException configurationException) {
-      LOGGER.warn(MSG_NO_VAR, variable);
+    } catch (IOException | ConfigurationException ioException) {
+      return null;
     }
-    return null;
   }
 }

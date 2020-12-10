@@ -1,13 +1,13 @@
 name: CI Dev
 
 on:
-  # CI trigger si: push sur master / pull request vers master / nouvelle release
+  # CI trigger si: push / pull request / nouvelle release
   push:
     branches:
-      master
+      '**'
   pull_request:
     branches:
-      master
+      '**'
   release:
     types:
       - created
@@ -53,8 +53,29 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Compilation
-      run: mvn -B package
-
     - name: Tests unitaires
-      run: mvn test
+      run: mvn -B test
+
+    - name: Génération badge Coverage
+      id: cov-badge
+      uses: cicirello/jacoco-badge-generator@v1.0.0
+      with:
+        jacoco-badge-file: coverage.svg
+
+    - name: Log taux de Coverage
+      run: |
+        echo "Coverage: ${{ steps.cov-badge.outputs.coverage }}"
+
+    - name: Publication badge Coverage
+      uses: google-github-actions/upload-cloud-storage@main
+      with:
+        credentials: ${{ secrets.GCP_CREDENTIALS }}
+        path: coverage.svg
+        destination: alternbot-coverage/badges
+
+    - name: Publication rapport Coverage
+      uses: google-github-actions/upload-cloud-storage@main
+      with:
+        credentials: ${{ secrets.GCP_CREDENTIALS }}
+        path: target/site/jacoco
+        destination: alternbot-coverage

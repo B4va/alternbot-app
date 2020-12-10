@@ -1,5 +1,5 @@
 # Variables d'environnement
-src/main/resources/utils/ENVIRONMENT.properties
+ENVIRONMENT.properties
 
 # Intellij
 .idea/

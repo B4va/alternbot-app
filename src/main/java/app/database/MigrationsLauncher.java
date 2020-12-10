@@ -24,7 +24,7 @@ public class MigrationsLauncher {
       final String user = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_USER);
       final String password = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.DB_PASSWORD);
       Flyway flyway = Flyway.configure()
-        .locations("filesystem:" + MigrationsLauncher.class.getResource(LOCATION).getFile())
+        .locations("migrations")
         .dataSource(url, user, password).load();
       execute(flyway, args);
     } catch (Exception e) {

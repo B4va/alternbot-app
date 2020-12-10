@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import javax.naming.ConfigurationException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -24,7 +25,7 @@ public abstract class EnvironmentVariablesUtils {
   public static final String BOT_TOKEN = "BOT_TOKEN";
 
   private static final Logger LOGGER = buildLogger(EnvironmentVariablesUtils.class);
-  private static final String ENVIRONMENT_VARIABLES_FILE = "/ENVIRONMENT.properties";
+  private static final String ENVIRONMENT_VARIABLES_FILE = "ENVIRONMENT.properties";
 
   private static final String ERR_GET_INT = "La variable d'environnement '{}' ne peut pas être convertie en Integer.";
   private static final String ERR_GET_BOOLEAN = "La variable d'environnement '{}' ne peut pas être convertie en Boolean.";
@@ -136,10 +137,8 @@ public abstract class EnvironmentVariablesUtils {
   }
 
   private static String getFromFile(String variable) {
-    String envFile = getFile(variable);
     try {
-      assert envFile != null;
-      try (FileInputStream inputStream = new FileInputStream(envFile)) {
+      try (InputStream inputStream = EnvironmentVariablesUtils.class.getResourceAsStream(ENVIRONMENT_VARIABLES_FILE)) {
         Properties prop = new Properties();
         prop.load(inputStream);
         return Optional.ofNullable(prop.getProperty(variable))
@@ -153,13 +152,5 @@ public abstract class EnvironmentVariablesUtils {
       LOGGER.warn(MSG_NO_VAR, variable);
     }
     return null;
-  }
-
-  private static String getFile(String variable) {
-    try {
-      return EnvironmentVariablesUtils.class.getResource(ENVIRONMENT_VARIABLES_FILE).getFile();
-    } catch (NullPointerException e) {
-      return null;
-    }
   }
 }

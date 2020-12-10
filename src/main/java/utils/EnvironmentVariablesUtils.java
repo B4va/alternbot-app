@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import javax.naming.ConfigurationException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -14,7 +15,7 @@ import static utils.LoggerUtils.buildLogger;
 /**
  * Accès aux variables d'environnement du programme.
  */
-public class EnvironmentVariablesUtils {
+public abstract class EnvironmentVariablesUtils {
 
   public static final String LOG_LEVEL = "LOG_LEVEL";
   public static final String LOG_FORMAT = "LOG_FORMAT";
@@ -24,7 +25,7 @@ public class EnvironmentVariablesUtils {
   public static final String BOT_TOKEN = "BOT_TOKEN";
 
   private static final Logger LOGGER = buildLogger(EnvironmentVariablesUtils.class);
-  private static final String ENVIRONMENT_VARIABLES_FILE = "/ENVIRONMENT.properties";
+  private static final String ENVIRONMENT_VARIABLES_FILE = "ENVIRONMENT.properties";
 
   private static final String ERR_GET_INT = "La variable d'environnement '{}' ne peut pas être convertie en Integer.";
   private static final String ERR_GET_BOOLEAN = "La variable d'environnement '{}' ne peut pas être convertie en Boolean.";
@@ -32,9 +33,6 @@ public class EnvironmentVariablesUtils {
   private static final String MSG_NO_VAR = "La variable d'environnement '{}' n'est pas configurée.";
   private static final String MSG_NO_FILE = "La variable {} n'est pas configurée. Aucun fichier de configuration des variables d'environnement.";
   public static final String MSG_DEFAULT_VALUE = "Valeur par défaut de '{}' : {}.";
-
-  private EnvironmentVariablesUtils() {
-  }
 
   /**
    * Accès à une variable d'environnement de type {@link Integer} ou à sa valeur par défaut.
@@ -133,15 +131,14 @@ public class EnvironmentVariablesUtils {
   }
 
   private static String get(String variable) {
-    return Optional.ofNullable(System.getenv(variable))
-      .orElse(getFromFile(variable));
+    return Objects.nonNull(System.getenv(variable))
+      ? System.getenv(variable)
+      : getFromFile(variable);
   }
 
   private static String getFromFile(String variable) {
-    String envFile = getFile(variable);
     try {
-      assert envFile != null;
-      try (FileInputStream inputStream = new FileInputStream(envFile)) {
+      try (InputStream inputStream = EnvironmentVariablesUtils.class.getResourceAsStream(ENVIRONMENT_VARIABLES_FILE)) {
         Properties prop = new Properties();
         prop.load(inputStream);
         return Optional.ofNullable(prop.getProperty(variable))
@@ -155,13 +152,5 @@ public class EnvironmentVariablesUtils {
       LOGGER.warn(MSG_NO_VAR, variable);
     }
     return null;
-  }
-
-  private static String getFile(String variable) {
-    try {
-      return EnvironmentVariablesUtils.class.getResource(ENVIRONMENT_VARIABLES_FILE).getFile();
-    } catch (NullPointerException e) {
-      return null;
-    }
   }
 }

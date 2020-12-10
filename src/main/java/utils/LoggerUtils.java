@@ -6,10 +6,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Gestion du {@link Logger}.
  */
-public class LoggerUtils {
-
-  private LoggerUtils() {
-  }
+public abstract class LoggerUtils {
 
   /**
    * Construit une instance du {@link Logger}.

@@ -1,0 +1,1 @@
+web: java -jar target/alternbot-0.0-SNAPSHOT.jar

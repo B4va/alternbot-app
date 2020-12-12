@@ -1,11 +1,8 @@
 name: CI Dev
 
 on:
-  # CI trigger si: push / pull request / nouvelle release
+  # CI trigger si: push sur une branche / nouvelle release
   push:
-    branches:
-      '**'
-  pull_request:
     branches:
       '**'
   release:

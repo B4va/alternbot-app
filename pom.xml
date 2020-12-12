@@ -6,7 +6,7 @@
 
     <groupId>org.iutm</groupId>
     <artifactId>alternbot</artifactId>
-    <version>0.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>

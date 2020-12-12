@@ -6,8 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Classe de test de {@link CommandsController}.
@@ -16,6 +15,12 @@ public class TestCommandsController {
 
   private static final CommandsController commandsController = new CommandsController();
   private static boolean TEST1, TEST2, TEST3;
+
+  @Test
+  public void init_doit_enregistrer_des_handlers() {
+    CommandsController commandsController = (CommandsController) new CommandsController().init();
+    assertFalse(commandsController.getRunnables().isEmpty());
+  }
 
   @Test
   public void run_doit_pouvoir_lancer_un_CommandsHandler_unique() {

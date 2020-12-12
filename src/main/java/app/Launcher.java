@@ -24,8 +24,8 @@ public class Launcher {
    */
   public static void main(String[] args) {
     runMigrations();
-    new Thread(new CommandsController(), COMMANDS).start();
-    new Thread(new WorkersController(), WORKERS).start();
+    new Thread(new CommandsController().init(), COMMANDS).start();
+    new Thread(new WorkersController().init(), WORKERS).start();
   }
 
   private static void runMigrations() {

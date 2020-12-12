@@ -9,7 +9,8 @@ import controllers.commands.schedule.ScheduleCommandsHandler;
 public class CommandsController extends Runner<CommandsHandler> {
 
   @Override
-  protected void init() {
-    runnables.add(new ScheduleCommandsHandler());
+  public Runner<CommandsHandler> init() {
+    runnables.add(new ScheduleCommandsHandler().init());
+    return this;
   }
 }

@@ -9,7 +9,8 @@ import controllers.workers.schedule.ScheduleWorkersHandler;
 public class WorkersController extends Runner<WorkersHandler> {
 
   @Override
-  protected void init() {
-    runnables.add(new ScheduleWorkersHandler());
+  public Runner<WorkersHandler> init() {
+    runnables.add(new ScheduleWorkersHandler().init());
+    return this;
   }
 }

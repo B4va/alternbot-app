@@ -1,9 +1,7 @@
 package controllers.workers;
 
-import controllers.workers.schedule.ScheduleWorkersHandler;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,18 +16,6 @@ public class TestWorkersController {
 
   private static final WorkersController workersController = new WorkersController();
   private static boolean TEST1, TEST2, TEST3;
-
-  @Test
-  public void init_doit_initialiser_lensemble_des_commands_handler_de_lapp() {
-    workersController.setRunnables(new ArrayList<>());
-    workersController.init();
-    assertAll(
-      // ScheduleWorkersHandler
-      () -> assertTrue(workersController.getRunnables()
-        .stream()
-        .anyMatch(r -> r.getClass().equals(ScheduleWorkersHandler.class)))
-    );
-  }
 
   @Test
   public void run_doit_pouvoir_lancer_un_CommandsHandler_unique() {

@@ -12,11 +12,12 @@ import java.util.concurrent.TimeUnit;
 public abstract class DailyWorker extends Worker {
 
   private static final String ZONE_ID = "Europe/Paris";
-  private static final String ERR_TIME = "Mauvais format h/min (h : 0-23 ; min : 0-59).";
+  private static final String ERR_TIME = "Mauvais format h/min (h : 0-23 ; min/sec : 0-59).";
   private static final String ERR_DELAY = "Le délai doit être positif.";
 
   private final int hour;
   private final int minute;
+  private int second;
   private final long delay;
 
   /**
@@ -39,6 +40,23 @@ public abstract class DailyWorker extends Worker {
   }
 
   /**
+   * Constructeur avec secondes.
+   *
+   * @param hour   heure
+   * @param minute minute
+   * @param second seconde
+   * @param delay  délai avant lancement (en secondes)
+   */
+  public DailyWorker(int hour, int minute, int second, long delay) {
+    this(hour, minute, delay);
+    if (second < 0 || second > 59) {
+      throw new IllegalArgumentException(ERR_TIME);
+    } else {
+      this.second = second;
+    }
+  }
+
+  /**
    * Lance le {@link Worker}.
    */
   @Override
@@ -47,7 +65,7 @@ public abstract class DailyWorker extends Worker {
     ZonedDateTime nextRun = now
       .withHour(hour)
       .withMinute(minute)
-      .withSecond(0);
+      .withSecond(second);
     if (now.plusSeconds(delay).isAfter(nextRun)) {
       nextRun = nextRun.plusDays(1);
     }

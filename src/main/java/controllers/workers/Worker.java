@@ -1,5 +1,7 @@
 package controllers.workers;
 
+import java.util.Objects;
+import java.util.Timer;
 import java.util.TimerTask;
 
 /**
@@ -7,10 +9,21 @@ import java.util.TimerTask;
  */
 public abstract class Worker implements Runnable {
 
+  protected Timer timer;
+
   /**
    * Lance le process.
    */
   public abstract void runOne();
+
+  /**
+   * Arrête le worker.
+   */
+  public void stop() {
+    if (Objects.nonNull(timer)) {
+      timer.cancel();
+    }
+  }
 
   /**
    * Formate le nom du {@link Thread} généré.

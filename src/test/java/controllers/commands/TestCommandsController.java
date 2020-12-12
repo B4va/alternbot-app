@@ -1,9 +1,7 @@
 package controllers.commands;
 
-import controllers.commands.schedule.ScheduleCommandsHandler;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,18 +16,6 @@ public class TestCommandsController {
 
   private static final CommandsController commandsController = new CommandsController();
   private static boolean TEST1, TEST2, TEST3;
-
-  @Test
-  public void init_doit_initialiser_lensemble_des_commands_handler_de_lapp() {
-    commandsController.setRunnables(new ArrayList<>());
-    commandsController.init();
-    assertAll(
-      // ScheduleCommandsHandler
-      () -> assertTrue(commandsController.getRunnables()
-        .stream()
-        .anyMatch(r -> r.getClass().equals(ScheduleCommandsHandler.class)))
-    );
-  }
 
   @Test
   public void run_doit_pouvoir_lancer_un_CommandsHandler_unique() {

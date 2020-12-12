@@ -14,7 +14,6 @@ public class Launcher {
   private static final String WORKERS = "WORKERS";
   private static final String PROD_ENV = "prod";
   private static final String DEV_ENV = "dev";
-  private static final String MIGRATE_CMD = "-migrate";
 
   /**
    * Exécute les migrations si lancement en production, puis lance les controleurs gérant les
@@ -31,7 +30,7 @@ public class Launcher {
   private static void runMigrations() {
     String env = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.ENVIRONMENT, DEV_ENV);
     if (env.equals(PROD_ENV)) {
-      MigrationsLauncher.main(new String[]{MIGRATE_CMD});
+      MigrationsLauncher.main(new String[]{MigrationsLauncher.MIGRATE});
     }
   }
 }

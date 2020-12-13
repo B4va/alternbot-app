@@ -17,7 +17,7 @@ public class TestIntervalWorker {
   private static int TEST1, TEST2;
 
   @Test
-  @Timeout(1)
+  @Timeout(10)
   public void run_doit_programmer_un_traitement_realise_a_intervalle_regulier() throws InterruptedException {
     IntervalWorker intervalWorker = new IntervalWorker(INTERVAL, 0) {
       @Override
@@ -37,7 +37,7 @@ public class TestIntervalWorker {
   }
 
   @Test
-  @Timeout(1)
+  @Timeout(10)
   public void run_doit_programmer_un_traitement_avec_le_bon_delai() throws InterruptedException {
     IntervalWorker intervalWorker = new IntervalWorker(INTERVAL, DELAY) {
       @Override

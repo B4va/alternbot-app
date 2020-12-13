@@ -47,8 +47,11 @@ public class TestWorkersController {
       public void run() {
         TEST1 = true;
       }
+
       @Override
-      public void runOne() {}
+      public void runOne() {
+      }
+
       @Override
       protected String getTask() {
         return null;
@@ -70,8 +73,11 @@ public class TestWorkersController {
       public void run() {
         TEST2 = true;
       }
+
       @Override
-      public void runOne() {}
+      public void runOne() {
+      }
+
       @Override
       protected String getTask() {
         return null;
@@ -89,8 +95,11 @@ public class TestWorkersController {
       public void run() {
         TEST3 = true;
       }
+
       @Override
-      public void runOne() {}
+      public void runOne() {
+      }
+
       @Override
       protected String getTask() {
         return null;

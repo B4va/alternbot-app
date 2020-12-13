@@ -57,7 +57,7 @@ public class TestIntervalWorker {
   }
 
   @Test
-  public void ne_doit_pas_accepter_un_intervalle_negatif() throws InterruptedException {
+  public void ne_doit_pas_accepter_un_intervalle_negatif() {
     assertThrows(IllegalArgumentException.class, () ->
       new IntervalWorker(-1, 0) {
         @Override
@@ -72,7 +72,7 @@ public class TestIntervalWorker {
   }
 
   @Test
-  public void ne_doit_pas_accepter_un_delai_negatif() throws InterruptedException {
+  public void ne_doit_pas_accepter_un_delai_negatif() {
     assertThrows(IllegalArgumentException.class, () ->
       new IntervalWorker(INTERVAL, -1) {
         @Override

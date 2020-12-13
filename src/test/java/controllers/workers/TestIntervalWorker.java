@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class TestIntervalWorker {
 
-  private static final int INTERVAL = 10;
-  private static final int TIME_EXEC = 100;
-  public static final int DELAY = 50;
+  private static final int INTERVAL = 100;
+  private static final int TIME_EXEC = 1000;
+  public static final int DELAY = 500;
   private static int TEST1, TEST2;
 
   @Test

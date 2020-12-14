@@ -28,7 +28,7 @@ public class HibernateConfiguration {
    * Référence les modèles mappés par Hibernate.
    */
   private static void registerEntities(Configuration configuration) {
-    // configuration.addAnnotatedClass(Test.class);
+
   }
 
   private static void setDatabaseConfiguration(Configuration configuration) {

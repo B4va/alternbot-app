@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.Table;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
@@ -51,5 +52,15 @@ public abstract class DbUtils {
     CriteriaQuery<T> criteria = builder.createQuery(c);
     criteria.from(c);
     return session.createQuery(criteria).getResultList();
+  }
+
+  /**
+   * Retourne le nom de la table en base de données associée à l'objet.
+   *
+   * @param c classe de l'objet
+   * @return table
+   */
+  public static <T> String getTableName(Class<T> c) {
+    return c.getAnnotation(Table.class).name();
   }
 }

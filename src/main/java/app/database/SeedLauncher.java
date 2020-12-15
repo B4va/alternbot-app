@@ -1,5 +1,6 @@
 package app.database;
 
+import models.Schedule;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -29,7 +30,17 @@ public class SeedLauncher {
   }
 
   private static void seed(Session session) {
+    seedSchedules(session);
+  }
 
+  private static void seedSchedules(Session session) {
+    logSeed(Schedule.class);
+    DbUtils.deleteAll(session, Schedule.class);
+    session.persist(new Schedule("LP Génie logiciel"));
+    session.persist(new Schedule("BUT Génie mécanique et productique"));
+    session.persist(new Schedule("LP Statistique et informatique décisionnelle"));
+    session.persist(new Schedule("BUT Techniques de commercialisation"));
+    session.persist(new Schedule("LP Acquisition de données, qualification d'appareillages en milieu industriel"));
   }
 
   private static <T> void logSeed(Class<T> c) {

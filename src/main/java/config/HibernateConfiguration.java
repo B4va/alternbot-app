@@ -1,5 +1,6 @@
 package config;
 
+import models.Schedule;
 import org.hibernate.cfg.Configuration;
 import utils.EnvironmentVariablesUtils;
 
@@ -28,7 +29,7 @@ public class HibernateConfiguration {
    * Référence les modèles mappés par Hibernate.
    */
   private static void registerEntities(Configuration configuration) {
-
+    configuration.addAnnotatedClass(Schedule.class);
   }
 
   private static void setDatabaseConfiguration(Configuration configuration) {

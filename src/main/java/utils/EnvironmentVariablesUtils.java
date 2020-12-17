@@ -19,6 +19,8 @@ public abstract class EnvironmentVariablesUtils {
   public static final String DB_PASSWORD = "DB_PASSWORD";
   public static final String BOT_TOKEN = "BOT_TOKEN";
   public static final String ENVIRONMENT = "ENVIRONMENT";
+  public static final String SERVEUR_TEST = "SERVEUR_TEST";
+  public static final String SERVEUR_TEST_2 = "SERVEUR_TEST_2";
 
   private static final String ENVIRONMENT_VARIABLES_FILE = "ENVIRONMENT.properties";
 

@@ -1,14 +1,11 @@
 package models;
 
-import com.sun.istack.NotNull;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Emploi du temps d'une promotion.
@@ -17,15 +14,18 @@ import javax.persistence.Table;
 @Table(name = "schedules")
 public class Schedule {
 
-  public static String TABLE = "schedules";
-
   @Id
   @Generated(GenerationTime.INSERT)
   @GenericGenerator(name = "generator", strategy = "increment")
   @GeneratedValue(generator = "generator")
+  @Column(name = "id")
   private int id;
-  @NotNull
+
+  @Column(name = "promotion", nullable = false)
   private String promotion;
+
+  @OneToMany(mappedBy = "schedule")
+  private Set<Server> servers;
 
   public Schedule() {
   }
@@ -48,5 +48,13 @@ public class Schedule {
 
   public void setPromotion(String promotion) {
     this.promotion = promotion;
+  }
+
+  public Set<Server> getServers() {
+    return servers;
+  }
+
+  public void setServers(Set<Server> servers) {
+    this.servers = servers;
   }
 }

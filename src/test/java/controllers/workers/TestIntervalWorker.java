@@ -3,8 +3,7 @@ package controllers.workers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Classe de test de {@link IntervalWorker}.
@@ -33,7 +32,10 @@ public class TestIntervalWorker {
     intervalWorker.run();
     Thread.sleep(TIME_EXEC);
     intervalWorker.stop();
-    assertEquals(TIME_EXEC / INTERVAL, TEST1);
+    assertAll(
+      () -> assertTrue(TIME_EXEC / INTERVAL - 1 <= TEST1),
+      () -> assertTrue(TIME_EXEC / INTERVAL + 1 >= TEST1)
+    );
   }
 
   @Test
@@ -53,7 +55,10 @@ public class TestIntervalWorker {
     intervalWorker.run();
     Thread.sleep(TIME_EXEC);
     intervalWorker.stop();
-    assertEquals(TIME_EXEC / INTERVAL - DELAY / INTERVAL, TEST2);
+    assertAll(
+      () -> assertTrue(TIME_EXEC / INTERVAL - DELAY / INTERVAL - 1 <= TEST2),
+      () -> assertTrue(TIME_EXEC / INTERVAL - DELAY / INTERVAL + 1 >= TEST2)
+    );
   }
 
   @Test

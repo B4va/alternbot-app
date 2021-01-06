@@ -1,13 +1,10 @@
-name: CI Dev
+name: CI dev
 
 on:
-  # CI trigger si: push sur une branche / nouvelle release
+  # CI trigger si: push sur une branche autre que master
   push:
-    branches:
-      '**'
-  release:
-    types:
-      - created
+    branches-ignore:
+      - 'master'
 
 jobs:
   build_and_test:
@@ -52,27 +49,3 @@ jobs:
 
     - name: Tests unitaires
       run: mvn -B test
-
-    - name: Génération badge Coverage
-      id: cov-badge
-      uses: cicirello/jacoco-badge-generator@v1.0.0
-      with:
-        jacoco-badge-file: coverage.svg
-
-    - name: Log taux de Coverage
-      run: |
-        echo "Coverage: ${{ steps.cov-badge.outputs.coverage }}"
-
-    - name: Publication badge Coverage
-      uses: google-github-actions/upload-cloud-storage@main
-      with:
-        credentials: ${{ secrets.GCP_CREDENTIALS }}
-        path: coverage.svg
-        destination: alternbot-coverage/badges
-
-    - name: Publication rapport Coverage
-      uses: google-github-actions/upload-cloud-storage@main
-      with:
-        credentials: ${{ secrets.GCP_CREDENTIALS }}
-        path: target/site/jacoco
-        destination: alternbot-coverage

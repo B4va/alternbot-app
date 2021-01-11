@@ -14,6 +14,8 @@ import java.util.List;
  */
 public abstract class Model {
 
+  public abstract int getId();
+
   /**
    * Crée l'objet en base de données.
    *
@@ -35,9 +37,15 @@ public abstract class Model {
    * @param c  classe de l'objet
    * @return objet mappé
    */
-  public static <T> T read(Serializable id, Class<T> c) {
+  public static <T extends Model> T read(Serializable id, Class<T> c) {
     Session session = DbUtils.getSessionFactory().openSession();
     T object = session.load(c, id);
+    try {
+      object.toString();
+    } catch (Exception e) {
+      session.close();
+      return null;
+    }
     session.close();
     return object;
   }
@@ -74,7 +82,7 @@ public abstract class Model {
     CriteriaBuilder builder = session.getCriteriaBuilder();
     CriteriaQuery<T> criteria = builder.createQuery(c);
     criteria.from(c);
-    List<T> list =  session.createQuery(criteria).getResultList();
+    List<T> list = session.createQuery(criteria).getResultList();
     session.close();
     return list;
   }

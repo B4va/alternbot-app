@@ -30,37 +30,4 @@ public abstract class DbUtils {
     }
     return sessionFactory;
   }
-
-  /**
-   * Supprime toutes les instances d'un objet en base de données.
-   *
-   * @param session session en cours
-   * @param c       classe des objets à supprimer
-   */
-  public static <T> void deleteAll(Session session, Class<T> c) {
-    session.createQuery("delete from " + c.getSimpleName()).executeUpdate();
-  }
-
-  /**
-   * Récupère toutes les instances d'un objet en base de données.
-   *
-   * @param session session en cours
-   * @param c       classe des objets à supprimer
-   */
-  public static <T> List<T> getAll(Session session, Class<T> c) {
-    CriteriaBuilder builder = session.getCriteriaBuilder();
-    CriteriaQuery<T> criteria = builder.createQuery(c);
-    criteria.from(c);
-    return session.createQuery(criteria).getResultList();
-  }
-
-  /**
-   * Retourne le nom de la table en base de données associée à l'objet.
-   *
-   * @param c classe de l'objet
-   * @return table
-   */
-  public static <T> String getTableName(Class<T> c) {
-    return c.getAnnotation(Table.class).name();
-  }
 }

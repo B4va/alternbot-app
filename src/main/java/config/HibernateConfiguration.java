@@ -43,5 +43,6 @@ public class HibernateConfiguration {
     configuration.setProperty("hibernate.connection.username", user);
     configuration.setProperty("hibernate.connection.password", password);
     configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+    configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
   }
 }

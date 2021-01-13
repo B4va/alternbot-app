@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "servers")
-public class Server {
+public class Server extends Model {
 
   @Id
   @Generated(GenerationTime.INSERT)

@@ -1,103 +1,114 @@
 package models;
 
-import models.Server;
-import org.junit.*;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import javax.persistence.PersistenceException;
+import java.util.List;
+
+import static java.util.Objects.nonNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Classe de test de {@link Server}.
  */
-public class TestServer implements TestModel{
+public class TestServer implements TestModel {
 
-    private int ID;
-    private Server server;
-    private Schedule schedule;
+  private static int ID;
+  private static Server SERVER;
+  private static Schedule SCHEDULE;
+  private static final String PROMOTION_TEST = "test";
+  private static final String REFERENCE_TEST = "ref";
+  private static final String UPDATED_REFERENCE = "updated_ref";
 
-    @BeforeAll
-    public void init(){
-        this.server = new Server();
-        this.schedule = new Schedule();
-        schedule.setId(1);
-        schedule.setPromotion("test");
-        this.server.setSchedule(schedule);
+  @BeforeAll
+  public static void init() {
+    SERVER = new Server();
+    SCHEDULE = new Schedule();
+    SCHEDULE.setId(1);
+    SCHEDULE.setPromotion(PROMOTION_TEST);
+    SERVER.setSchedule(SCHEDULE);
+  }
+
+  @AfterAll
+  public static void tearDown() {
+    SERVER = Model.read(ID, Server.class);
+    if (nonNull(SERVER)) {
+      SERVER.delete();
     }
-
-    @AfterAll
-    public void tearDown(){
-        this.server = Model.read(ID, Server.class);
-        if(nonNull(this.server)){
-            this.server.delete();
-        }
-        this.schedule = Model.read(ID, Schedule.class);
-        if(nonNull(this.schedule)){
-            this.server.delete();
-        }
+    SCHEDULE = Model.read(ID, Schedule.class);
+    if (nonNull(SCHEDULE)) {
+      SERVER.delete();
     }
+  }
 
-    @Test
-    @Order(1)
-    @Override
-    public void testCreate(){
-        this.server.setReference("ref");
-        this.server.setId(1);
-        this.server.setSchedule(schedule);
-        this.schedule.create();
-        this.server.create();
-        List<Server> servers = Model.readAll(Server.class);
-        Server serv = servers.stream().filter(s -> s.getReference().equals("ref")).findFirst().orElse(null);
-        if (nonNull(server)) ID = server.getId();
-        assertNotNull(server);
-    }
+  @Test
+  @Order(1)
+  @Override
+  public void testCreate() {
+    SERVER.setReference(REFERENCE_TEST);
+    SERVER.setId(1);
+    SERVER.setSchedule(SCHEDULE);
+    SCHEDULE.create();
+    SERVER.create();
+    List<Server> servers = Model.readAll(Server.class);
+    Server serv = servers.stream()
+      .filter(s -> s.getReference().equals(REFERENCE_TEST))
+      .findFirst()
+      .orElse(null);
+    if (nonNull(serv)) ID = serv.getId();
+    assertNotNull(serv);
+  }
 
-    @Test
-    @Order(2)
-    public void testCreate_server_null() {
-        Server s = new Server();
-        assertThrows(PersistenceException.class, s::create);
-    }
+  @Test
+  @Order(2)
+  public void testCreate_server_null() {
+    Server s = new Server();
+    assertThrows(PersistenceException.class, s::create);
+  }
 
-    @Test
-    @Order(3)
-    @Override
-    public void testRead() {
-        Server s = Model.read(ID, Server.class);
-        assertNotNull(s);
-        assertAll(
-                () -> assertNotNull(s),
-                () -> assertEquals(s.getId(), this.server.getId()),
-                () -> assertEquals(s.getReference(), this.server.getReference()),
-                () -> assertEquals(s.getSchedule(),this.server.getSchedule())
-        );
-    }
+  @Test
+  @Order(3)
+  @Override
+  public void testRead() {
+    Server s = Model.read(ID, Server.class);
+    assertNotNull(s);
+    assertAll(
+      () -> assertNotNull(s),
+      () -> assertEquals(s.getId(), SERVER.getId()),
+      () -> assertEquals(s.getReference(), SERVER.getReference()),
+      () -> assertEquals(s.getSchedule(), SERVER.getSchedule())
+    );
+  }
 
-    @Test
-    @Order(4)
-    public void testUpdate_Schedule_null() {
-        this.server.setSchedule(null);
-        assertThrows(PersistenceException.class, this.server::update);
-    }
+  @Test
+  @Order(4)
+  public void testUpdate_Schedule_null() {
+    SERVER.setSchedule(null);
+    assertThrows(PersistenceException.class, SERVER::update);
+  }
 
-    @Test
-    @Order(5)
-    @Override
-    public void testUpdate() {
-        this.server.setReference("UPDATED");
-        this.server.setSchedule(this.schedule);
-        this.server.update();
-        this.server = Model.read(ID, Server.class);
-        assertNotNull(this.server);
-        assertEquals(this.server.getReference(), "UPDATED");
-    }
+  @Test
+  @Order(5)
+  @Override
+  public void testUpdate() {
+    SERVER.setReference(UPDATED_REFERENCE);
+    SERVER.setSchedule(SCHEDULE);
+    SERVER.update();
+    SERVER = Model.read(ID, Server.class);
+    assertNotNull(SERVER);
+    assertEquals(SERVER.getReference(), UPDATED_REFERENCE);
+  }
 
-    @Test
-    @Order(6)
-    @Override
-    public void testDelete() {
-        this.server.delete();
-        Server s = Model.read(ID, Server.class);
-        assertNull(s);
-    }
+  @Test
+  @Order(6)
+  @Override
+  public void testDelete() {
+    SERVER.delete();
+    Server s = Model.read(ID, Server.class);
+    assertNull(s);
+  }
 
 }

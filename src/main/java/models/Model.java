@@ -39,13 +39,7 @@ public abstract class Model {
    */
   public static <T extends Model> T read(Serializable id, Class<T> c) {
     Session session = DbUtils.getSessionFactory().openSession();
-    T object = session.load(c, id);
-    try {
-      object.toString();
-    } catch (Exception e) {
-      session.close();
-      return null;
-    }
+    T object = session.get(c, id);
     session.close();
     return object;
   }

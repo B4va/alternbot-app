@@ -32,11 +32,9 @@ public class TestSchedule implements TestModel {
   @Override
   public void testCreate() {
     SCHEDULE = new Schedule(PROMOTION_TEST);
-    SCHEDULE.create();
+    ID = SCHEDULE.create();
     List<Schedule> schedules = Model.readAll(Schedule.class);
-    Schedule schedule = schedules.stream().filter(s -> s.getPromotion().equals(PROMOTION_TEST)).findFirst().orElse(null);
-    if (nonNull(schedule)) ID = schedule.getId();
-    assertNotNull(schedule);
+    assertTrue(schedules.stream().anyMatch(s -> s.getId() == ID));
   }
 
   @Test

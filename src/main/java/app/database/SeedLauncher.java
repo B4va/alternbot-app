@@ -39,9 +39,10 @@ public class SeedLauncher {
     }
   }
 
-  private static void seed(Session session) {
+  private static void seed(Session session) throws ParseException {
     List<Schedule> schedules = seedSchedules(session);
     seedServers(session, schedules);
+    seedSessions(session, schedules);
   }
 
   private static void deleteAll() {

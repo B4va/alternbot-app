@@ -80,6 +80,7 @@ public class SeedLauncher {
     SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.ENGLISH);
     List<models.Session> sessions = Arrays.asList(
       new models.Session("Math", "Dupond Dupond", "F13", formatter.parse("20-01-2020 14:00:00"), formatter.parse("20-01-2020 15:00:00"), schedules.get(0)),
+      new models.Session("Philosophie", "Loïc Steinmetz", "L32", formatter.parse("20-01-2020 15:00:00"), formatter.parse("20-01-2020 17:00:00"), schedules.get(0)),
       new models.Session("Anglais", "Marie Curie", "A12", formatter.parse("22-01-2020 10:00:00"), formatter.parse("22-01-2020 12:00:00"), schedules.get(1))
     );
     sessions.forEach(session::persist);

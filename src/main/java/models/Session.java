@@ -58,7 +58,6 @@ public class Session extends Model {
     this.id = id;
   }
 
-
   public String getName() {
     return name;
   }
@@ -66,7 +65,6 @@ public class Session extends Model {
   public void setName(String name) {
     this.name = name;
   }
-
 
   public String getTeacher() {
     return this.teacher;
@@ -76,7 +74,6 @@ public class Session extends Model {
     this.teacher = teacher;
   }
 
-
   public String getLocation() {
     return this.location;
   }
@@ -84,7 +81,6 @@ public class Session extends Model {
   public void setLocation(String location) {
     this.location = location;
   }
-
 
   public Date getStart() {
     return start;
@@ -94,7 +90,6 @@ public class Session extends Model {
     this.start = start;
   }
 
-
   public Date getEnd() {
     return this.end;
   }
@@ -103,7 +98,6 @@ public class Session extends Model {
     this.end = end;
   }
 
-
   public Schedule getSchedule() {
     return schedule;
   }
@@ -111,6 +105,5 @@ public class Session extends Model {
   public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
   }
-
 
 }

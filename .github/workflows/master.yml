@@ -53,7 +53,7 @@ jobs:
     - name: Compilation
       run: mvn package -DskipTests
 
-    - name: Exécution des migrations:
+    - name: Exécution des migrations
       run: mvn flyway:migrate
 
     - name: Tests unitaires

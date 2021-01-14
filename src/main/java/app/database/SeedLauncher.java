@@ -6,13 +6,16 @@ import models.Server;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import utils.DateUtils;
 import utils.DbUtils;
 import utils.EnvironmentVariablesUtils;
 import utils.LoggerUtils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static utils.DateUtils.stringToDate;
+import static utils.DateUtils.stringToTime;
 
 /**
  * Initialisation de la base de données avec des objets pré-configurés.
@@ -78,11 +81,10 @@ public class SeedLauncher {
 
   private static List<models.Session> seedSessions(Session session, List<Schedule> schedules) throws ParseException {
     logSeed(models.Session.class);
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.ENGLISH);
     List<models.Session> sessions = Arrays.asList(
-      new models.Session("Math", "Dupond Dupond", "F13", formatter.parse("20-01-2020 14:00:00"), formatter.parse("20-01-2020 15:00:00"), schedules.get(0)),
-      new models.Session("Philosophie", "Loïc Steinmetz", "L32", formatter.parse("20-01-2020 15:00:00"), formatter.parse("20-01-2020 17:00:00"), schedules.get(0)),
-      new models.Session("Anglais", "Marie Curie", "A12", formatter.parse("22-01-2020 10:00:00"), formatter.parse("22-01-2020 12:00:00"), schedules.get(1))
+      new models.Session("Math", "Dupond Dupond", "F13", stringToDate("20-01-2020"), stringToTime("14:00"), stringToTime("15:00"), schedules.get(0)),
+      new models.Session("Philosophie", "Loïc Steinmetz", "L32", stringToDate("20-01-2020"), stringToTime("16:00"), stringToTime("17:00"), schedules.get(0)),
+      new models.Session("Anglais", "Marie Curie", "A12", stringToDate("22-01-2020"), stringToTime("11:00"), stringToTime("12:00"), schedules.get(1))
     );
     sessions.forEach(session::persist);
     return sessions;

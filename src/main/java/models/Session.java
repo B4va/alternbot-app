@@ -27,10 +27,16 @@ public class Session extends Model {
   @Column(name = "location", nullable = false)
   private String location;
 
-  @Column(name = "start_date", nullable = false)
+  @Column(name = "date_session", nullable = false)
+  @Temporal(TemporalType.DATE)
+  private Date date;
+
+  @Column(name = "start_time", nullable = false)
+  @Temporal(TemporalType.TIME)
   private Date start;
 
-  @Column(name = "end_date", nullable = false)
+  @Column(name = "end_time", nullable = false)
+  @Temporal(TemporalType.TIME)
   private Date end;
 
   @ManyToOne
@@ -41,15 +47,17 @@ public class Session extends Model {
 
   }
 
-  public Session(String name, String teacher, String location, Date start, Date end, Schedule schedule) {
+  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule) {
     this.name = name;
     this.teacher = teacher;
     this.location = location;
+    this.date = date;
     this.start = start;
     this.end = end;
     this.schedule = schedule;
   }
 
+  @Override
   public int getId() {
     return id;
   }
@@ -67,7 +75,7 @@ public class Session extends Model {
   }
 
   public String getTeacher() {
-    return this.teacher;
+    return teacher;
   }
 
   public void setTeacher(String teacher) {
@@ -75,11 +83,19 @@ public class Session extends Model {
   }
 
   public String getLocation() {
-    return this.location;
+    return location;
   }
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
   }
 
   public Date getStart() {
@@ -91,7 +107,7 @@ public class Session extends Model {
   }
 
   public Date getEnd() {
-    return this.end;
+    return end;
   }
 
   public void setEnd(Date end) {
@@ -105,5 +121,4 @@ public class Session extends Model {
   public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
   }
-
 }

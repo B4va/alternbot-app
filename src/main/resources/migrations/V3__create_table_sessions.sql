@@ -3,8 +3,9 @@ CREATE TABLE sessions (
     name VARCHAR NOT NULL,
     teacher VARCHAR NOT NULL,
     location VARCHAR NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NUll,
+    date_session DATE NOT NULL,
+    start_time TIME NOT NUll,
+    end_time TIME NOT NULL,
     schedule_id INT NOT NULL,
 
     CONSTRAINT fk_schedule

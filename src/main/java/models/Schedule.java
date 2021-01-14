@@ -27,6 +27,9 @@ public class Schedule {
   @OneToMany(mappedBy = "schedule")
   private Set<Server> servers;
 
+  @OneToMany(mappedBy = "schedule")
+  private Set<Session> sessions;
+
   public Schedule() {
   }
 
@@ -57,4 +60,9 @@ public class Schedule {
   public void setServers(Set<Server> servers) {
     this.servers = servers;
   }
+
+  public Set<Session> getSessions() { return sessions; }
+
+  public void setSessions(Set<Session> sessions) { this.sessions = sessions; }
+
 }

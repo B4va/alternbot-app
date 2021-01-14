@@ -2,6 +2,7 @@ package config;
 
 import models.Schedule;
 import models.Server;
+import models.Session;
 import org.hibernate.cfg.Configuration;
 import utils.EnvironmentVariablesUtils;
 
@@ -32,6 +33,7 @@ public class HibernateConfiguration {
   private static void registerEntities(Configuration configuration) {
     configuration.addAnnotatedClass(Schedule.class);
     configuration.addAnnotatedClass(Server.class);
+    configuration.addAnnotatedClass(Session.class);
   }
 
   private static void setDatabaseConfiguration(Configuration configuration) {

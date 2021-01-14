@@ -5,11 +5,11 @@ import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
-@Table(name = "cours")
-public class Cours {
+@Table(name = "sessions")
+public class Session {
 
     @Id
     @Generated(GenerationTime.INSERT)
@@ -27,21 +27,21 @@ public class Cours {
     @Column(name = "location", nullable = false)
     private String location;
 
-    @Column(name = "start", nullable = false)
+    @Column(name = "start_date", nullable = false)
     private Date start;
 
-    @Column(name = "end", nullable = false)
+    @Column(name = "end_date", nullable = false)
     private Date end;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
-    public Cours() {
+    public Session() {
 
     }
 
-    public Cours(String name,String teacher,String location,Date start, Date end, Schedule schedule){
+    public Session(String name,String teacher,String location,Date start, Date end, Schedule schedule){
         this.name = name;
         this.teacher = teacher;
         this.location = location;

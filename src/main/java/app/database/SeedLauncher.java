@@ -9,8 +9,9 @@ import utils.DbUtils;
 import utils.EnvironmentVariablesUtils;
 import utils.LoggerUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Initialisation de la base de données avec des objets pré-configurés.
@@ -44,6 +45,7 @@ public class SeedLauncher {
   private static void deleteAll(Session session) {
     DbUtils.deleteAll(session, Server.class);
     DbUtils.deleteAll(session, Schedule.class);
+    DbUtils.deleteAll(session, models.Session.class);
   }
 
   private static List<Schedule> seedSchedules(Session session) {
@@ -69,6 +71,17 @@ public class SeedLauncher {
     );
     servers.forEach(session::persist);
     return servers;
+  }
+
+  private static List<models.Session> seedSessions(Session session, List<Schedule> schedules) throws ParseException {
+    logSeed(models.Session.class);
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.ENGLISH);
+    List<models.Session> sessions = Arrays.asList(
+            new models.Session("Math", "Dupond Dupond", "F13", formatter.parse("20-01-2020 14:00:00"), formatter.parse("20-01-2020 15:00:00"), schedules.get(0)),
+            new models.Session("Anglais", "Marie Curie", "A12", formatter.parse("22-01-2020 10:00:00"), formatter.parse("22-01-2020 12:00:00"), schedules.get(1))
+    );
+    sessions.forEach(session::persist);
+    return sessions;
   }
 
   private static <T> void logSeed(Class<T> c) {

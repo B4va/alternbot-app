@@ -61,8 +61,12 @@ public class Schedule {
     this.servers = servers;
   }
 
-  public Set<Session> getSessions() { return sessions; }
+  public Set<Session> getSessions() {
+    return sessions;
+  }
 
-  public void setSessions(Set<Session> sessions) { this.sessions = sessions; }
+  public void setSessions(Set<Session> sessions) {
+    this.sessions = sessions;
+  }
 
 }

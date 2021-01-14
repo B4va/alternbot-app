@@ -128,12 +128,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.6</version>
-				<configuration>
-					<excludes>
-						<exclude>config/**/*</exclude>
-						<exclude>utils/**/*</exclude>
-					</excludes>
-				</configuration>
+                <configuration>
+                  <excludes>
+                    <exclude>config/**/*</exclude>
+                    <exclude>utils/**/*</exclude>
+                  </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -148,6 +148,26 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>7.5.0</version>
+                <configuration>
+                    <url>${env.DB_URL}</url>
+                    <user>${env.DB_USER}</user>
+                    <password>${env.DB_PASSWORD}</password>
+                    <locations>
+                        <location>classpath:migrations</location>
+                    </locations>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.2.18</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

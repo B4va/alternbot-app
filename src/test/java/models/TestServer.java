@@ -1,6 +1,9 @@
 package models;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -11,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Classe de test de {@link Server}.
  */
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestServer implements TestModel {
 
   private static int ID;
@@ -38,7 +40,7 @@ public class TestServer implements TestModel {
     }
     SCHEDULE = Model.read(ID, Schedule.class);
     if (nonNull(SCHEDULE)) {
-      SCHEDULE.delete();
+      SERVER.delete();
     }
   }
 
@@ -69,14 +71,6 @@ public class TestServer implements TestModel {
 
   @Test
   @Order(3)
-  public void testCreate_schedule_null(){
-    Server s = SERVER;
-    s.setSchedule(null);
-    assertThrows(PersistenceException.class, s::create);
-  }
-
-  @Test
-  @Order(4)
   @Override
   public void testRead() {
     Server s = Model.read(ID, Server.class);
@@ -85,19 +79,19 @@ public class TestServer implements TestModel {
       () -> assertNotNull(s),
       () -> assertEquals(s.getId(), SERVER.getId()),
       () -> assertEquals(s.getReference(), SERVER.getReference()),
-      () -> assertEquals(s.getSchedule().getId(), SERVER.getSchedule().getId())
+      () -> assertEquals(s.getSchedule(), SERVER.getSchedule())
     );
   }
 
   @Test
-  @Order(5)
+  @Order(4)
   public void testUpdate_Schedule_null() {
     SERVER.setSchedule(null);
     assertThrows(PersistenceException.class, SERVER::update);
   }
 
   @Test
-  @Order(6)
+  @Order(5)
   @Override
   public void testUpdate() {
     SERVER.setReference(UPDATED_REFERENCE);
@@ -109,14 +103,7 @@ public class TestServer implements TestModel {
   }
 
   @Test
-  @Order(7)
-  public void testDeleteScheduleWithExistingServer(){
-    SERVER.setSchedule(null);
-    assertThrows(PersistenceException.class,SERVER::update);
-  }
-
-  @Test
-  @Order(8)
+  @Order(6)
   @Override
   public void testDelete() {
     SERVER.delete();

@@ -47,5 +47,11 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
+    - name: Compilation
+      run: mvn package -DskipTests
+
+    - name: Exécution des migrations
+      run: mvn flyway:migrate
+
     - name: Tests unitaires
-      run: mvn -B test
+      run: mvn test

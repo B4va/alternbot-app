@@ -47,8 +47,8 @@ public class SeedLauncher {
 
   private static void deleteAll() {
     Model.deleteAll(Server.class);
-    Model.deleteAll(Schedule.class);
     Model.deleteAll(models.Session.class);
+    Model.deleteAll(Schedule.class);
   }
 
   private static List<Schedule> seedSchedules(Session session) {

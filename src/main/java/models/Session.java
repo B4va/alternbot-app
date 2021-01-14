@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "sessions")
-public class Session {
+public class Session extends Model {
 
   @Id
   @Generated(GenerationTime.INSERT)

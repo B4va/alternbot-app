@@ -1,5 +1,6 @@
 package app.database;
 
+import models.Model;
 import models.Schedule;
 import models.Server;
 import org.apache.logging.log4j.Logger;
@@ -23,10 +24,11 @@ public class SeedLauncher {
   public static void main(String[] args) {
     LOGGER.info("RUN Seed.");
     try {
+      LOGGER.info("Suppression des anciens objets.");
+      deleteAll();
+      LOGGER.info("Enregistrement des nouveaux objets.");
       Session session = DbUtils.getSessionFactory().openSession();
       Transaction transaction = session.beginTransaction();
-      LOGGER.info("Suppression des objets.");
-      deleteAll(session);
       seed(session);
       transaction.commit();
       session.close();
@@ -42,10 +44,10 @@ public class SeedLauncher {
     seedServers(session, schedules);
   }
 
-  private static void deleteAll(Session session) {
-    DbUtils.deleteAll(session, Server.class);
-    DbUtils.deleteAll(session, Schedule.class);
-    DbUtils.deleteAll(session, models.Session.class);
+  private static void deleteAll() {
+    Model.deleteAll(Server.class);
+    Model.deleteAll(Schedule.class);
+    Model.deleteAll(models.Session.class);
   }
 
   private static List<Schedule> seedSchedules(Session session) {

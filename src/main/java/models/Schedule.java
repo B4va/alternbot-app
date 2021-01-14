@@ -12,7 +12,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "schedules")
-public class Schedule {
+public class Schedule extends Model {
 
   @Id
   @Generated(GenerationTime.INSERT)

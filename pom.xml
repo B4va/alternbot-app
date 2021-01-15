@@ -132,6 +132,7 @@
                   <excludes>
                     <exclude>config/**/*</exclude>
                     <exclude>utils/**/*</exclude>
+                    <exclude>programs/**/*</exclude>
                   </excludes>
                 </configuration>
                 <executions>

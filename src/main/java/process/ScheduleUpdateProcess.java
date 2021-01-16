@@ -15,14 +15,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.text.ParseException;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static utils.DateUtils.datetimeToDate;
+import static utils.DateUtils.datetimeToTime;
 
 /**
  * Process de récupération des données IUT.
@@ -38,10 +39,14 @@ public class ScheduleUpdateProcess {
     List<Schedule> schedules = Model.readAll(Schedule.class);
     schedules.forEach(s -> {
       String data = fetchIcalData(s);
-      List<VEvent> events = parseIcal(data, s);
-      List<Session> sessions = mapSessions(events, s);
-      sessions.forEach(this::saveSession);
+      if (nonNull(data)) {
+        List<VEvent> events = parseIcal(data, s);
+        List<Session> newSessions = mapSessions(events, s);
+        Set<Session> oldSessions = s.getSessions();
+        newSessions.forEach(ns -> updateSession(ns, oldSessions));
+      }
     });
+    purgeSessions();
   }
 
   private String fetchIcalData(Schedule schedule) {
@@ -74,7 +79,10 @@ public class ScheduleUpdateProcess {
     } catch (ParserException | IOException e) {
       LOGGER.warn("Impossible de parser les infos récupérées via '{}'.", schedule.getUrl());
     }
-    return events;
+    return events.stream()
+      .filter(e -> nonNull(e.getStartDate()))
+      .filter(e -> e.getStartDate().getDate().after(new Date()))
+      .collect(Collectors.toList());
   }
 
   private List<Session> mapSessions(List<VEvent> events, Schedule schedule) {
@@ -83,9 +91,16 @@ public class ScheduleUpdateProcess {
       try {
         String name = e.getDescription().getValue();
         String location = nonNull(e.getLocation()) ? e.getLocation().getValue() : null;
-        Date startDate = e.getStartDate().getDate();
-        Date endDate = e.getEndDate().getDate();
-        return new Session(name, null, location, startDate, startDate, endDate, schedule);
+        Date date, start, end;
+        try {
+          date = datetimeToDate(e.getStartDate().getDate());
+          start = datetimeToTime(e.getStartDate().getDate());
+          end = datetimeToTime(e.getEndDate().getDate());
+        } catch (ParseException ex) {
+          errorCount.getAndIncrement();
+          return null;
+        }
+        return new Session(name, null, location, date, start, end, schedule);
       } catch (NullPointerException ex) {
         errorCount.getAndIncrement();
         return null;
@@ -94,26 +109,54 @@ public class ScheduleUpdateProcess {
     if (errorCount.get() > 0) {
       LOGGER.warn("{} erreurs lors de la mise à jour de l'edt '{}'.", errorCount.get(), schedule.getPromotion());
     }
+    sessions.removeAll(Collections.singleton(null));
     return sessions;
   }
 
-  private void saveSession(Session session) {
-    /*
-    TODO :
-      si cours déjà enregistré au même horaire :
-        - si identique, ne rien faire
-        - si différent, modifier et envoyer publication alerte
-      sinon :
-        - enregistrer le cours
-     */
+  // todo : finaliser après merge du process d'envoi de l'alerte en cas de modif de l'edt
+  private void updateSession(Session session, Set<Session> oldSessions) {
+    if (!isSaved(session, oldSessions)) {
+      // ScheduleUpdatePublicationProcess pub = new ScheduleUpdatePublicationProcess()
+      List<Session> overlapped = oldSessions.stream()
+        .filter(s -> isOverlapping(session, s))
+        .collect(Collectors.toList());
+      // pub.sendPublication(session, overlapped)
+      overlapped.forEach(s -> {
+        s.setUpdated(true);
+        s.update();
+      });
+      session.create();
+    }
+  }
+
+  private boolean isSaved(Session session, Set<Session> oldSessions) {
+    return oldSessions.stream()
+      .anyMatch(s -> session.getName().equals(s.getName()) &&
+        ((isNull(session.getLocation()) && isNull(s.getLocation())) || session.getLocation().equals(s.getLocation())) &&
+        ((isNull(session.getTeacher()) && isNull(s.getTeacher())) || session.getTeacher().equals(s.getTeacher())) &&
+        session.getStart().equals(s.getStart()) &&
+        session.getEnd().equals(s.getEnd()) &&
+        session.getDate().equals(s.getDate()));
+  }
+
+  private boolean isOverlapping(Session newSession, Session oldSession) {
+    return newSession.getDate().equals(oldSession.getDate()) &&
+      (newSession.getStart().after(oldSession.getStart()) &&
+        newSession.getStart().before(oldSession.getEnd())) ||
+      (newSession.getEnd().after(oldSession.getDate()) &&
+        newSession.getEnd().before(oldSession.getEnd()));
+  }
+
+  // todo : PERFORMANCE - purge via une requête SQL unique
+  private void purgeSessions() {
+    List<Session> sessions = Model.readAll(Session.class);
+    sessions.stream()
+      .filter(Session::isUpdated)
+      .forEach(Session::delete);
   }
 
   public static void main(String[] args) {
-    Schedule schedule = new Schedule("Test", "https://dptinfo.iutmetz.univ-lorraine.fr/lna/agendas/ical.php?ical=c3459ed54a02149");
-    String data = new ScheduleUpdateProcess().fetchIcalData(schedule);
-    System.out.println(data);
-    List<VEvent> events = new ScheduleUpdateProcess().parseIcal(data, schedule);
-    List<Session> sessions = new ScheduleUpdateProcess().mapSessions(events, schedule);
-    System.exit(0);
+//    new Schedule("Test", "https://dptinfo.iutmetz.univ-lorraine.fr/lna/agendas/ical.php?ical=c3459ed54a02149").create();
+    new ScheduleUpdateProcess().update();
   }
 }

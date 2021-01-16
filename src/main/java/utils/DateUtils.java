@@ -55,4 +55,26 @@ public class DateUtils {
   public static Date stringToTime(String time) throws ParseException {
     return TIME_FORMATTER.parse(time);
   }
+
+  /**
+   * Crée une simple date.
+   *
+   * @param datetime objet date intégrant l'heure
+   * @return objet date n'intégrant pas l'heure
+   * @throws ParseException erreur de parsing
+   */
+  public static Date datetimeToDate(Date datetime) throws ParseException {
+    return stringToDate(dateToString(datetime));
+  }
+
+  /**
+   * Crée une simple heure.
+   *
+   * @param datetime objet date intégrant la date
+   * @return objet date n'intégrant que l'heure
+   * @throws ParseException erreur de parsing
+   */
+  public static Date datetimeToTime(Date datetime) throws ParseException {
+    return stringToTime(timeToString(datetime));
+  }
 }

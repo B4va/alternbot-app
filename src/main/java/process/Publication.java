@@ -14,7 +14,7 @@ public abstract class Publication {
      * @param jda, Altern'bot qui est connecté sur le serveur
      * @return true si le channel existe sur le server, sinon false
      */
-    protected static boolean check_If_Channel_Exists(JDA jda){
+    protected boolean check_If_Channel_Exists(JDA jda){
         if(jda.getTextChannelsByName("emplois-du-temps",true).size() > 0) return true;
         else return false;
     }
@@ -26,7 +26,7 @@ public abstract class Publication {
      * @throws LoginException
      * @throws InterruptedException
      */
-    protected static void sendMessage(String message, Server server) throws LoginException, InterruptedException {
+    protected void sendMessage(String message, Server server) throws LoginException, InterruptedException {
         JDA jda = JDABuilder.createDefault(server.getReference()).build();
         jda.awaitReady();
         if(check_If_Channel_Exists(jda)) {

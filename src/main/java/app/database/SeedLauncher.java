@@ -58,7 +58,7 @@ public class SeedLauncher {
   private static List<Schedule> seedSchedules(Session session) {
     logSeed(Schedule.class);
     List<Schedule> schedules = Arrays.asList(
-      new Schedule("LP Génie logiciel", EnvironmentVariablesUtils.getString(SCHEDULE_URL, "url1")),
+      new Schedule("LP Génie logiciel", EnvironmentVariablesUtils.getString(SCHEDULE_URL, "url1.com")),
       new Schedule("BUT Génie mécanique et productique", "url2.com"),
       new Schedule("LP Statistique et informatique décisionnelle", "url3.com"),
       new Schedule("BUT Techniques de commercialisation", "url4.com"),

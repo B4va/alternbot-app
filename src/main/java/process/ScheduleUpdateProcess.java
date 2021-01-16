@@ -36,8 +36,10 @@ public class ScheduleUpdateProcess {
    * Met à jour les données de la base en récupérant les données de l'IUT.
    */
   public void update() {
+    LOGGER.info("Lancement du process de mise à jour des données IUT.");
     List<Schedule> schedules = Model.readAll(Schedule.class);
     schedules.forEach(s -> {
+      LOGGER.debug("Mise à jour des cours de l'edt #{} - promotion : {}", s.getId(), s.getPromotion());
       String data = fetchIcalData(s);
       if (nonNull(data)) {
         List<VEvent> events = parseIcal(data, s);
@@ -45,8 +47,12 @@ public class ScheduleUpdateProcess {
         Set<Session> oldSessions = s.getSessions();
         newSessions.forEach(ns -> updateSession(ns, oldSessions));
       }
+      LOGGER.debug("EDT #{} : OK", s.getId());
     });
+    LOGGER.debug("Purge des cours mis à jour.");
     purgeSessions();
+    LOGGER.debug("Purge OK.");
+    LOGGER.info("Process terminé.");
   }
 
   private String fetchIcalData(Schedule schedule) {

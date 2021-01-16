@@ -17,7 +17,9 @@ public class TestSchedule implements TestModel {
   private static int ID;
   private static Schedule SCHEDULE;
   private static final String PROMOTION_TEST = "Promotion test";
+  private static final String URL_TEST = "url.com";
   private static final String PROMOTION_UPDATE = "Promotion mise à jour";
+  private static final String URL_UPDATE = "url.update.com";
 
   @AfterAll
   public static void tearDown() {
@@ -31,7 +33,7 @@ public class TestSchedule implements TestModel {
   @Order(1)
   @Override
   public void testCreate() {
-    SCHEDULE = new Schedule(PROMOTION_TEST);
+    SCHEDULE = new Schedule(PROMOTION_TEST, URL_TEST);
     ID = SCHEDULE.create();
     List<Schedule> schedules = Model.readAll(Schedule.class);
     assertTrue(schedules.stream().anyMatch(s -> s.getId() == ID));
@@ -41,6 +43,15 @@ public class TestSchedule implements TestModel {
   @Order(2)
   public void testCreate_promotion_null() {
     Schedule schedule = new Schedule();
+    schedule.setUrl(URL_TEST);
+    assertThrows(PersistenceException.class, schedule::create);
+  }
+
+  @Test
+  @Order(2)
+  public void testCreate_url_null() {
+    Schedule schedule = new Schedule();
+    schedule.setPromotion(PROMOTION_TEST);
     assertThrows(PersistenceException.class, schedule::create);
   }
 
@@ -52,15 +63,25 @@ public class TestSchedule implements TestModel {
     assertAll(
       () -> assertNotNull(schedule),
       () -> assertEquals(schedule.getId(), SCHEDULE.getId()),
-      () -> assertEquals(schedule.getPromotion(), SCHEDULE.getPromotion())
+      () -> assertEquals(schedule.getPromotion(), SCHEDULE.getPromotion()),
+      () -> assertEquals(schedule.getUrl(), SCHEDULE.getUrl())
     );
   }
 
   @Test
   @Order(4)
   public void testUpdate_promotion_null() {
-    SCHEDULE.setPromotion(null);
-    assertThrows(PersistenceException.class, SCHEDULE::update);
+    Schedule schedule = new Schedule(null, URL_UPDATE);
+    schedule.setId(SCHEDULE.getId());
+    assertThrows(PersistenceException.class, schedule::update);
+  }
+
+  @Test
+  @Order(4)
+  public void testUpdate_url_null() {
+    Schedule schedule = new Schedule(PROMOTION_UPDATE, null);
+    schedule.setId(SCHEDULE.getId());
+    assertThrows(PersistenceException.class, schedule::update);
   }
 
   @Test
@@ -68,10 +89,14 @@ public class TestSchedule implements TestModel {
   @Override
   public void testUpdate() {
     SCHEDULE.setPromotion(PROMOTION_UPDATE);
+    SCHEDULE.setUrl(URL_UPDATE);
     SCHEDULE.update();
     SCHEDULE = Model.read(ID, Schedule.class);
     assertNotNull(SCHEDULE);
-    assertEquals(SCHEDULE.getPromotion(), PROMOTION_UPDATE);
+    assertAll(
+      () -> assertEquals(SCHEDULE.getPromotion(), PROMOTION_UPDATE),
+      () -> assertEquals(SCHEDULE.getUrl(), URL_UPDATE)
+    );
   }
 
   @Test

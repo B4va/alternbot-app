@@ -20,6 +20,7 @@ public class TestServer implements TestModel {
   private static Schedule SCHEDULE;
   private static final String PROMOTION_TEST = "test";
   private static final String REFERENCE_TEST = "ref";
+  private static final String URL_TEST = "url.com";
   private static final String UPDATED_REFERENCE = "updated_ref";
 
   @AfterAll
@@ -38,7 +39,7 @@ public class TestServer implements TestModel {
   @Order(1)
   @Override
   public void testCreate() {
-    SCHEDULE = new Schedule(PROMOTION_TEST);
+    SCHEDULE = new Schedule(PROMOTION_TEST, URL_TEST);
     ID_SCHEDULE = SCHEDULE.create();
     SERVER = new Server(REFERENCE_TEST, Schedule.read(ID_SCHEDULE, Schedule.class));
     ID_SERVER = SERVER.create();

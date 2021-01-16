@@ -24,6 +24,9 @@ public class Schedule extends Model {
   @Column(name = "promotion", nullable = false)
   private String promotion;
 
+  @Column(name = "url", nullable = false)
+  private String url;
+
   @OneToMany(mappedBy = "schedule")
   private Set<Server> servers;
 
@@ -33,8 +36,9 @@ public class Schedule extends Model {
   public Schedule() {
   }
 
-  public Schedule(String promotion) {
+  public Schedule(String promotion, String url) {
     this.promotion = promotion;
+    this.url = url;
   }
 
   public int getId() {
@@ -51,6 +55,14 @@ public class Schedule extends Model {
 
   public void setPromotion(String promotion) {
     this.promotion = promotion;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
   }
 
   public Set<Server> getServers() {

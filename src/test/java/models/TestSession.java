@@ -22,6 +22,7 @@ public class TestSession implements TestModel {
   private static Session SESSION;
   private static Schedule SCHEDULE;
   private static final String PROMOTION_TEST = "promotion test";
+  private static final String URL_TEST = "url.com";
   private static final String UPDATED_NAME = "Updated name";
   private static final String DATE = "01-01-2021";
   private static final String START_TIME = "14:00";
@@ -46,7 +47,7 @@ public class TestSession implements TestModel {
   @Order(1)
   @Override
   public void testCreate() {
-    SCHEDULE = new Schedule(PROMOTION_TEST);
+    SCHEDULE = new Schedule(PROMOTION_TEST, URL_TEST);
     ID_SCHEDULE = SCHEDULE.create();
     try {
       SESSION = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),

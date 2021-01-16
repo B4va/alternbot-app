@@ -16,6 +16,7 @@ import java.util.*;
 
 import static utils.DateUtils.stringToDate;
 import static utils.DateUtils.stringToTime;
+import static utils.EnvironmentVariablesUtils.*;
 
 /**
  * Initialisation de la base de données avec des objets pré-configurés.
@@ -57,11 +58,11 @@ public class SeedLauncher {
   private static List<Schedule> seedSchedules(Session session) {
     logSeed(Schedule.class);
     List<Schedule> schedules = Arrays.asList(
-      new Schedule("LP Génie logiciel"),
-      new Schedule("BUT Génie mécanique et productique"),
-      new Schedule("LP Statistique et informatique décisionnelle"),
-      new Schedule("BUT Techniques de commercialisation"),
-      new Schedule("LP Acquisition de données, qualification d'appareillages en milieu industriel")
+      new Schedule("LP Génie logiciel", EnvironmentVariablesUtils.getString(SCHEDULE_URL, "url1")),
+      new Schedule("BUT Génie mécanique et productique", "url2.com"),
+      new Schedule("LP Statistique et informatique décisionnelle", "url3.com"),
+      new Schedule("BUT Techniques de commercialisation", "url4.com"),
+      new Schedule("LP Acquisition de données, qualification d'appareillages en milieu industriel", "url5.com")
     );
     schedules.forEach(session::persist);
     return schedules;
@@ -69,8 +70,8 @@ public class SeedLauncher {
 
   private static List<Server> seedServers(Session session, List<Schedule> schedules) {
     logSeed(Server.class);
-    String serveurTest1 = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.SERVEUR_TEST, "0123456789");
-    String serveurTest2 = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.SERVEUR_TEST_2, serveurTest1);
+    String serveurTest1 = EnvironmentVariablesUtils.getString(SERVEUR_TEST, "0123456789");
+    String serveurTest2 = EnvironmentVariablesUtils.getString(SERVEUR_TEST_2, serveurTest1);
     List<Server> servers = Arrays.asList(
       new Server(serveurTest1, schedules.get(0)),
       new Server(serveurTest2, schedules.get(1))

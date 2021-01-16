@@ -49,7 +49,6 @@ public class TestSchedule implements TestModel {
   @Override
   public void testRead() {
     Schedule schedule = Model.read(ID, Schedule.class);
-    assertNotNull(schedule);
     assertAll(
       () -> assertNotNull(schedule),
       () -> assertEquals(schedule.getId(), SCHEDULE.getId()),

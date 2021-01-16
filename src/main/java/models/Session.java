@@ -1,0 +1,124 @@
+package models;
+
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "sessions")
+public class Session extends Model {
+
+  @Id
+  @Generated(GenerationTime.INSERT)
+  @GenericGenerator(name = "generator", strategy = "increment")
+  @GeneratedValue(generator = "generator")
+  @Column(name = "id")
+  private int id;
+
+  @Column(name = "name", nullable = false)
+  private String name;
+
+  @Column(name = "teacher", nullable = false)
+  private String teacher;
+
+  @Column(name = "location", nullable = false)
+  private String location;
+
+  @Column(name = "date_session", nullable = false)
+  @Temporal(TemporalType.DATE)
+  private Date date;
+
+  @Column(name = "start_time", nullable = false)
+  @Temporal(TemporalType.TIME)
+  private Date start;
+
+  @Column(name = "end_time", nullable = false)
+  @Temporal(TemporalType.TIME)
+  private Date end;
+
+  @ManyToOne
+  @JoinColumn(name = "schedule_id", nullable = false)
+  private Schedule schedule;
+
+  public Session() {
+
+  }
+
+  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule) {
+    this.name = name;
+    this.teacher = teacher;
+    this.location = location;
+    this.date = date;
+    this.start = start;
+    this.end = end;
+    this.schedule = schedule;
+  }
+
+  @Override
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getTeacher() {
+    return teacher;
+  }
+
+  public void setTeacher(String teacher) {
+    this.teacher = teacher;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
+  }
+
+  public Date getStart() {
+    return start;
+  }
+
+  public void setStart(Date start) {
+    this.start = start;
+  }
+
+  public Date getEnd() {
+    return end;
+  }
+
+  public void setEnd(Date end) {
+    this.end = end;
+  }
+
+  public Schedule getSchedule() {
+    return schedule;
+  }
+
+  public void setSchedule(Schedule schedule) {
+    this.schedule = schedule;
+  }
+}

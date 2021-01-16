@@ -67,7 +67,6 @@ public class TestServer implements TestModel {
   @Override
   public void testRead() {
     Server s = Model.read(ID_SERVER, Server.class);
-    assertNotNull(s);
     assertAll(
       () -> assertNotNull(s),
       () -> assertEquals(s.getId(), SERVER.getId()),

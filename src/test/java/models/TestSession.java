@@ -85,7 +85,8 @@ public class TestSession implements TestModel {
       fail();
     }
     session.setTeacher(null);
-    assertThrows(PersistenceException.class, session::create);
+    assertDoesNotThrow(session::create);
+    session.delete();
   }
 
   @Test
@@ -188,7 +189,7 @@ public class TestSession implements TestModel {
   public void testUpdate_teacher_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setTeacher(null);
-    assertThrows(PersistenceException.class, session::update);
+    assertDoesNotThrow(session::update);
   }
 
   @Test

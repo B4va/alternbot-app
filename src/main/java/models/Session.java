@@ -21,7 +21,7 @@ public class Session extends Model {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "teacher", nullable = false)
+  @Column(name = "teacher")
   private String teacher;
 
   @Column(name = "location", nullable = false)

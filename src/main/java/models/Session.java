@@ -39,6 +39,9 @@ public class Session extends Model {
   @Temporal(TemporalType.TIME)
   private Date end;
 
+  @Column(name = "updated")
+  private boolean updated;
+
   @ManyToOne
   @JoinColumn(name = "schedule_id", nullable = false)
   private Schedule schedule;
@@ -112,6 +115,14 @@ public class Session extends Model {
 
   public void setEnd(Date end) {
     this.end = end;
+  }
+
+  public boolean isUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(boolean updated) {
+    this.updated = updated;
   }
 
   public Schedule getSchedule() {

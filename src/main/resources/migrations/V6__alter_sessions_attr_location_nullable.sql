@@ -1,0 +1,2 @@
+ALTER TABLE sessions
+ALTER COLUMN location DROP NOT NULL;

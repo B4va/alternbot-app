@@ -30,6 +30,7 @@ jobs:
       DB_USER: postgres
       DB_PASSWORD: muchsecurity
       BOT_TOKEN: ${{ secrets.DISCORD_CIBOT_TOKEN }}
+      SCHEDULE_URL: ${{ secrets.SCHEDULE_URL }}
 
     steps:
     - name: Checkout du code

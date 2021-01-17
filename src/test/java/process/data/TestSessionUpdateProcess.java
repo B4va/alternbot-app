@@ -71,17 +71,6 @@ public class TestSessionUpdateProcess {
     SESSION_OL_START.setId(SESSION_OL_START.create());
   }
 
-  @BeforeEach
-  public void reinit() {
-    SESSION_RDM.update();
-    SESSION_OL_END.update();
-    SESSION_OL_START.update();
-    List<Session> sessions = Model.readAll(Session.class);
-    sessions.stream()
-      .filter(s -> s.getName().equals(NAME_TEST))
-      .forEach(Model::delete);
-  }
-
   @AfterAll
   public static void tearDown() {
     SESSION_TEST.delete();
@@ -89,6 +78,17 @@ public class TestSessionUpdateProcess {
     SESSION_OL_END.delete();
     SESSION_OL_START.delete();
     SCHEDULE.delete();
+  }
+
+  @BeforeEach
+  public void initEach() {
+    SESSION_RDM.update();
+    SESSION_OL_END.update();
+    SESSION_OL_START.update();
+    List<Session> sessions = Model.readAll(Session.class);
+    sessions.stream()
+      .filter(s -> s.getName().equals(NAME_TEST))
+      .forEach(Model::delete);
   }
 
   @Test

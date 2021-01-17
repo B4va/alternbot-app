@@ -1,4 +1,4 @@
-package process;
+package process.data;
 
 import models.Schedule;
 import org.apache.logging.log4j.Logger;

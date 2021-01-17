@@ -1,4 +1,4 @@
-package process;
+package process.data;
 
 /**
  * Classe de test de {@link SchedulesUpdateProcess}.

@@ -1,4 +1,4 @@
-package process;
+package process.data;
 
 import models.Schedule;
 import models.Session;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static utils.DateUtils.datetimeToDate;
 import static utils.DateUtils.datetimeToTime;
@@ -39,6 +40,7 @@ public class IcalMappingProcess {
    * @return liste de cours
    */
   public List<Session> map(String data, Schedule schedule) {
+    if (isNull(data)) return Collections.emptyList();
     List<VEvent> icalData = parseIcal(data, schedule);
     return mapSessions(icalData, schedule);
   }
@@ -82,7 +84,7 @@ public class IcalMappingProcess {
       }
     }).collect(Collectors.toList());
     if (errorCount.get() > 0) {
-      LOGGER.warn("{} erreurs lors de la mise à jour de l'edt '{}'.", errorCount.get(), schedule.getPromotion());
+      LOGGER.warn("{} informations manquantes lors de la mise à jour de l'edt '{}'.", errorCount.get(), schedule.getPromotion());
     }
     sessions.removeAll(Collections.singleton(null));
     return sessions;

@@ -1,4 +1,4 @@
-package process;
+package process.data;
 
 import models.Model;
 import models.Schedule;
@@ -6,7 +6,8 @@ import models.Session;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.nonNull;
 
@@ -40,10 +41,5 @@ public class SchedulesUpdateProcess {
     new SessionsPurgeProcess().purge();
     LOGGER.debug("Purge OK.");
     LOGGER.info("Process terminé.");
-  }
-
-  public static void main(String[] args) {
-//    new Schedule("Test", "https://dptinfo.iutmetz.univ-lorraine.fr/lna/agendas/ical.php?ical=c3459ed54a02149").create();
-    new SchedulesUpdateProcess().update();
   }
 }

@@ -1,4 +1,4 @@
-package process;
+package process.data;
 
 import models.Session;
 

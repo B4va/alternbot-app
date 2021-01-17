@@ -1,0 +1,90 @@
+package process;
+
+import models.Schedule;
+import models.Session;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.VEvent;
+import org.apache.logging.log4j.Logger;
+import utils.LoggerUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
+import static utils.DateUtils.datetimeToDate;
+import static utils.DateUtils.datetimeToTime;
+
+/**
+ * Process de mapping de données ical.
+ */
+public class IcalMappingProcess {
+
+  private static final Logger LOGGER = LoggerUtils.buildLogger(IcalMappingProcess.class);
+
+  /**
+   * Mappe des données au format ical.
+   *
+   * @param data     données au format ical
+   * @param schedule emploi du temps associé aux données
+   * @return liste de cours
+   */
+  public List<Session> map(String data, Schedule schedule) {
+    List<VEvent> icalData = parseIcal(data, schedule);
+    return mapSessions(icalData, schedule);
+  }
+
+  private List<VEvent> parseIcal(String data, Schedule schedule) {
+    CalendarBuilder builder = new CalendarBuilder();
+    List<VEvent> events = new ArrayList<>();
+    try {
+      Calendar calendar = builder.build(new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8)));
+      for (Object o : calendar.getComponents("VEVENT")) {
+        events.add((VEvent) o);
+      }
+    } catch (ParserException | IOException e) {
+      LOGGER.warn("Impossible de parser les infos récupérées via '{}'.", schedule.getUrl());
+    }
+    return events.stream()
+      .filter(e -> nonNull(e.getStartDate()))
+      .filter(e -> e.getStartDate().getDate().after(new Date()))
+      .collect(Collectors.toList());
+  }
+
+  private List<Session> mapSessions(List<VEvent> events, Schedule schedule) {
+    AtomicInteger errorCount = new AtomicInteger();
+    List<Session> sessions = events.stream().map(e -> {
+      try {
+        String name = e.getDescription().getValue();
+        String location = nonNull(e.getLocation()) ? e.getLocation().getValue() : null;
+        Date date, start, end;
+        try {
+          date = datetimeToDate(e.getStartDate().getDate());
+          start = datetimeToTime(e.getStartDate().getDate());
+          end = datetimeToTime(e.getEndDate().getDate());
+        } catch (ParseException ex) {
+          errorCount.getAndIncrement();
+          return null;
+        }
+        return new Session(name, null, location, date, start, end, schedule);
+      } catch (NullPointerException ex) {
+        errorCount.getAndIncrement();
+        return null;
+      }
+    }).collect(Collectors.toList());
+    if (errorCount.get() > 0) {
+      LOGGER.warn("{} erreurs lors de la mise à jour de l'edt '{}'.", errorCount.get(), schedule.getPromotion());
+    }
+    sessions.removeAll(Collections.singleton(null));
+    return sessions;
+  }
+}

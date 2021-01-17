@@ -46,10 +46,11 @@ public class SessionUpdateProcess {
   }
 
   private boolean isOverlapping(Session newSession, Session oldSession) {
-    return newSession.getDate().equals(oldSession.getDate()) &&
-      (newSession.getStart().after(oldSession.getStart()) &&
-        newSession.getStart().before(oldSession.getEnd())) ||
-      (newSession.getEnd().after(oldSession.getDate()) &&
-        newSession.getEnd().before(oldSession.getEnd()));
+    if (!newSession.getDate().equals(oldSession.getDate())) return false;
+    boolean overlappWithEnd = newSession.getEnd().after(oldSession.getStart()) &&
+      newSession.getEnd().before(oldSession.getEnd());
+    boolean overappWithStart = newSession.getStart().after(oldSession.getStart()) &&
+      newSession.getStart().before(oldSession.getEnd());
+    return overlappWithEnd || overappWithStart;
   }
 }

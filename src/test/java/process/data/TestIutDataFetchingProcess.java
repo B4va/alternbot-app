@@ -3,6 +3,7 @@ package process.data;
 import models.Schedule;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import utils.EnvironmentVariablesUtils;
 
@@ -15,9 +16,14 @@ import static utils.EnvironmentVariablesUtils.SCHEDULE_URL;
  */
 public class TestIutDataFetchingProcess {
 
-  private static final IutDataFetchingProcess PROCESS = new IutDataFetchingProcess();
+  private static IutDataFetchingProcess PROCESS;
   private static final String URL_TEST = "urltest";
   private static final String START_ICAL = "BEGIN:VCALENDAR";
+
+  @BeforeAll
+  public static void init() {
+    PROCESS = new IutDataFetchingProcess();
+  }
 
   @Test
   public void testFetch_valid_url() {

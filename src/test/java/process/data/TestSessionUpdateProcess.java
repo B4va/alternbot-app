@@ -23,7 +23,7 @@ import static utils.DateUtils.stringToTime;
  */
 public class TestSessionUpdateProcess {
 
-  private static final SessionUpdateProcess PROCESS = new SessionUpdateProcess();
+  private static SessionUpdateProcess PROCESS;
   private static Session SESSION_TEST;
   private static Session SESSION_RDM;
   private static Session SESSION_OL_END;
@@ -56,6 +56,7 @@ public class TestSessionUpdateProcess {
 
   @BeforeAll
   public static void init() throws ParseException {
+    PROCESS = new SessionUpdateProcess();
     SCHEDULE.setId(SCHEDULE.create());
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);

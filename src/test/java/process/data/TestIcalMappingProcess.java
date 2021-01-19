@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.DateUtils.dateToString;
@@ -16,7 +17,7 @@ import static utils.DateUtils.timeToString;
  */
 public class TestIcalMappingProcess {
 
-  private static final IcalMappingProcess PROCESS = new IcalMappingProcess();
+  private static IcalMappingProcess PROCESS;
   private static final String NAME = "Informatique";
   private static final String LOCATION = "F06";
   private static final String DATE = "16-09-2030";
@@ -72,6 +73,7 @@ public class TestIcalMappingProcess {
 
   @BeforeAll
   public static void init() {
+    PROCESS = new IcalMappingProcess();
     SCHEDULE = new Schedule();
     SCHEDULE.setId(1);
   }

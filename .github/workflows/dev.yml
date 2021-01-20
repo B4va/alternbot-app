@@ -29,7 +29,9 @@ jobs:
       DB_URL: jdbc:postgresql://localhost:5432/alternbot
       DB_USER: postgres
       DB_PASSWORD: muchsecurity
-      BOT_TOKEN: ${{ secrets.DISCORD_CIBOT_TOKEN }}
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      CHANNEL_TEST: ${{ secrets.CHANNEL_TEST }}
+      SERVER_TEST: ${{ secrets.SERVER_TEST }}
 
     steps:
     - name: Checkout du code

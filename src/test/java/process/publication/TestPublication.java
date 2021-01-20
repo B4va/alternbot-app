@@ -10,7 +10,7 @@ import javax.security.auth.login.LoginException;
 import static java.util.Objects.isNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.EnvironmentVariablesUtils.CHANNEL_TEST;
-import static utils.EnvironmentVariablesUtils.SERVEUR_TEST;
+import static utils.EnvironmentVariablesUtils.SERVER_TEST;
 
 /**
  * Classe de test de {@link Publication}.
@@ -36,7 +36,7 @@ public class TestPublication {
 
   @Test
   public void testSendMessage_ok() throws LoginException, InterruptedException {
-    Server server = new Server(EnvironmentVariablesUtils.getString(SERVEUR_TEST), null);
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
     if (isNull(server.getReference())) fail();
     assertTrue(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
   }
@@ -49,7 +49,7 @@ public class TestPublication {
 
   @Test
   public void testSendMessage_not_existing_channel() throws LoginException, InterruptedException {
-    Server server = new Server(EnvironmentVariablesUtils.getString(SERVEUR_TEST), null);
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
     if (isNull(server.getReference())) fail();
     assertFalse(PROCESS.sendMessage(MESSAGE, server, NOT_EXISTING_CHANNEL));
   }

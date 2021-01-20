@@ -1,19 +1,14 @@
 package process;
 
-import models.Schedule;
+
 import models.Server;
 import models.Session;
 
 import javax.security.auth.login.LoginException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
 
-import static utils.DateUtils.stringToDate;
-import static utils.DateUtils.stringToTime;
 
-public class ScheduleUpdateProcess extends Publication{
+public class ScheduleUpdatePublicationProcess extends Publication{
 
     /**
      *
@@ -22,7 +17,7 @@ public class ScheduleUpdateProcess extends Publication{
      * @throws LoginException
      * @throws InterruptedException
      */
-    public void formatter(Session oldSession, Session newSession) throws LoginException, InterruptedException {
+    public void sendPublication(Session oldSession, Session newSession) throws LoginException, InterruptedException {
         String message = "@everyone \nChangement d'emploi du temps :information_source:```";
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
         SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE dd MMMMM");

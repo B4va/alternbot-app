@@ -1,28 +1,20 @@
 package process;
 
-import models.Model;
 import models.Schedule;
 import models.Server;
 import models.Session;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
 import org.junit.jupiter.api.*;
 
-import javax.persistence.PersistenceException;
 import javax.security.auth.login.LoginException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
-import static java.util.Objects.nonNull;
-import static org.junit.jupiter.api.Assertions.*;
 import static utils.DateUtils.stringToDate;
 import static utils.DateUtils.stringToTime;
 
 /**
- * Classe de test de {@link ScheduleUpdateProcess}.
+ * Classe de test de {@link ScheduleUpdatePublicationProcess}.
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestScheduleUpdateProcess {
@@ -32,7 +24,7 @@ public class TestScheduleUpdateProcess {
   private HashSet<Server> servers;
   private Session old,nouv;
   private Date debut,fin,d;
-  private ScheduleUpdateProcess scheduleUpdateProcess;
+  private ScheduleUpdatePublicationProcess scheduleUpdateProcess;
 
   @BeforeAll
   public void init() throws ParseException, LoginException, InterruptedException {
@@ -57,7 +49,7 @@ public class TestScheduleUpdateProcess {
     nouv.setDate(d);
     nouv.setStart(debut);
     nouv.setEnd(fin);
-    scheduleUpdateProcess = new ScheduleUpdateProcess();
+    scheduleUpdateProcess = new ScheduleUpdatePublicationProcess();
   }
 
   @Order(1)

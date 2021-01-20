@@ -11,12 +11,11 @@ public abstract class Publication {
 
     /**
      *
-     * @param jda, Altern'bot qui est connecté sur le serveur
+     * @param jda instance de connexion au serveur Discord
      * @return true si le channel existe sur le server, sinon false
      */
-    protected boolean check_If_Channel_Exists(JDA jda){
-        if(jda.getTextChannelsByName("emplois-du-temps",true).size() > 0) return true;
-        else return false;
+    protected boolean hasChannel(JDA jda){
+        return !jda.getTextChannelsByName("emplois-du-temps", true).isEmpty();
     }
 
     /**
@@ -29,7 +28,7 @@ public abstract class Publication {
     protected void sendMessage(String message, Server server) throws LoginException, InterruptedException {
         JDA jda = JDABuilder.createDefault(server.getReference()).build();
         jda.awaitReady();
-        if(check_If_Channel_Exists(jda)) {
+        if(hasChannel(jda)) {
             TextChannel textChannel = jda.getTextChannelsByName("emplois-du-temps", true).get(0);
             if (textChannel != null) {
                 textChannel.sendMessage(message).queue();

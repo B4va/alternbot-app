@@ -1,6 +1,6 @@
 package app;
 
-import app.database.MigrationsLauncher;
+import programs.MigrationsLauncher;
 import controllers.commands.CommandsController;
 import controllers.workers.WorkersController;
 import utils.EnvironmentVariablesUtils;

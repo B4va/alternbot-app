@@ -1,4 +1,4 @@
-package app.database;
+package programs;
 
 import models.Model;
 import models.Schedule;

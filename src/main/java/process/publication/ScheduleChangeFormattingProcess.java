@@ -1,7 +1,7 @@
 package process.publication;
 
 import models.Session;
-import models.businessmodels.SessionChange;
+import models.business.SessionChange;
 
 import java.util.List;
 

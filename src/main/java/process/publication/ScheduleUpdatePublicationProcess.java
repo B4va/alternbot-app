@@ -1,7 +1,10 @@
 package process.publication;
 
+import models.Schedule;
 import models.Server;
-import models.businessmodels.SessionChange;
+import models.business.SessionChange;
+import org.apache.logging.log4j.Logger;
+import utils.LoggerUtils;
 
 import javax.security.auth.login.LoginException;
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.List;
  */
 public class ScheduleUpdatePublicationProcess extends Publication {
 
+  private static final Logger LOGGER = LoggerUtils.buildLogger(ScheduleUpdatePublicationProcess.class);
+
   private static final String CHANNEL = "emploi-du-temps";
 
   /**
@@ -18,12 +23,18 @@ public class ScheduleUpdatePublicationProcess extends Publication {
    * sur le serveur Discord concerné.
    *
    * @param changes modifications de l'emploi du temps
-   * @param server  serveur Discord
-   * @throws LoginException       erreur de connexion au serveur Discord
-   * @throws InterruptedException connexion interrompue
+   * @param schedule emploi du temps concerné par les modifications
    */
-  public void sendPublication(List<SessionChange> changes, Server server) throws LoginException, InterruptedException {
+  public void sendPublication(List<SessionChange> changes, Schedule schedule) {
     String message = new ScheduleChangeFormattingProcess().format(changes);
-    sendMessage(message, server, CHANNEL);
+    schedule.getServers().forEach(s -> {
+      try {
+        sendMessage(message, s, CHANNEL);
+      } catch (LoginException | InterruptedException e) {
+        LOGGER.warn(
+          "Impossible d'envoyer les modification de l'emploi du temps au server : {}",
+          s.getReference());
+      }
+    });
   }
 }

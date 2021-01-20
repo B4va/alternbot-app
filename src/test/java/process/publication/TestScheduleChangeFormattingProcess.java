@@ -1,7 +1,7 @@
 package process.publication;
 
 import models.Session;
-import models.businessmodels.SessionChange;
+import models.business.SessionChange;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;

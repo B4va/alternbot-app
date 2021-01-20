@@ -1,4 +1,4 @@
-package models.businessmodels;
+package models.business;
 
 import models.Session;
 

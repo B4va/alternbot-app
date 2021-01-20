@@ -1,4 +1,4 @@
-package app.database;
+package programs;
 
 import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;

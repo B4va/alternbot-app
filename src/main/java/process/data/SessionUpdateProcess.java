@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
-
 /**
  * Process de mise à jour d'un cours.
  */
@@ -38,8 +36,6 @@ public class SessionUpdateProcess {
   private boolean isSaved(Session session, Set<Session> oldSessions) {
     return oldSessions.stream()
       .anyMatch(s -> session.getName().equals(s.getName()) &&
-        ((isNull(session.getLocation()) && isNull(s.getLocation())) || session.getLocation().equals(s.getLocation())) &&
-        ((isNull(session.getTeacher()) && isNull(s.getTeacher())) || session.getTeacher().equals(s.getTeacher())) &&
         session.getStart().equals(s.getStart()) &&
         session.getEnd().equals(s.getEnd()) &&
         session.getDate().equals(s.getDate()));

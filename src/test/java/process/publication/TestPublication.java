@@ -8,8 +8,7 @@ import utils.EnvironmentVariablesUtils;
 import javax.security.auth.login.LoginException;
 
 import static java.util.Objects.isNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.EnvironmentVariablesUtils.CHANNEL_TEST;
 import static utils.EnvironmentVariablesUtils.SERVEUR_TEST;
 
@@ -21,6 +20,8 @@ public class TestPublication {
   private static Publication PROCESS;
   private static final String MESSAGE = "test";
   private static String CHANNEL = "général";
+  private static final String INVALID_SERVER_REF = "ref";
+  private static final String NOT_EXISTING_CHANNEL = "nochan";
 
   @BeforeAll
   public static void init() {
@@ -38,5 +39,18 @@ public class TestPublication {
     Server server = new Server(EnvironmentVariablesUtils.getString(SERVEUR_TEST), null);
     if (isNull(server.getReference())) fail();
     assertTrue(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
+  }
+
+  @Test
+  public void testSendMessage_invalid_server() throws LoginException, InterruptedException {
+    Server server = new Server(INVALID_SERVER_REF, null);
+    assertFalse(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
+  }
+
+  @Test
+  public void testSendMessage_not_existing_channel() throws LoginException, InterruptedException {
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVEUR_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertFalse(PROCESS.sendMessage(MESSAGE, server, NOT_EXISTING_CHANNEL));
   }
 }

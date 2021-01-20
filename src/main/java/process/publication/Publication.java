@@ -33,33 +33,50 @@ public abstract class Publication {
   protected boolean sendMessage(String message, Server server, String channel) throws LoginException, InterruptedException {
     JDA jda = JDABuilder.createDefault(EnvironmentVariablesUtils.getString(BOT_TOKEN)).build();
     jda.awaitReady();
-    Guild guild = jda.getGuildById(server.getReference());
-    if (isNull(guild)) {
-      LOGGER.warn("Référence du serveur incorrecte ; Serveur : {}", server.getReference());
-      return false;
-    }
+    Guild guild = getGuild(server, jda);
+    if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
-      TextChannel textChannel = jda.getTextChannelsByName(channel, true).get(0);
-      try {
-        if (isNull(textChannel)) {
-          LOGGER.warn(
-            "Erreur lors de l'envoi d'un message dans un channel. Serveur : {}, Channel : {}",
-            server.getReference(), channel);
-          return false;
-        }
-        return nonNull(textChannel.sendMessage(message).complete());
-      } catch (RuntimeException e) {
-        LOGGER.warn(
-          "Erreur lors de l'envoi d'un message. Serveur : {}",
-          server.getReference());
-        return false;
-      }
+      return sendMessage(message, server, channel, jda);
     } else {
       return false;
     }
   }
 
   private boolean hasChannel(Guild guild, String channel) {
-    return !guild.getTextChannelsByName(channel, true).isEmpty();
+    boolean b = !guild.getTextChannelsByName(channel, true).isEmpty();
+    if (!b) LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
+    return b;
+  }
+
+  private Guild getGuild(Server server, JDA jda) {
+    Guild guild = null;
+    try {
+      guild = jda.getGuildById(server.getReference());
+    } catch (NumberFormatException e) {
+      LOGGER.warn("Référence du serveur au mauvais format ; Serveur : {}", server.getReference());
+    }
+    if (isNull(guild)) {
+      LOGGER.warn("Référence du serveur incorrecte ; Serveur : {}", server.getReference());
+      return null;
+    }
+    return guild;
+  }
+
+  private boolean sendMessage(String message, Server server, String channel, JDA jda) {
+    TextChannel textChannel = jda.getTextChannelsByName(channel, true).get(0);
+    try {
+      if (isNull(textChannel)) {
+        LOGGER.warn(
+          "Erreur lors de l'envoi d'un message dans un channel. Serveur : {}, Channel : {}",
+          server.getReference(), channel);
+        return false;
+      }
+      return nonNull(textChannel.sendMessage(message).complete());
+    } catch (RuntimeException e) {
+      LOGGER.warn(
+        "Erreur lors de l'envoi d'un message. Serveur : {}",
+        server.getReference());
+      return false;
+    }
   }
 }

@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class LoggerUtils {
 
+  private static final String DEFAULT_LOGGER_NAME = "/DEFAULT/";
+
   /**
    * Construit une instance du {@link Logger}.
    *
@@ -15,7 +17,11 @@ public abstract class LoggerUtils {
    * @return logger
    */
   public static <T> Logger buildLogger(Class<T> c) {
-    return LogManager.getLogger(c.getSimpleName());
+    try {
+      return LogManager.getLogger(c.getSimpleName());
+    } catch (Exception e) {
+      return LogManager.getLogger(DEFAULT_LOGGER_NAME);
+    }
   }
 
 }

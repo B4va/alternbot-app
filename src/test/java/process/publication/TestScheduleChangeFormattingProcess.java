@@ -23,40 +23,40 @@ public class TestScheduleChangeFormattingProcess {
 
   private static final ScheduleChangeFormattingProcess PROCESS = new ScheduleChangeFormattingProcess();
   private static final String MESSAGE_NEW_SESSION =
-    "@everyone \nChangement d'emploi du temps :information_source:\n```\n"
-    + "\nNOUVEAU COURS :"
+    "@everyone \nChangement d'emploi du temps :information_source:\n```"
+    + "\n\nNOUVEAU COURS :"
     + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
     + "\n```";
   private static final String MESSAGE_UPDATED_SESSION =
-    "@everyone \nChangement d'emploi du temps :information_source:\n```\n"
-    + "\nMODIFICATION :"
+    "@everyone \nChangement d'emploi du temps :information_source:\n```"
+    + "\n\nMODIFICATION :"
     + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
     + "\n> Cours supprimés/modifiés :"
     + "\n    - Informatique (14:00 - 15:00)"
     + "\n```";
   private static final String MESSAGE_MULTIPLE_NEW_SESSIONS =
-    "@everyone \nChangement d'emploi du temps :information_source:\n```\n"
-      + "\nNOUVEAU COURS :"
+    "@everyone \nChangement d'emploi du temps :information_source:\n```"
+      + "\n\nNOUVEAU COURS :"
       + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
-      + "\nNOUVEAU COURS :"
+      + "\n\nNOUVEAU COURS :"
       + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
       + "\n```";
   private static final String MESSAGE_MULTIPLE_UPDATED_SESSIONS =
-    "@everyone \nChangement d'emploi du temps :information_source:\n```\n"
-      + "\nMODIFICATION :"
+    "@everyone \nChangement d'emploi du temps :information_source:\n```"
+      + "\n\nMODIFICATION :"
       + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
       + "\n> Cours supprimés/modifiés :"
       + "\n    - Informatique (14:00 - 15:00)"
       + "\n    - Informatique (14:00 - 15:00)"
       + "\n```";
   private static final String MESSAGE_SESSION_NO_TEACHER =
-    "@everyone \nChangement d'emploi du temps :information_source:\n```\n"
-      + "\nNOUVEAU COURS :"
+    "@everyone \nChangement d'emploi du temps :information_source:\n```"
+      + "\n\nNOUVEAU COURS :"
       + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 - A01"
       + "\n```";
   private static final String MESSAGE_SESSION_NO_LOCATION =
-    "@everyone \nChangement d'emploi du temps :information_source:\n```\n"
-      + "\nNOUVEAU COURS :"
+    "@everyone \nChangement d'emploi du temps :information_source:\n```"
+      + "\n\nNOUVEAU COURS :"
       + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof)"
       + "\n```";
   private static Session SESSION;

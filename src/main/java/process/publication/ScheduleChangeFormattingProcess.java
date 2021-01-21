@@ -21,7 +21,7 @@ public class ScheduleChangeFormattingProcess {
    * @return message
    */
   public String format(List<SessionChange> changes) {
-    StringBuilder message = new StringBuilder("@everyone \nChangement d'emploi du temps :information_source:\n```\n");
+    StringBuilder message = new StringBuilder("@everyone \nChangement d'emploi du temps :information_source:\n```");
     fillMessage(changes, message);
     message.append("\n```");
     return message.toString();
@@ -36,7 +36,7 @@ public class ScheduleChangeFormattingProcess {
 
   private void fillMessageWithNewSession(StringBuilder message, SessionChange c) {
     Session ns = c.getNewSession();
-    message.append(c.getReplacedSessions().isEmpty() ? "\nNOUVEAU COURS :\n" : "\nMODIFICATION :\n");
+    message.append(c.getReplacedSessions().isEmpty() ? "\n\nNOUVEAU COURS :\n" : "\n\nMODIFICATION :\n");
     message
       .append(c.getNewSession().getName().toUpperCase())
       .append(" - le ").append(dateToString(ns.getDate()))

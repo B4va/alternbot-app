@@ -66,7 +66,7 @@ public class IcalMappingProcess {
     AtomicInteger errorCount = new AtomicInteger();
     List<Session> sessions = events.stream().map(e -> {
       try {
-        String name = e.getDescription().getValue().split("-")[0];
+        String name = e.getDescription().getValue().split(" - ")[0];
         String location = nonNull(e.getLocation()) ? e.getLocation().getValue() : null;
         Date date, start, end;
         try {

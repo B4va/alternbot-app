@@ -11,6 +11,7 @@ import static java.util.Objects.isNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.EnvironmentVariablesUtils.CHANNEL_TEST;
 import static utils.EnvironmentVariablesUtils.SERVER_TEST;
+import static utils.JDAUtils.initializeJDA;
 
 /**
  * Classe de test de {@link Publication}.
@@ -24,7 +25,8 @@ public class TestPublication {
   private static final String NOT_EXISTING_CHANNEL = "nochan";
 
   @BeforeAll
-  public static void init() {
+  public static void init() throws LoginException, InterruptedException {
+    initializeJDA();
     PROCESS = new Publication() {
       @Override
       protected boolean sendMessage(String message, Server server, String channel) throws LoginException, InterruptedException {

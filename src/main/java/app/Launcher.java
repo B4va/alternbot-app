@@ -1,15 +1,22 @@
 package app;
 
-import programs.MigrationsLauncher;
 import controllers.commands.CommandsController;
 import controllers.workers.WorkersController;
+import org.apache.logging.log4j.Logger;
+import programs.MigrationsLauncher;
 import utils.EnvironmentVariablesUtils;
+import utils.LoggerUtils;
+
+import javax.security.auth.login.LoginException;
+
+import static utils.JDAUtils.initializeJDA;
 
 /**
  * Lanceur de l'application.
  */
 public class Launcher {
 
+  private static final Logger LOGGER = LoggerUtils.buildLogger(Launcher.class);
   private static final String COMMANDS = "COMMANDS";
   private static final String WORKERS = "WORKERS";
   private static final String PROD_ENV = "prod";
@@ -23,6 +30,13 @@ public class Launcher {
    */
   public static void main(String[] args) {
     runMigrations();
+    try {
+      initializeJDA();
+    } catch (LoginException | InterruptedException e) {
+      LOGGER.fatal("Impossible d'établir la connexion JDA.");
+      e.printStackTrace();
+      System.exit(-1);
+    }
     new Thread(new CommandsController().init(), COMMANDS).start();
     new Thread(new WorkersController().init(), WORKERS).start();
   }

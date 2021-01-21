@@ -2,18 +2,16 @@ package process.publication;
 
 import models.Server;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.logging.log4j.Logger;
-import utils.EnvironmentVariablesUtils;
 import utils.LoggerUtils;
 
 import javax.security.auth.login.LoginException;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static utils.EnvironmentVariablesUtils.BOT_TOKEN;
+import static utils.JDAUtils.getJDAInstance;
 
 /**
  * Gestion de la publication dans les différents serveurs Discord.
@@ -31,12 +29,10 @@ public abstract class Publication {
    * @throws InterruptedException connexion rompue
    */
   protected boolean sendMessage(String message, Server server, String channel) throws LoginException, InterruptedException {
-    JDA jda = JDABuilder.createDefault(EnvironmentVariablesUtils.getString(BOT_TOKEN)).build();
-    jda.awaitReady();
-    Guild guild = getGuild(server, jda);
+    Guild guild = getGuild(server, getJDAInstance());
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
-      return sendMessage(message, server, channel, jda);
+      return doSendMessage(message, server, channel);
     } else {
       return false;
     }
@@ -62,8 +58,8 @@ public abstract class Publication {
     return guild;
   }
 
-  private boolean sendMessage(String message, Server server, String channel, JDA jda) {
-    TextChannel textChannel = jda.getTextChannelsByName(channel, true).get(0);
+  private boolean doSendMessage(String message, Server server, String channel) {
+    TextChannel textChannel = getJDAInstance().getTextChannelsByName(channel, true).get(0);
     try {
       if (isNull(textChannel)) {
         LOGGER.warn(

@@ -22,6 +22,7 @@ public abstract class EnvironmentVariablesUtils {
   public static final String SERVEUR_TEST = "SERVEUR_TEST";
   public static final String SERVEUR_TEST_2 = "SERVEUR_TEST_2";
   public static final String SCHEDULE_URL = "SCHEDULE_URL";
+  public static final String CHANNEL_TEST = "CHANNEL_TEST";
 
   private static final String ENVIRONMENT_VARIABLES_FILE = "ENVIRONMENT.properties";
 

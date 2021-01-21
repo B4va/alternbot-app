@@ -1,7 +1,9 @@
 package process.data;
 
 import models.Session;
+import models.business.SessionChange;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,19 +20,20 @@ public class SessionUpdateProcess {
    * @param oldSessions ensemble des cours déjà enregistrés liés au même emploi du temps
    */
   // todo : finaliser après merge du process d'envoi de l'alerte en cas de modif de l'edt
-  public void update(Session session, Set<Session> oldSessions) {
+  public List<SessionChange> update(Session session, Set<Session> oldSessions, List<SessionChange> changes) {
     if (!isSaved(session, oldSessions)) {
-      // ScheduleUpdatePublicationProcess pub = new ScheduleUpdatePublicationProcess()
+      session.create();
       List<Session> overlapped = oldSessions.stream()
         .filter(s -> isOverlapping(session, s))
         .collect(Collectors.toList());
-      // pub.sendPublication(session, overlapped)
+      SessionChange change = new SessionChange(session, overlapped);
+      changes.add(change);
       overlapped.forEach(s -> {
         s.setUpdated(true);
         s.update();
       });
-      session.create();
     }
+    return changes;
   }
 
   private boolean isSaved(Session session, Set<Session> oldSessions) {

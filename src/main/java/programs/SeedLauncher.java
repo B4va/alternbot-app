@@ -70,8 +70,8 @@ public class SeedLauncher {
 
   private static List<Server> seedServers(Session session, List<Schedule> schedules) {
     logSeed(Server.class);
-    String serveurTest1 = EnvironmentVariablesUtils.getString(SERVEUR_TEST, "0123456789");
-    String serveurTest2 = EnvironmentVariablesUtils.getString(SERVEUR_TEST_2, serveurTest1);
+    String serveurTest1 = EnvironmentVariablesUtils.getString(SERVER_TEST, "0123456789");
+    String serveurTest2 = EnvironmentVariablesUtils.getString(SERVER_TEST_2, serveurTest1);
     List<Server> servers = Arrays.asList(
       new Server(serveurTest1, schedules.get(0)),
       new Server(serveurTest2, schedules.get(1))

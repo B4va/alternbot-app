@@ -3,6 +3,7 @@ package process.data;
 import models.Model;
 import models.Schedule;
 import models.Session;
+import models.business.SessionChange;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,9 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 
 import java.text.ParseException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.DateUtils.stringToDate;
@@ -95,63 +94,91 @@ public class TestSessionUpdateProcess {
   @Test
   public void testUpdate_new_session() {
     int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_RDM);
-    PROCESS.update(SESSION_TEST, oldSessions);
+    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     Session oldSession = Model.read(SESSION_RDM.getId(), Session.class);
+    List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
-      () -> assertFalse(oldSession.isUpdated())
+      () -> assertEquals(finalChanges.size(), 1),
+      () -> assertEquals(finalChanges.get(0).getNewSession(), SESSION_TEST)
     );
   }
 
   @Test
   public void testUpdate_new_session_no_old() {
     int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.emptySet();
-    PROCESS.update(SESSION_TEST, oldSessions);
+    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
-    assertEquals(updatedNbSessions, nbSessions + 1);
+    List<SessionChange> finalChanges = changes;
+    assertAll(
+      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertEquals(finalChanges.size(), 1),
+      () -> assertEquals(finalChanges.get(0).getNewSession(), SESSION_TEST)
+    );
   }
 
   @Test
   public void testUpdate_overlapping_session_with_end() {
     int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_END);
-    PROCESS.update(SESSION_TEST, oldSessions);
+    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     Session oldSession = Model.read(SESSION_OL_END.getId(), Session.class);
+    List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
-      () -> assertTrue(oldSession.isUpdated())
+      () -> assertTrue(oldSession.isUpdated()),
+      () -> assertEquals(finalChanges.size(), 1),
+      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
+      () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OL_END))
     );
   }
 
   @Test
   public void testUpdate_overlapping_session_with_start() {
     int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_START);
-    PROCESS.update(SESSION_TEST, oldSessions);
+    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     Session oldSession = Model.read(SESSION_OL_START.getId(), Session.class);
+    List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
-      () -> assertTrue(oldSession.isUpdated())
+      () -> assertTrue(oldSession.isUpdated()),
+      () -> assertEquals(finalChanges.size(), 1),
+      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
+      () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OL_START))
     );
   }
 
   @Test
   public void testUpdate_multiple_overlapping() {
     int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Sets.newSet(SESSION_OL_END, SESSION_OL_START);
-    PROCESS.update(SESSION_TEST, oldSessions);
+    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     Session oldSession1 = Model.read(SESSION_OL_END.getId(), Session.class);
     Session oldSession2 = Model.read(SESSION_OL_START.getId(), Session.class);
+    List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
       () -> assertTrue(oldSession1.isUpdated()),
-      () -> assertTrue(oldSession2.isUpdated())
+      () -> assertTrue(oldSession2.isUpdated()),
+      () -> assertEquals(finalChanges.size(), 1),
+      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 2),
+      () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
+      () -> assertTrue(finalChanges.get(0).getReplacedSessions()
+        .containsAll(Arrays.asList(SESSION_OL_START, SESSION_OL_END)))
     );
   }
 
@@ -161,12 +188,15 @@ public class TestSessionUpdateProcess {
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     alreadySaved.setId(alreadySaved.create());
     int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(alreadySaved);
-    PROCESS.update(SESSION_TEST, oldSessions);
+    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions),
-      () -> assertFalse(alreadySaved.isUpdated())
+      () -> assertFalse(alreadySaved.isUpdated()),
+      () -> assertTrue(finalChanges.isEmpty())
     );
   }
 }

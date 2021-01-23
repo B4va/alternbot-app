@@ -16,10 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestSchedule implements TestModel {
 
-  public static final String REF_SERVER = "0132456789";
-  public static final String SESSION_NAME = "session";
-  public static final String SESSION_TEACHER = "prof";
-  public static final String SESSION_LOCATION = "location";
   private static int ID_SESSION;
   private static int ID_SERVER;
   private static int ID_SCHEDULE;
@@ -28,6 +24,10 @@ public class TestSchedule implements TestModel {
   private static final String URL_TEST = "url.com";
   private static final String PROMOTION_UPDATE = "Promotion mise à jour";
   private static final String URL_UPDATE = "url.update.com";
+  public static final String REF_SERVER = "0132456789";
+  public static final String SESSION_NAME = "session";
+  public static final String SESSION_TEACHER = "prof";
+  public static final String SESSION_LOCATION = "location";
 
   @AfterAll
   public static void tearDown() {

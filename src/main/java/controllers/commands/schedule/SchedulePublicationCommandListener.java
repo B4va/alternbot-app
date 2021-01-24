@@ -73,7 +73,7 @@ public class SchedulePublicationCommandListener extends CommandListener {
       try {
         return stringToDate(date);
       } catch (ParseException e) {
-        throw new Exception("Mauvais format de la date : JJ/MM/AAAA.");
+        throw new Exception("Mauvais format de la date : JJ-MM-AAAA.");
       }
     }
     return reqDate;

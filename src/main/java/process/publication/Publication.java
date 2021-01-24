@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
-import javax.security.auth.login.LoginException;
-
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static utils.JDAUtils.getJDAInstance;
@@ -20,15 +18,15 @@ public abstract class Publication {
 
   private static final Logger LOGGER = LoggerUtils.buildLogger(Publication.class);
 
+  public static final String SCHEDULE_CHANNEL = "emploi-du-temps";
+
   /**
    * Envoie un message sur l'un des channel d'un serveur Discord.
    *
    * @param message à poster sur le server
    * @param server  qui reçoit le message
-   * @throws LoginException       erreur de connexion au serveur discord
-   * @throws InterruptedException connexion rompue
    */
-  protected boolean sendMessage(String message, Server server, String channel) throws LoginException, InterruptedException {
+  protected boolean sendMessage(String message, Server server, String channel) {
     Guild guild = getGuild(server, getJDAInstance());
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
@@ -45,17 +43,12 @@ public abstract class Publication {
   }
 
   private Guild getGuild(Server server, JDA jda) {
-    Guild guild = null;
     try {
-      guild = jda.getGuildById(server.getReference());
-    } catch (NumberFormatException e) {
-      LOGGER.warn("Référence du serveur au mauvais format ; Serveur : {}", server.getReference());
-    }
-    if (isNull(guild)) {
-      LOGGER.warn("Référence du serveur incorrecte ; Serveur : {}", server.getReference());
+      return jda.getGuildById(server.getReference());
+    } catch (NumberFormatException | NullPointerException e) {
+      LOGGER.warn("Impossible de trouver le Serveur : {}", server.getReference());
       return null;
     }
-    return guild;
   }
 
   private boolean doSendMessage(String message, Server server, String channel) {

@@ -29,7 +29,7 @@ public class TestPublication {
     initializeJDA();
     PROCESS = new Publication() {
       @Override
-      protected boolean sendMessage(String message, Server server, String channel) throws LoginException, InterruptedException {
+      protected boolean sendMessage(String message, Server server, String channel) {
         return super.sendMessage(message, server, channel);
       }
     };

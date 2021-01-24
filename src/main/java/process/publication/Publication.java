@@ -63,8 +63,8 @@ public abstract class Publication {
       return nonNull(textChannel.sendMessage(message).complete());
     } catch (RuntimeException e) {
       LOGGER.warn(
-        "Erreur lors de l'envoi d'un message. Serveur : {}",
-        server.getReference());
+        "Erreur lors de l'envoi d'un message. Serveur : {} ; longueur msg : {}",
+        server.getReference(), message.length());
       return false;
     }
   }

@@ -30,15 +30,8 @@ public class Launcher {
    */
   public static void main(String[] args) {
     runMigrations();
-    try {
-      initializeJDA();
-    } catch (LoginException | InterruptedException e) {
-      LOGGER.fatal("Impossible d'établir la connexion JDA.");
-      e.printStackTrace();
-      System.exit(-1);
-    }
-    new Thread(new CommandsController().init(), COMMANDS).start();
-    new Thread(new WorkersController().init(), WORKERS).start();
+    initJDA();
+    initThreads();
   }
 
   private static void runMigrations() {
@@ -46,5 +39,20 @@ public class Launcher {
     if (env.equals(PROD_ENV)) {
       MigrationsLauncher.main(new String[]{MigrationsLauncher.MIGRATE});
     }
+  }
+
+  private static void initJDA() {
+    try {
+      initializeJDA();
+    } catch (LoginException | InterruptedException e) {
+      LOGGER.fatal("Impossible d'établir la connexion JDA.");
+      e.printStackTrace();
+      System.exit(-1);
+    }
+  }
+
+  private static void initThreads() {
+    new Thread(new CommandsController().init(), COMMANDS).start();
+    new Thread(new WorkersController().init(), WORKERS).start();
   }
 }

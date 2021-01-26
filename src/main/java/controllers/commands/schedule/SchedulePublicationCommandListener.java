@@ -21,9 +21,9 @@ import static utils.JDAUtils.getJDAInstance;
 public class SchedulePublicationCommandListener extends CommandListener {
 
   private static final String COMMAND = "$edt";
-  private static final String DATE_PARAMETER = "-d=";
+  private static final String DATE_PARAMETER = "-d";
   private static final String EXPORT_PARAMETER = "-e";
-  private static final String PLUS_PARAMETER = "+";
+  private static final String PLUS_PARAMETER = "-p";
 
   @Override
   public void run() {
@@ -61,7 +61,7 @@ public class SchedulePublicationCommandListener extends CommandListener {
         calendar.add(Calendar.DAY_OF_MONTH, addDays);
         return calendar.getTime();
       } catch (NumberFormatException e) {
-        throw new Exception("Mauvais format du paramètre : +<nb_jours>.");
+        throw new Exception("Mauvais format du paramètre : -p <nb_jours>.");
       }
     }
     return reqDate;
@@ -73,7 +73,7 @@ public class SchedulePublicationCommandListener extends CommandListener {
       try {
         return stringToDate(date);
       } catch (ParseException e) {
-        throw new Exception("Mauvais format de la date : JJ-MM-AAAA.");
+        throw new Exception("Mauvais format du paramètre : -d <JJ-MM-AAAA>.");
       }
     }
     return reqDate;

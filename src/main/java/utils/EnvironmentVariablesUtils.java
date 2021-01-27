@@ -129,7 +129,7 @@ public abstract class EnvironmentVariablesUtils {
         return Optional.ofNullable(prop.getProperty(variable))
           .orElseThrow(ConfigurationException::new);
       }
-    } catch (IOException | ConfigurationException ioException) {
+    } catch (IOException | ConfigurationException | NullPointerException e) {
       return null;
     }
   }

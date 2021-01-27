@@ -22,9 +22,7 @@ public class HelpCommandListener extends CommandListener {
       @Override
       public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         String message = event.getMessage().getContentRaw();
-        // TODO : utiliser méthode héritée après merge du raccordement des premières commandes
-//        if (isCommand(message, COMMAND)) {
-        if (message.contains(COMMAND)) {
+        if (isCommand(message, COMMAND)) {
           try {
             String doc = new DocumentationParsingProcess().parse(DOCUMENTATION_FILE);
             event.getChannel().sendMessage(doc).queue();

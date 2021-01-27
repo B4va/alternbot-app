@@ -19,7 +19,6 @@ public class SessionUpdateProcess {
    * @param session     cours récupéré
    * @param oldSessions ensemble des cours déjà enregistrés liés au même emploi du temps
    */
-  // todo : finaliser après merge du process d'envoi de l'alerte en cas de modif de l'edt
   public List<SessionChange> update(Session session, Set<Session> oldSessions, List<SessionChange> changes) {
     if (!isSaved(session, oldSessions)) {
       session.create();

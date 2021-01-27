@@ -4,6 +4,8 @@ import models.Server;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.utils.AttachmentOption;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
@@ -31,6 +33,26 @@ public abstract class Publication {
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
       return doSendMessage(message, server, channel);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Poste un fichier sur l'un des channel d'un serveur Discord.
+   *
+   * @param fileData  contenu du fichier à poster
+   * @param fileName  nom du fichier tel qu'il apparaîtra sur Discord
+   * @param isSpoiler indique si il faut marquer le fichier comme spoiler ou pas
+   * @param server    serveur sur lequel le fichier sera posté
+   * @param channel   nom du channel sur lequel le fichier sera posté
+   * @return {@code true} si le fichier a été posté avec succès, {@code false} en cas d'erreur
+   */
+  protected boolean sendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
+    Guild guild = getGuild(server, getJDAInstance());
+    if (isNull(guild)) return false;
+    if (hasChannel(guild, channel)) {
+      return doSendFile(fileData, fileName, isSpoiler, server, channel);
     } else {
       return false;
     }
@@ -65,6 +87,19 @@ public abstract class Publication {
       LOGGER.warn(
         "Erreur lors de l'envoi d'un message. Serveur : {} ; longueur msg : {}",
         server.getReference(), message.length());
+      return false;
+    }
+  }
+
+  private boolean doSendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
+    TextChannel textChannel = getJDAInstance().getTextChannelsByName(channel, true).get(0);
+    try {
+      MessageAction msg = isSpoiler ? textChannel.sendFile(fileData, fileName, AttachmentOption.SPOILER) : textChannel.sendFile(fileData, fileName);
+      return nonNull(msg.complete());
+    } catch (RuntimeException e) {
+      LOGGER.warn(
+        "Erreur lors de l'envoi d'un fichier. Serveur : {} ; Fichier : {}",
+        server.getReference(), fileName);
       return false;
     }
   }

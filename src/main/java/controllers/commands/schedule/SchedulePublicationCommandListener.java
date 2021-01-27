@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import process.publication.DailySchedulePublicationProcess;
+import process.publication.ScheduleFileExportProcess;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -40,7 +41,7 @@ public class SchedulePublicationCommandListener extends CommandListener {
             reqDate = handlePlusParameter(m, reqDate);
             reqDate = handleDateParameter(m, reqDate);
             if (hasParameter(m, EXPORT_PARAMETER)) {
-              // TODO : process export edt (fichier)
+              new ScheduleFileExportProcess().export(serverRef, channel, reqDate);
             } else {
               new DailySchedulePublicationProcess().sendPublication(reqDate, serverRef, channel);
             }

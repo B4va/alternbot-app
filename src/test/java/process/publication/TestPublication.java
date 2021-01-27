@@ -7,6 +7,8 @@ import utils.EnvironmentVariablesUtils;
 
 import javax.security.auth.login.LoginException;
 
+import java.nio.charset.StandardCharsets;
+
 import static java.util.Objects.isNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.EnvironmentVariablesUtils.CHANNEL_TEST;
@@ -20,6 +22,8 @@ public class TestPublication {
 
   private static Publication PROCESS;
   private static final String MESSAGE = "test";
+  private static final String TEST_FILE_CONTENT = "Bleep bloop. I am a robot.";
+  private static final String TEST_FILE_NAME = "test.txt";
   private static String CHANNEL = "général";
   private static final String INVALID_SERVER_REF = "ref";
   private static final String NOT_EXISTING_CHANNEL = "nochan";
@@ -35,6 +39,8 @@ public class TestPublication {
     };
     CHANNEL = EnvironmentVariablesUtils.getString(CHANNEL_TEST, CHANNEL);
   }
+
+
 
   @Test
   public void testSendMessage_ok() throws LoginException, InterruptedException {
@@ -54,5 +60,46 @@ public class TestPublication {
     Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
     if (isNull(server.getReference())) fail();
     assertFalse(PROCESS.sendMessage(MESSAGE, server, NOT_EXISTING_CHANNEL));
+  }
+
+  @Test
+  public void testSendFile_ok() throws LoginException, InterruptedException {
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertTrue(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), TEST_FILE_NAME, false, server, CHANNEL));
+  }
+  @Test
+  public void testSendFile_okSpoiler() throws LoginException, InterruptedException {
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertTrue(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), TEST_FILE_NAME, true, server, CHANNEL));
+  }
+
+  @Test
+  public void testSendFile_not_existing_channel() throws LoginException, InterruptedException {
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), TEST_FILE_NAME, false, server, NOT_EXISTING_CHANNEL));
+  }
+
+  @Test
+  public void testSendFile_invalid_server() throws LoginException, InterruptedException {
+    final Server server = new Server(INVALID_SERVER_REF, null);
+    assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), TEST_FILE_NAME, false, server, CHANNEL));
+  }
+
+  @Test
+  public void testSendFile_invalid_file_data() throws LoginException, InterruptedException {
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertFalse(PROCESS.sendFile(null, TEST_FILE_NAME, false, server, CHANNEL));
+  }
+
+  @Test
+  public void testSendFile_invalid_file_name() throws LoginException, InterruptedException {
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), "", false, server, CHANNEL));
+    assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), null, false, server, CHANNEL));
   }
 }

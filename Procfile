@@ -1,1 +1,1 @@
-web: java -jar target/alternbot-0.0-SNAPSHOT.jar
+web: java -jar target/alternbot-1.0.jar

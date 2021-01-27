@@ -1,6 +1,6 @@
 **COMMANDES ALTERN'BOT**
 
-Emploi du temps :
+**Emploi du temps :**
 
 - `$edt` : obtenir l'emploi du temps du jour.
 - `$edt -d <JJ-MM-AAAA>` : obtenir l'emploi du temps à la date indiquée *(ex : `$edt -d=01-01-2021` pour récupérer l'emploi du temps du 01-01-2021)*

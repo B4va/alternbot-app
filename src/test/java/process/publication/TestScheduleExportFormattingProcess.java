@@ -12,10 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.DateUtils.stringToDate;
@@ -49,14 +46,12 @@ public class TestScheduleExportFormattingProcess {
       new Session("Physique nucléaire", "Emmett Brown", "F13", stringToDate("22-10-2080"), stringToTime("01:15"), stringToTime("13:00"), schedule)
     );
 
-    ClassLoader classLoader = TestScheduleExportFormattingProcess.class.getClassLoader();
-
     ICAL_CONTENT_OK = new String(
-      Files.readAllBytes(Paths.get(classLoader.getResource(ICAL_OK_FILENAME).toURI())),
+      Files.readAllBytes(Paths.get(TestScheduleExportFormattingProcess.class.getResource(ICAL_OK_FILENAME).toURI())),
       StandardCharsets.UTF_8
     );
     ICAL_CONTENT_NO_TZ = new String(
-      Files.readAllBytes(Paths.get(classLoader.getResource(ICAL_NO_TZ_FILENAME).toURI())),
+      Files.readAllBytes(Paths.get(TestScheduleExportFormattingProcess.class.getResource(ICAL_NO_TZ_FILENAME).toURI())),
       StandardCharsets.UTF_8
     );
   }

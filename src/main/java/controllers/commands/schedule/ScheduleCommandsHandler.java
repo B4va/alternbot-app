@@ -9,7 +9,7 @@ public class ScheduleCommandsHandler extends CommandsHandler {
 
   @Override
   public CommandsHandler init() {
-    // TODO
+    runnables.add(new SchedulePublicationCommandListener());
     return this;
   }
 }

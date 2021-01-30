@@ -25,6 +25,9 @@ public abstract class Worker implements Runnable {
     LOGGER.info("Processus terminé.");
   }
 
+  /**
+   * Réalise le traitement devant être lancé régulièrement.
+   */
   protected abstract void doRunOne();
 
   /**

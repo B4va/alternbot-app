@@ -9,12 +9,6 @@ import process.data.SchedulesUpdateProcess;
  */
 public class ScheduleUpdateWorker extends IntervalWorker {
 
-  /**
-   * Constructeur.
-   *
-   * @param interval délai entre chaque exécution (en millisecondes)
-   * @param delay    délai avant lancement (en millisecondes)
-   */
   public ScheduleUpdateWorker(long interval, long delay) {
     super(interval, delay);
   }

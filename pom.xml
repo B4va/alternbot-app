@@ -138,6 +138,7 @@
                 <version>0.8.6</version>
                 <configuration>
                   <excludes>
+                    <exclude>app/**/*</exclude>
                     <exclude>config/**/*</exclude>
                     <exclude>utils/**/*</exclude>
                     <exclude>programs/**/*</exclude>

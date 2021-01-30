@@ -1,5 +1,6 @@
 package controllers.commands;
 
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,11 @@ public class TestCommandListener {
   public static void init() {
     LISTENER = new CommandListener() {
       @Override
-      public void run() {
+      protected String getCommand() {
+        return null;
+      }
+      @Override
+      protected void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
       }
     };
     COMPLEX_COMMAND = SIMPLE_COMMAND + " " + PARAMETER + " " + PARAMETER_VALUE;

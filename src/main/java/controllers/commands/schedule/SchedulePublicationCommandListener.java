@@ -2,8 +2,6 @@ package controllers.commands.schedule;
 
 import controllers.commands.CommandListener;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 import process.publication.DailySchedulePublicationProcess;
 import process.publication.ScheduleFileExportProcess;
 
@@ -14,7 +12,6 @@ import java.util.List;
 
 import static java.util.Objects.nonNull;
 import static utils.DateUtils.stringToDate;
-import static utils.JDAUtils.getJDAInstance;
 
 /**
  * Gère la publication de l'emploi du temps via commande utilisateur.
@@ -27,30 +24,26 @@ public class SchedulePublicationCommandListener extends CommandListener {
   private static final String PLUS_PARAMETER = "-p";
 
   @Override
-  public void run() {
-    getJDAInstance().addEventListener(new ListenerAdapter() {
-      @Override
-      public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        String message = event.getMessage().getContentRaw();
-        if (isCommand(message, COMMAND)) {
-          List<String> m = parseCommand(message);
-          Date reqDate = new Date();
-          String serverRef = event.getGuild().getId();
-          String channel = event.getChannel().getName();
-          try {
-            reqDate = handlePlusParameter(m, reqDate);
-            reqDate = handleDateParameter(m, reqDate);
-            if (hasParameter(m, EXPORT_PARAMETER)) {
-              new ScheduleFileExportProcess().export(serverRef, channel, reqDate);
-            } else {
-              new DailySchedulePublicationProcess().sendPublication(reqDate, serverRef, channel);
-            }
-          } catch (Exception e) {
-            event.getChannel().sendMessage(e.getMessage()).queue();
-          }
-        }
+  protected String getCommand() {
+    return COMMAND;
+  }
+
+  @Override
+  public void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
+    Date reqDate = new Date();
+    String serverRef = event.getGuild().getId();
+    String channel = event.getChannel().getName();
+    try {
+      reqDate = handlePlusParameter(message, reqDate);
+      reqDate = handleDateParameter(message, reqDate);
+      if (hasParameter(message, EXPORT_PARAMETER)) {
+        new ScheduleFileExportProcess().export(serverRef, channel, reqDate);
+      } else {
+        new DailySchedulePublicationProcess().sendPublication(reqDate, serverRef, channel);
       }
-    });
+    } catch (Exception e) {
+      event.getChannel().sendMessage(e.getMessage()).queue();
+    }
   }
 
   private Date handlePlusParameter(List<String> m, Date reqDate) throws Exception {

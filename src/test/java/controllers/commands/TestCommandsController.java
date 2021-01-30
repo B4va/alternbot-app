@@ -1,5 +1,6 @@
 package controllers.commands;
 
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -47,6 +48,13 @@ public class TestCommandsController {
       public void run() {
         TEST1 = true;
       }
+      @Override
+      public void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
+      }
+      @Override
+      public String getCommand() {
+        return null;
+      }
     };
     CommandsHandler commandsHandler = new CommandsHandler() {
       @Override
@@ -64,6 +72,13 @@ public class TestCommandsController {
       public void run() {
         TEST2 = true;
       }
+      @Override
+      public void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
+      }
+      @Override
+      public String getCommand() {
+        return null;
+      }
     };
     CommandsHandler commandsHandler1 = new CommandsHandler() {
       @Override
@@ -76,6 +91,13 @@ public class TestCommandsController {
       @Override
       public void run() {
         TEST3 = true;
+      }
+      @Override
+      public void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
+      }
+      @Override
+      public String getCommand() {
+        return null;
       }
     };
     CommandsHandler commandsHandler2 = new CommandsHandler() {

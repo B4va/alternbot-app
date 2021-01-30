@@ -1,20 +1,15 @@
 package process.publication;
 
 import models.Schedule;
-import models.Server;
 import models.business.SessionChange;
-import org.apache.logging.log4j.Logger;
-import utils.LoggerUtils;
 
-import javax.security.auth.login.LoginException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Process de notification des mises à jour de l'emploi du temps.
  */
 public class ScheduleUpdatePublicationProcess extends Publication {
-
-  private static final Logger LOGGER = LoggerUtils.buildLogger(ScheduleUpdatePublicationProcess.class);
 
   /**
    * Envoie une publication listant les mises à jour de l'emploi du temps
@@ -23,8 +18,12 @@ public class ScheduleUpdatePublicationProcess extends Publication {
    * @param changes modifications de l'emploi du temps
    * @param schedule emploi du temps concerné par les modifications
    */
-  public void sendPublication(List<SessionChange> changes, Schedule schedule) {
+  public boolean sendPublication(List<SessionChange> changes, Schedule schedule) {
+    AtomicBoolean res = new AtomicBoolean(true);
     String message = new ScheduleChangeFormattingProcess().format(changes);
-    schedule.getServers().forEach(s -> sendMessage(message, s, SCHEDULE_CHANNEL));
+    schedule.getServers().forEach(s -> {
+      if (!sendMessage(message, s, SCHEDULE_CHANNEL)) res.set(false);
+    });
+    return res.get();
   }
 }

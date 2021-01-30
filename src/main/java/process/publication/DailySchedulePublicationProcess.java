@@ -6,9 +6,9 @@ import models.Server;
 import models.Session;
 import process.data.DailyScheduleSelectionProcess;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Objects.nonNull;
 
@@ -24,13 +24,18 @@ public class DailySchedulePublicationProcess extends Publication {
    *
    * @param date    date des cours à envoyer
    */
-  public void sendPublication(Date date) {
+  public boolean sendPublication(Date date) {
+    AtomicBoolean res = new AtomicBoolean(true);
     List<Schedule> schedules = Model.readAll(Schedule.class);
     schedules.forEach(schedule -> {
       List<Session> sessions = new DailyScheduleSelectionProcess().select(schedule, date);
       String message = new DailyScheduleFormattingProcess().format(sessions, date);
-      schedule.getServers().forEach(server -> sendMessage(message, server, SCHEDULE_CHANNEL));
+      schedule.getServers()
+        .forEach(server -> {
+          if (!sendMessage(message, server, SCHEDULE_CHANNEL)) res.set(false);
+        });
     });
+    return res.get();
   }
 
   /**

@@ -20,7 +20,7 @@ public class ScheduleUpdateWorker extends IntervalWorker {
   }
 
   @Override
-  public void runOne() {
+  public void doRunOne() {
     new SchedulesUpdateProcess().update();
   }
 

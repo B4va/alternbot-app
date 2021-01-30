@@ -49,7 +49,8 @@ public class TestWorkersController {
       }
 
       @Override
-      public void runOne() {
+      protected void doRunOne() {
+
       }
 
       @Override
@@ -75,7 +76,7 @@ public class TestWorkersController {
       }
 
       @Override
-      public void runOne() {
+      public void doRunOne() {
       }
 
       @Override
@@ -97,7 +98,7 @@ public class TestWorkersController {
       }
 
       @Override
-      public void runOne() {
+      public void doRunOne() {
       }
 
       @Override

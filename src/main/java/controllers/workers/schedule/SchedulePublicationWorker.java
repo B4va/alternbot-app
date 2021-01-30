@@ -15,7 +15,7 @@ public class SchedulePublicationWorker extends DailyWorker {
   }
 
   @Override
-  public void runOne() {
+  public void doRunOne() {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, 1);
     new DailySchedulePublicationProcess().sendPublication(calendar.getTime());

@@ -20,7 +20,7 @@ public class TestIntervalWorker {
   public void run_doit_programmer_un_traitement_realise_a_intervalle_regulier() throws InterruptedException {
     IntervalWorker intervalWorker = new IntervalWorker(INTERVAL, 0) {
       @Override
-      public void runOne() {
+      public void doRunOne() {
         TEST1++;
       }
 
@@ -43,7 +43,7 @@ public class TestIntervalWorker {
   public void run_doit_programmer_un_traitement_avec_le_bon_delai() throws InterruptedException {
     IntervalWorker intervalWorker = new IntervalWorker(INTERVAL, DELAY) {
       @Override
-      public void runOne() {
+      public void doRunOne() {
         TEST2++;
       }
 
@@ -66,7 +66,7 @@ public class TestIntervalWorker {
     assertThrows(IllegalArgumentException.class, () ->
       new IntervalWorker(-1, 0) {
         @Override
-        public void runOne() {
+        public void doRunOne() {
         }
 
         @Override
@@ -81,7 +81,7 @@ public class TestIntervalWorker {
     assertThrows(IllegalArgumentException.class, () ->
       new IntervalWorker(INTERVAL, -1) {
         @Override
-        public void runOne() {
+        public void doRunOne() {
         }
 
         @Override

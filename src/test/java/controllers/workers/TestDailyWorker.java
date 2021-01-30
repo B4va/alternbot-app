@@ -32,7 +32,7 @@ public class TestDailyWorker {
   public void run_doit_programmer_un_traitement_realise_a_heure_fixe() throws InterruptedException {
     DailyWorker dailyWorker = new DailyWorker(hour, min, sec, 0) {
       @Override
-      public void runOne() {
+      public void doRunOne() {
         TEST = true;
       }
 
@@ -57,7 +57,7 @@ public class TestDailyWorker {
   public void run_doit_programmer_un_traitement_avec_un_delai() throws InterruptedException {
     DailyWorker dailyWorker = new DailyWorker(hour, min, sec, 30) {
       @Override
-      public void runOne() {
+      public void doRunOne() {
         TEST = true;
       }
 
@@ -81,7 +81,7 @@ public class TestDailyWorker {
   public void run_doit_programmer_un_traitement_netant_pas_execute_avant_lheure_prevue() throws InterruptedException {
     DailyWorker dailyWorker = new DailyWorker(hour, min, 0) {
       @Override
-      public void runOne() {
+      public void doRunOne() {
         TEST = true;
       }
 
@@ -101,7 +101,7 @@ public class TestDailyWorker {
     assertThrows(IllegalArgumentException.class, () ->
       new DailyWorker(25, 70, 0) {
         @Override
-        public void runOne() {
+        public void doRunOne() {
         }
 
         @Override
@@ -116,7 +116,7 @@ public class TestDailyWorker {
     assertThrows(IllegalArgumentException.class, () ->
       new DailyWorker(0, 0, -1) {
         @Override
-        public void runOne() {
+        public void doRunOne() {
         }
 
         @Override

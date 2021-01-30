@@ -1,5 +1,8 @@
 package controllers.workers;
 
+import org.apache.logging.log4j.Logger;
+import utils.LoggerUtils;
+
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,12 +12,20 @@ import java.util.TimerTask;
  */
 public abstract class Worker implements Runnable {
 
+  private static final Logger LOGGER = LoggerUtils.buildLogger(Worker.class);
+
   protected Timer timer;
 
   /**
    * Lance le process.
    */
-  public abstract void runOne();
+  public void runOne() {
+    LOGGER.info("Lancement du processus.");
+    doRunOne();
+    LOGGER.info("Processus terminé.");
+  }
+
+  protected abstract void doRunOne();
 
   /**
    * Arrête le worker.

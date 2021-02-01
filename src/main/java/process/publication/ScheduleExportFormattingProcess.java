@@ -25,7 +25,7 @@ import static java.util.Objects.nonNull;
 public class ScheduleExportFormattingProcess {
   private static final Logger LOGGER = LoggerUtils.buildLogger(ScheduleExportFormattingProcess.class);
   private static final String ICAL_PRODUCT_AUTHOR = "Altern'Bot Dev Team";
-  private static final String ICAL_PRODUCT_NAME = "Altern'Bot v1";
+  private static final String ICAL_PRODUCT_NAME = "Altern'Bot v2";
 
   private TimeZone icalTimezone;
   private TzId icalTimezoneId;

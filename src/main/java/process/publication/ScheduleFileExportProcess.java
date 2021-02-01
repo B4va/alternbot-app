@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static java.util.Objects.isNull;
+import static utils.DateUtils.dateToString;
 
 /**
  * Process permettant l'export et la publication de l'emploi du temps sous forme d'un fichier iCal.
@@ -58,9 +59,13 @@ public class ScheduleFileExportProcess extends Publication {
     }
 
     final List<Session> sessions = new ScheduleExportSessionSelectionProcess().select(server.getSchedule(), from);
-    if (isNull(sessions) || sessions.isEmpty()) {
+    if (isNull(sessions)) {
       LOGGER.warn("Échec du processus de sélection des cours - Serveur: {} - Date: {}", serverRef, from);
       return false;
+    }
+
+    if (sessions.isEmpty()) {
+      return this.sendMessage("Aucun cours prévu au `" + dateToString(from) + "` ou après.", server, channelName);
     }
 
     final byte[] fileContent = new ScheduleExportFormattingProcess().format(server, sessions).getBytes(StandardCharsets.UTF_8);

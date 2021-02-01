@@ -6,6 +6,7 @@ import models.Session;
 import models.business.SessionChange;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class SessionUpdateProcess {
    * @param newSessions ensemble des cours récupérés
    */
   public List<SessionChange> updateFromOld(Session session, List<Session> newSessions, List<SessionChange> changes) {
-    if (newSessions.stream().noneMatch(s -> s.equals(session)) && !isAlreadyChanged(session, changes)) {
+    if (newSessions.stream().noneMatch(s -> s.equals(session)) && !isAlreadyChanged(session, changes) && !isPast(session)) {
       List<Session> deleted = new ArrayList<>();
       deleted.add(session);
       deleted.forEach(s -> {
@@ -53,6 +54,12 @@ public class SessionUpdateProcess {
       changes.add(new SessionChange(null, deleted));
     }
     return changes;
+  }
+
+  private boolean isPast(Session session) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_MONTH, -1);
+    return session.getDate().before(calendar.getTime());
   }
 
   private boolean isAlreadyChanged(Session session, List<SessionChange> changes) {

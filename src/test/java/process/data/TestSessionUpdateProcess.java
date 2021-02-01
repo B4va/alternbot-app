@@ -54,6 +54,7 @@ public class TestSessionUpdateProcess {
   private static final String START_OL_START = "09:00";
   private static final String END_OL_START = "11:00";
   private static final String NAME_OLD_SESSION = "CoursTest_OldSession";
+  private static final String DATE_OLD_SESSION = "01-01-2030";
 
   @BeforeAll
   public static void init() throws ParseException {
@@ -62,7 +63,7 @@ public class TestSessionUpdateProcess {
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     SESSION_TEST.setId(SESSION_TEST.create());
-    OLD_SESSION = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
+    OLD_SESSION = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_OLD_SESSION),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     OLD_SESSION.setId(OLD_SESSION.create());
     SESSION_RDM = new Session(NAME_RDM, TEACHER_RDM, LOCATION_RDM, stringToDate(DATE_RDM),
@@ -208,7 +209,7 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
-  public void testUpdateFromOld_deleted() {
+  public void testUpdateFromOld_deleted() throws ParseException {
     List<SessionChange> changes = new ArrayList<>();
     PROCESS.updateFromOld(OLD_SESSION, Collections.emptyList(), changes);
     assertAll(
@@ -218,23 +219,41 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
+  public void testUpdateFromOld_deleted_but_past() throws ParseException {
+    List<SessionChange> changes = new ArrayList<>();
+    OLD_SESSION.setDate(stringToDate("01-01-2000"));
+    PROCESS.updateFromOld(OLD_SESSION, Collections.emptyList(), changes);
+    OLD_SESSION.setDate(stringToDate(DATE_OLD_SESSION));
+    assertAll(
+      () -> assertFalse(OLD_SESSION.isUpdated()),
+      () -> assertTrue(changes.isEmpty())
+    );
+  }
+
+  @Test
   public void testUpdateFromOld_not_changed() throws ParseException {
     List<SessionChange> changes = new ArrayList<>();
-    Session newSession = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
+    Session newSession = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_OLD_SESSION),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     List<Session> newSessions = Collections.singletonList(newSession);
     PROCESS.updateFromOld(OLD_SESSION, newSessions, changes);
-    assertTrue(changes.isEmpty());
+    assertAll(
+      () -> assertFalse(OLD_SESSION.isUpdated()),
+      () -> assertTrue(changes.isEmpty())
+    );
   }
 
   @Test
   public void testUpdateFromOld_already_in_session_changes() throws ParseException {
     List<SessionChange> changes = new ArrayList<>();
-    Session alreadyChanged = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
+    Session alreadyChanged = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_OLD_SESSION),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     changes.add(new SessionChange(new Session(), Collections.singletonList(alreadyChanged)));
     List<Session> newSessions = Collections.emptyList();
     PROCESS.updateFromOld(OLD_SESSION, newSessions, changes);
-    assertEquals(changes.size(), 1);
+    assertAll(
+      () -> assertFalse(OLD_SESSION.isUpdated()),
+      () -> assertEquals(changes.size(), 1)
+    );
   }
 }

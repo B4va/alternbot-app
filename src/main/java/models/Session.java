@@ -132,4 +132,11 @@ public class Session extends Model {
   public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
   }
+
+  public boolean equals(Session session) {
+    return name.equals(session.getName()) &&
+      start.equals(session.getStart()) &&
+      end.equals(session.getEnd()) &&
+      date.equals(session.getDate());
+  }
 }

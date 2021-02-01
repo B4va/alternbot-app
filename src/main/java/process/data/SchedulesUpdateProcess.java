@@ -24,21 +24,31 @@ public class SchedulesUpdateProcess {
     List<Schedule> schedules = Model.readAll(Schedule.class);
     IutDataFetchingProcess iutDataFetchingProcess = new IutDataFetchingProcess();
     IcalMappingProcess icalMappingProcess = new IcalMappingProcess();
-    SessionUpdateProcess sessionUpdateProcess = new SessionUpdateProcess();
     schedules.forEach(s -> {
       String data = iutDataFetchingProcess.fetch(s);
       List<SessionChange> changes = new ArrayList<>();
       if (nonNull(data)) {
         List<Session> newSessions = icalMappingProcess.map(data, s);
         Set<Session> oldSessions = s.getSessions();
-        for (Session ns : newSessions) {
-          changes = sessionUpdateProcess.update(ns, oldSessions, changes);
-        }
+        changes = doUpdate(changes, newSessions, oldSessions);
       }
       if (!changes.isEmpty()) {
         new ScheduleUpdatePublicationProcess().sendPublication(changes, s);
       }
     });
     new SessionsPurgeProcess().purge();
+  }
+
+  private List<SessionChange> doUpdate(List<SessionChange> changes, List<Session> newSessions, Set<Session> oldSessions) {
+    SessionUpdateProcess sessionUpdateProcess = new SessionUpdateProcess();
+    // Passe les nouveaux cours en revue pour les enregistrer et marquer les cours qu'ils remplacent potentiellement.
+    for (Session ns : newSessions) {
+      changes = sessionUpdateProcess.updateWithNew(ns, oldSessions, changes);
+    }
+    // Passe les anciens cours en revue pour marquer les cours supprimés.
+    for (Session os : oldSessions) {
+      changes = sessionUpdateProcess.updateFromOld(os, newSessions, changes);
+    }
+    return changes;
   }
 }

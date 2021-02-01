@@ -1,8 +1,11 @@
 package process.data;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+import edu.emory.mathcs.backport.java.util.Collections;
 import models.Session;
 import models.business.SessionChange;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,19 +16,18 @@ import java.util.stream.Collectors;
 public class SessionUpdateProcess {
 
   /**
-   * Met à jour un cours dont les données ont été récupérées.
+   * Met à jour les anciens cours enregistrés à partir d'un nouveau cours récupéré.
    *
    * @param session     cours récupéré
    * @param oldSessions ensemble des cours déjà enregistrés liés au même emploi du temps
    */
-  public List<SessionChange> update(Session session, Set<Session> oldSessions, List<SessionChange> changes) {
-    if (!isSaved(session, oldSessions)) {
+  public List<SessionChange> updateWithNew(Session session, Set<Session> oldSessions, List<SessionChange> changes) {
+    if (oldSessions.stream().noneMatch(s -> s.equals(session))) {
       session.create();
       List<Session> overlapped = oldSessions.stream()
         .filter(s -> isOverlapping(session, s))
         .collect(Collectors.toList());
-      SessionChange change = new SessionChange(session, overlapped);
-      changes.add(change);
+      changes.add(new SessionChange(session, overlapped));
       overlapped.forEach(s -> {
         s.setUpdated(true);
         s.update();
@@ -34,12 +36,28 @@ public class SessionUpdateProcess {
     return changes;
   }
 
-  private boolean isSaved(Session session, Set<Session> oldSessions) {
-    return oldSessions.stream()
-      .anyMatch(s -> session.getName().equals(s.getName()) &&
-        session.getStart().equals(s.getStart()) &&
-        session.getEnd().equals(s.getEnd()) &&
-        session.getDate().equals(s.getDate()));
+  /**
+   * Met à jour un cours à partir de l'ancien cours : détecte son éventuelle suppression.
+   *
+   * @param session     ancien cours
+   * @param newSessions ensemble des cours récupérés
+   */
+  public List<SessionChange> updateFromOld(Session session, List<Session> newSessions, List<SessionChange> changes) {
+    if (newSessions.stream().noneMatch(s -> s.equals(session)) && !isAlreadyChanged(session, changes)) {
+      List<Session> deleted = new ArrayList<>();
+      deleted.add(session);
+      deleted.forEach(s -> {
+        s.setUpdated(true);
+        s.update();
+      });
+      changes.add(new SessionChange(null, deleted));
+    }
+    return changes;
+  }
+
+  private boolean isAlreadyChanged(Session session, List<SessionChange> changes) {
+    return changes.stream()
+      .anyMatch(c -> c.getReplacedSessions().stream().anyMatch(s -> s.equals(session)));
   }
 
   private boolean isOverlapping(Session newSession, Session oldSession) {

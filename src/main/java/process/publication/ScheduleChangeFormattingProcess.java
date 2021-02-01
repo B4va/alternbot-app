@@ -29,9 +29,17 @@ public class ScheduleChangeFormattingProcess {
 
   private void fillMessage(List<SessionChange> changes, StringBuilder message) {
     for (SessionChange c : changes) {
-      fillMessageWithNewSession(message, c);
-      fillMessageWithReplacedSessions(message, c);
+      if (isNewSession(c)) {
+        fillMessageWithNewSession(message, c);
+        fillMessageWithReplacedSessions(message, c);
+      } else {
+        fillMessageWithDeletedSession(message, c);
+      }
     }
+  }
+
+  private boolean isNewSession(SessionChange change) {
+    return nonNull(change.getNewSession());
   }
 
   private void fillMessageWithNewSession(StringBuilder message, SessionChange c) {
@@ -63,6 +71,19 @@ public class ScheduleChangeFormattingProcess {
           .append(timeToString(s.getEnd()))
           .append(")");
       }
+    }
+  }
+
+  private void fillMessageWithDeletedSession(StringBuilder message, SessionChange c) {
+    Session deletedSession = c.getReplacedSessions().get(0);
+    message.append("\n\nCOURS SUPPRIME :\n");
+    message
+      .append(deletedSession.getName().toUpperCase())
+      .append(" - le ").append(dateToString(deletedSession.getDate()))
+      .append(" de ").append(timeToString(deletedSession.getStart()))
+      .append(" à ").append(timeToString(deletedSession.getEnd()));
+    if (nonNull(deletedSession.getTeacher())) {
+      message.append(" (").append(deletedSession.getTeacher()).append(")");
     }
   }
 }

@@ -27,6 +27,7 @@ public class TestSessionUpdateProcess {
   private static Session SESSION_RDM;
   private static Session SESSION_OL_END;
   private static Session SESSION_OL_START;
+  private static Session OLD_SESSION;
   private static final Schedule SCHEDULE = new Schedule("prom", "url");
   private static final String NAME_TEST = "CoursTest_TestSessionUpdateProcess";
   private static final String TEACHER_TEST = null;
@@ -52,6 +53,7 @@ public class TestSessionUpdateProcess {
   private static final String DATE_OL_START = "01-01-2021";
   private static final String START_OL_START = "09:00";
   private static final String END_OL_START = "11:00";
+  private static final String NAME_OLD_SESSION = "CoursTest_OldSession";
 
   @BeforeAll
   public static void init() throws ParseException {
@@ -60,6 +62,9 @@ public class TestSessionUpdateProcess {
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     SESSION_TEST.setId(SESSION_TEST.create());
+    OLD_SESSION = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+    OLD_SESSION.setId(OLD_SESSION.create());
     SESSION_RDM = new Session(NAME_RDM, TEACHER_RDM, LOCATION_RDM, stringToDate(DATE_RDM),
       stringToTime(START_RDM), stringToTime(END_RDM), SCHEDULE);
     SESSION_RDM.setId(SESSION_RDM.create());
@@ -77,6 +82,7 @@ public class TestSessionUpdateProcess {
     SESSION_RDM.delete();
     SESSION_OL_END.delete();
     SESSION_OL_START.delete();
+    OLD_SESSION.delete();
     SCHEDULE.delete();
   }
 
@@ -89,16 +95,17 @@ public class TestSessionUpdateProcess {
     sessions.stream()
       .filter(s -> s.getName().equals(NAME_TEST))
       .forEach(Model::delete);
+    OLD_SESSION.setUpdated(false);
+    OLD_SESSION.update();
   }
 
   @Test
-  public void testUpdate_new_session() {
+  public void testUpdateWithNew_new_session() {
     int nbSessions = Model.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_RDM);
-    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
+    changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
-    Session oldSession = Model.read(SESSION_RDM.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
@@ -108,11 +115,11 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
-  public void testUpdate_new_session_no_old() {
+  public void testUpdateWithNew_new_session_no_old() {
     int nbSessions = Model.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.emptySet();
-    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
+    changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
@@ -123,11 +130,11 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
-  public void testUpdate_overlapping_session_with_end() {
+  public void testUpdateWithNew_overlapping_session_with_end() {
     int nbSessions = Model.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_END);
-    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
+    changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     Session oldSession = Model.read(SESSION_OL_END.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
@@ -142,11 +149,11 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
-  public void testUpdate_overlapping_session_with_start() {
+  public void testUpdateWithNew_overlapping_session_with_start() {
     int nbSessions = Model.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_START);
-    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
+    changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     Session oldSession = Model.read(SESSION_OL_START.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
@@ -161,11 +168,11 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
-  public void testUpdate_multiple_overlapping() {
+  public void testUpdateWithNew_multiple_overlapping() {
     int nbSessions = Model.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Sets.newSet(SESSION_OL_END, SESSION_OL_START);
-    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
+    changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     Session oldSession1 = Model.read(SESSION_OL_END.getId(), Session.class);
     Session oldSession2 = Model.read(SESSION_OL_START.getId(), Session.class);
@@ -183,14 +190,14 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
-  public void testUpdate_already_saved() throws ParseException {
+  public void testUpdateWithNew_already_saved() throws ParseException {
     Session alreadySaved = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     alreadySaved.setId(alreadySaved.create());
     int nbSessions = Model.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(alreadySaved);
-    changes = PROCESS.update(SESSION_TEST, oldSessions, changes);
+    changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
     int updatedNbSessions = Model.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
@@ -198,5 +205,36 @@ public class TestSessionUpdateProcess {
       () -> assertFalse(alreadySaved.isUpdated()),
       () -> assertTrue(finalChanges.isEmpty())
     );
+  }
+
+  @Test
+  public void testUpdateFromOld_deleted() {
+    List<SessionChange> changes = new ArrayList<>();
+    PROCESS.updateFromOld(OLD_SESSION, Collections.emptyList(), changes);
+    assertAll(
+      () -> assertTrue(OLD_SESSION.isUpdated()),
+      () -> assertFalse(changes.isEmpty())
+    );
+  }
+
+  @Test
+  public void testUpdateFromOld_not_changed() throws ParseException {
+    List<SessionChange> changes = new ArrayList<>();
+    Session newSession = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+    List<Session> newSessions = Collections.singletonList(newSession);
+    PROCESS.updateFromOld(OLD_SESSION, newSessions, changes);
+    assertTrue(changes.isEmpty());
+  }
+
+  @Test
+  public void testUpdateFromOld_already_in_session_changes() throws ParseException {
+    List<SessionChange> changes = new ArrayList<>();
+    Session alreadyChanged = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+    changes.add(new SessionChange(new Session(), Collections.singletonList(alreadyChanged)));
+    List<Session> newSessions = Collections.emptyList();
+    PROCESS.updateFromOld(OLD_SESSION, newSessions, changes);
+    assertEquals(changes.size(), 1);
   }
 }

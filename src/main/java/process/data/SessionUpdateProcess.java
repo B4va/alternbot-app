@@ -3,7 +3,6 @@ package process.data;
 import models.Session;
 import models.business.SessionChange;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

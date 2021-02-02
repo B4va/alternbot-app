@@ -141,6 +141,10 @@ public class Session extends Model {
       date.equals(session.getDate());
   }
 
+  /**
+   * Indique si le cours est considéré comme passé.
+   * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire
+   */
   public boolean isPast() {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -1);

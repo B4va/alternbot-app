@@ -58,35 +58,41 @@ public class IcalMappingProcess {
     }
     return events.stream()
       .filter(e -> nonNull(e.getStartDate()))
-      .filter(e -> e.getStartDate().getDate().after(new Date()))
       .collect(Collectors.toList());
   }
 
   private List<Session> mapSessions(List<VEvent> events, Schedule schedule) {
     AtomicInteger errorCount = new AtomicInteger();
-    List<Session> sessions = events.stream().map(e -> {
+    List<Session> sessions = events.stream()
+      .map(e -> mapSession(e, schedule, errorCount))
+      .collect(Collectors.toList());
+    if (errorCount.get() > 0) {
+      LOGGER.warn("{} informations manquantes lors de la mise à jour de l'edt '{}'.",
+        errorCount.get(), schedule.getPromotion());
+    }
+    sessions.removeAll(Collections.singleton(null));
+    return sessions.stream()
+      .filter(s -> !s.isPast())
+      .collect(Collectors.toList());
+  }
+
+  private Session mapSession(VEvent event, Schedule schedule, AtomicInteger errorCount) {
+    try {
+      String name = event.getDescription().getValue().split(" - ")[0];
+      String location = nonNull(event.getLocation()) ? event.getLocation().getValue() : null;
+      Date date, start, end;
       try {
-        String name = e.getDescription().getValue().split(" - ")[0];
-        String location = nonNull(e.getLocation()) ? e.getLocation().getValue() : null;
-        Date date, start, end;
-        try {
-          date = datetimeToDate(e.getStartDate().getDate());
-          start = datetimeToTime(e.getStartDate().getDate());
-          end = datetimeToTime(e.getEndDate().getDate());
-        } catch (ParseException ex) {
-          errorCount.getAndIncrement();
-          return null;
-        }
-        return new Session(name, null, location, date, start, end, schedule);
-      } catch (NullPointerException ex) {
+        date = datetimeToDate(event.getStartDate().getDate());
+        start = datetimeToTime(event.getStartDate().getDate());
+        end = datetimeToTime(event.getEndDate().getDate());
+      } catch (ParseException ex) {
         errorCount.getAndIncrement();
         return null;
       }
-    }).collect(Collectors.toList());
-    if (errorCount.get() > 0) {
-      LOGGER.warn("{} informations manquantes lors de la mise à jour de l'edt '{}'.", errorCount.get(), schedule.getPromotion());
+      return new Session(name, null, location, date, start, end, schedule);
+    } catch (NullPointerException ex) {
+      errorCount.getAndIncrement();
+      return null;
     }
-    sessions.removeAll(Collections.singleton(null));
-    return sessions;
   }
 }

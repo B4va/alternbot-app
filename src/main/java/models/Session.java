@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -138,5 +139,11 @@ public class Session extends Model {
       start.equals(session.getStart()) &&
       end.equals(session.getEnd()) &&
       date.equals(session.getDate());
+  }
+
+  public boolean isPast() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_MONTH, -1);
+    return date.before(calendar.getTime());
   }
 }

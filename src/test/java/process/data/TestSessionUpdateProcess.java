@@ -79,7 +79,10 @@ public class TestSessionUpdateProcess {
 
   @AfterAll
   public static void tearDown() {
-    SESSION_TEST.delete();
+    List<Session> sessions = Model.readAll(Session.class);
+    sessions.stream()
+      .filter(s -> s.getName().equals(NAME_TEST))
+      .forEach(Model::delete);
     SESSION_RDM.delete();
     SESSION_OL_END.delete();
     SESSION_OL_START.delete();
@@ -209,7 +212,27 @@ public class TestSessionUpdateProcess {
   }
 
   @Test
-  public void testUpdateFromOld_deleted() throws ParseException {
+  public void testUpdateWithNew_same_time_sessions() throws ParseException {
+    Session sameTimeSession = new Session(NAME_TEST, TEACHER_OL_START, LOCATION_TEST, stringToDate(DATE_OL_START),
+      stringToTime(START_OL_START), stringToTime(END_OL_START), SCHEDULE);
+    int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
+    Set<Session> oldSessions = Collections.singleton(SESSION_OL_START);
+    changes = PROCESS.updateWithNew(sameTimeSession, oldSessions, changes);
+    int updatedNbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> finalChanges = changes;
+    assertAll(
+      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertTrue(SESSION_OL_START.isUpdated()),
+      () -> assertEquals(finalChanges.size(), 1),
+      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(sameTimeSession, finalChanges.get(0).getNewSession()),
+      () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OL_START))
+    );
+  }
+
+  @Test
+  public void testUpdateFromOld_deleted() {
     List<SessionChange> changes = new ArrayList<>();
     PROCESS.updateFromOld(OLD_SESSION, Collections.emptyList(), changes);
     assertAll(

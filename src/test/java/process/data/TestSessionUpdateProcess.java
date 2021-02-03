@@ -27,6 +27,7 @@ public class TestSessionUpdateProcess {
   private static Session SESSION_RDM;
   private static Session SESSION_OL_END;
   private static Session SESSION_OL_START;
+  private static Session SESSION_OVER;
   private static Session OLD_SESSION;
   private static final Schedule SCHEDULE = new Schedule("prom", "url");
   private static final String NAME_TEST = "CoursTest_TestSessionUpdateProcess";
@@ -53,6 +54,12 @@ public class TestSessionUpdateProcess {
   private static final String DATE_OL_START = "01-01-2021";
   private static final String START_OL_START = "09:00";
   private static final String END_OL_START = "11:00";
+  private static final String NAME_OVER = "CoursTest_TestSessionUpdateProcess_over";
+  private static final String TEACHER_OVER = null;
+  private static final String LOCATION_OVER = "A4";
+  private static final String DATE_OVER = "01-01-2021";
+  private static final String START_OVER = "10:30";
+  private static final String END_OVER = "11:30";
   private static final String NAME_OLD_SESSION = "CoursTest_OldSession";
   private static final String DATE_OLD_SESSION = "01-01-2030";
 
@@ -75,6 +82,9 @@ public class TestSessionUpdateProcess {
     SESSION_OL_START = new Session(NAME_OL_START, TEACHER_OL_START, LOCATION_OL_START, stringToDate(DATE_OL_START),
       stringToTime(START_OL_START), stringToTime(END_OL_START), SCHEDULE);
     SESSION_OL_START.setId(SESSION_OL_START.create());
+    SESSION_OVER = new Session(NAME_OVER, TEACHER_OVER, LOCATION_OVER, stringToDate(DATE_OVER),
+      stringToTime(START_OVER), stringToTime(END_OVER), SCHEDULE);
+    SESSION_OVER.setId(SESSION_OVER.create());
   }
 
   @AfterAll
@@ -86,6 +96,7 @@ public class TestSessionUpdateProcess {
     SESSION_RDM.delete();
     SESSION_OL_END.delete();
     SESSION_OL_START.delete();
+    SESSION_OVER.delete();
     OLD_SESSION.delete();
     SCHEDULE.delete();
   }
@@ -228,6 +239,25 @@ public class TestSessionUpdateProcess {
       () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
       () -> assertEquals(sameTimeSession, finalChanges.get(0).getNewSession()),
       () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OL_START))
+    );
+  }
+
+  @Test
+  public void testUpdateWithNew_new_session_all_over_the_old() {
+    int nbSessions = Model.readAll(Session.class).size();
+    List<SessionChange> changes = new ArrayList<>();
+    Set<Session> oldSessions = Collections.singleton(SESSION_OVER);
+    changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
+    int updatedNbSessions = Model.readAll(Session.class).size();
+    Session oldSession = Model.read(SESSION_OVER.getId(), Session.class);
+    List<SessionChange> finalChanges = changes;
+    assertAll(
+      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertTrue(oldSession.isUpdated()),
+      () -> assertEquals(finalChanges.size(), 1),
+      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
+      () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OVER))
     );
   }
 

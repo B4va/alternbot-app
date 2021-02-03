@@ -64,8 +64,10 @@ public class SessionUpdateProcess {
       newSession.getEnd().before(oldSession.getEnd());
     boolean overappWithStart = newSession.getStart().after(oldSession.getStart()) &&
       newSession.getStart().before(oldSession.getEnd());
-    boolean sameTime = newSession.getStart().equals(oldSession.getStart()) &&
+    boolean sameTime = newSession.getStart().equals(oldSession.getStart()) ||
       newSession.getEnd().equals(oldSession.getEnd());
-    return overlappWithEnd || overappWithStart || sameTime;
+    boolean over = newSession.getStart().before(oldSession.getStart()) &&
+      newSession.getEnd().after(oldSession.getEnd());
+    return overlappWithEnd || overappWithStart || sameTime || over;
   }
 }

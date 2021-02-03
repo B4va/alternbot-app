@@ -5,10 +5,7 @@ import models.Session;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -16,7 +13,7 @@ import static java.util.Objects.isNull;
 /**
  * Process permettant de sélectionner des cours d'un emploi du temps ayant lieu à une date donnée et après cette date.
  */
-public class ScheduleExportSessionSelectionProcess {
+public class ScheduleExportSessionSelectionProcess extends SessionSelection {
   private static final Logger LOGGER = LoggerUtils.buildLogger(ScheduleExportSessionSelectionProcess.class);
 
   /**
@@ -33,25 +30,15 @@ public class ScheduleExportSessionSelectionProcess {
       return null;
     }
 
-    final Set<Session> sessions = schedule.getSessions();
+    Set<Session> sessions = schedule.getSessions();
     if (isNull(sessions) || sessions.isEmpty()) {
       LOGGER.warn("Aucun cours dans l'emploi du temps donné");
       return Collections.emptyList();
     }
 
-    // Cours sélectionnés puis triés.
-    // Le tri se fait d'abord sur la date, par ordre croissant. Si 2 cours ont la même date, le tri se fait sur l'heure
-    // de début du cours.
-    return sessions.stream()
+    sessions = sessions.stream()
       .filter(sess -> sess.getDate().equals(from) || sess.getDate().after(from))
-      .sorted((s1, s2) -> {
-        if (s1.getDate().compareTo(s2.getDate()) < 0)
-          return -1;
-        else if (s1.getDate().compareTo(s2.getDate()) > 0)
-          return 1;
-        else
-          return Integer.compare(s1.getStart().compareTo(s2.getStart()), 0);
-      })
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
+    return sessions.isEmpty() ? Collections.emptyList() : orderSessionsByDateAndStart(new ArrayList<>(sessions));
   }
 }

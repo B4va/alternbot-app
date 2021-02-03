@@ -82,14 +82,4 @@ public class TestDailyScheduleFormattingProcess {
     String message = PROCESS.format(sessions, stringToDate(DATE));
     assertEquals(MESSAGE_MULTIPLE_SESSIONS, message);
   }
-
-  @Test
-  public void testFormat_unordered_sessions() throws ParseException {
-    List<Session> sessions = new ArrayList<>();
-    sessions.add(SESSION2);
-    sessions.add(SESSION1);
-    String message = PROCESS.format(sessions, stringToDate(DATE));
-    assertEquals(MESSAGE_MULTIPLE_SESSIONS, message);
-  }
-
 }

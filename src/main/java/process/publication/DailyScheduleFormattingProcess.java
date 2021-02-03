@@ -2,7 +2,6 @@ package process.publication;
 
 import models.Session;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +22,6 @@ public class DailyScheduleFormattingProcess extends Publication {
    * @return message formatté
    */
   public String format(List<Session> sessions, Date date) {
-    Comparator<Session> byDate = Comparator.comparing(Session::getDate);
-    Comparator<Session> byStart = Comparator.comparing(Session::getStart);
-    sessions.sort(byDate.thenComparing(byStart));
     StringBuilder message = new StringBuilder("```\nEmploi du temps du ");
     message
       .append(dateToString(date))

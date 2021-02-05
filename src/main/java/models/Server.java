@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Serveur Discord ayant intégré Altern'Bot.
@@ -26,6 +27,9 @@ public class Server extends Model {
   @ManyToOne
   @JoinColumn(name = "schedule_id", nullable = false)
   private Schedule schedule;
+
+  @OneToMany(mappedBy = "server")
+  private Set<Task> tasks;
 
   public Server() {
   }
@@ -57,5 +61,13 @@ public class Server extends Model {
 
   public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
+  }
+
+  public Set<Task> getTasks() {
+    return this.tasks;
+  }
+
+  public void setTasks(Set<Task> tasks) {
+    this.tasks = tasks;
   }
 }

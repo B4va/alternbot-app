@@ -103,8 +103,7 @@ public class TestTask implements TestModel {
     }
 
     task.setDueDate(null);
-    assertDoesNotThrow(task::create);
-    task.delete();
+    assertThrows(PersistenceException.class, task::create);
   }
 
   @Test
@@ -119,8 +118,7 @@ public class TestTask implements TestModel {
     }
 
     task.setDueTime(null);
-    assertDoesNotThrow(task::create);
-    task.delete();
+    assertThrows(PersistenceException.class, task::create);
   }
 
   @Test
@@ -195,7 +193,7 @@ public class TestTask implements TestModel {
     Task task = Task.read(TASK_ID, Task.class);
     task.setDueDate(null);
 
-    assertDoesNotThrow(task::update);
+    assertThrows(PersistenceException.class, task::update);
   }
 
   @Test
@@ -204,7 +202,7 @@ public class TestTask implements TestModel {
     Task task = Task.read(TASK_ID, Task.class);
     task.setDueTime(null);
 
-    assertDoesNotThrow(task::update);
+    assertThrows(PersistenceException.class, task::update);
   }
 
   @Test

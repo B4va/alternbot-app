@@ -97,7 +97,7 @@ public class TestServer implements TestModel {
   @Test
   @Order(6)
   public void testAssociations() {
-    ID_TASK = new Task(TASK_DESCRIPTION_TEST, null, null, SERVER).create();
+    ID_TASK = new Task(TASK_DESCRIPTION_TEST, new Date(), new Date(), SERVER).create();
     Server server = Model.read(ID_SERVER, Server.class);
     assertAll(
       () -> assertEquals(1, server.getTasks().size()),

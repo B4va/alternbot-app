@@ -3,6 +3,7 @@ package programs;
 import models.Model;
 import models.Schedule;
 import models.Server;
+import models.Task;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -45,11 +46,13 @@ public class SeedLauncher {
 
   private static void seed(Session session) throws ParseException {
     List<Schedule> schedules = seedSchedules(session);
-    seedServers(session, schedules);
+    List<Server> servers = seedServers(session, schedules);
     seedSessions(session, schedules);
+    seedTasks(session, servers);
   }
 
   private static void deleteAll() {
+    Model.deleteAll(Task.class);
     Model.deleteAll(Server.class);
     Model.deleteAll(models.Session.class);
     Model.deleteAll(Schedule.class);
@@ -89,6 +92,18 @@ public class SeedLauncher {
     );
     sessions.forEach(session::persist);
     return sessions;
+  }
+
+  private static List<Task> seedTasks(Session session, List<Server> servers) throws ParseException {
+    logSeed(Task.class);
+    List<Task> tasks = Arrays.asList(
+      new Task("TP GraphQL", stringToDate("16-01-2021"), stringToTime("08:00"), servers.get(0)),
+      new Task("Projet POO", stringToDate("14-03-2021"), stringToTime("00:00"), servers.get(0)),
+      new Task("Exos JaveEE", stringToDate("09-02-2021"), stringToTime("17:30"), servers.get(1)),
+      new Task("Projet BDR", stringToDate("06-04-2021"), stringToTime("00:00"), servers.get(1))
+    );
+    tasks.forEach(session::persist);
+    return tasks;
   }
 
   private static <T> void logSeed(Class<T> c) {

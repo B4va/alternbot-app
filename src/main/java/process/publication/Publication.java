@@ -74,21 +74,26 @@ public abstract class Publication {
   }
 
   private boolean doSendMessage(String message, Server server, String channel) {
-    TextChannel textChannel = getJDAInstance().getTextChannelsByName(channel, true).get(0);
-    try {
-      if (isNull(textChannel)) {
+    Guild guild = getJDAInstance()
+      .getGuildById(server.getId());
+    if (nonNull(guild)) {
+      try {
+        TextChannel textChannel = guild.getTextChannelById(channel);
+        if (isNull(textChannel)) {
+          LOGGER.warn(
+            "Erreur lors de l'envoi d'un message dans un channel. Serveur : {}, Channel : {}",
+            server.getReference(), channel);
+          return false;
+        }
+        return nonNull(textChannel.sendMessage(message).complete());
+      } catch (RuntimeException e) {
         LOGGER.warn(
-          "Erreur lors de l'envoi d'un message dans un channel. Serveur : {}, Channel : {}",
-          server.getReference(), channel);
+          "Erreur lors de l'envoi d'un message. Serveur : {} ; longueur msg : {}",
+          server.getReference(), message.length());
         return false;
       }
-      return nonNull(textChannel.sendMessage(message).complete());
-    } catch (RuntimeException e) {
-      LOGGER.warn(
-        "Erreur lors de l'envoi d'un message. Serveur : {} ; longueur msg : {}",
-        server.getReference(), message.length());
-      return false;
     }
+    return false;
   }
 
   private boolean doSendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {

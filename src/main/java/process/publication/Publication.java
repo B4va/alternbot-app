@@ -1,7 +1,6 @@
 package process.publication;
 
 import models.Server;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
@@ -29,7 +28,7 @@ public abstract class Publication {
    * @param server  qui reçoit le message
    */
   protected boolean sendMessage(String message, Server server, String channel) {
-    Guild guild = getGuild(server, getJDAInstance());
+    Guild guild = getGuild(server);
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
       return doSendMessage(message, server, channel);
@@ -49,7 +48,7 @@ public abstract class Publication {
    * @return {@code true} si le fichier a été posté avec succès, {@code false} en cas d'erreur
    */
   protected boolean sendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
-    Guild guild = getGuild(server, getJDAInstance());
+    Guild guild = getGuild(server);
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
       return doSendFile(fileData, fileName, isSpoiler, server, channel);
@@ -64,48 +63,58 @@ public abstract class Publication {
     return b;
   }
 
-  private Guild getGuild(Server server, JDA jda) {
+  private Guild getGuild(Server server) {
     try {
-      return jda.getGuildById(server.getReference());
+      return getJDAInstance().getGuildById(server.getReference());
     } catch (NumberFormatException | NullPointerException e) {
       LOGGER.warn("Impossible de trouver le Serveur : {}", server.getReference());
       return null;
     }
   }
 
+  private TextChannel getChannel(Guild guild, String channel) {
+    try {
+      return guild.getTextChannelsByName(channel, true).get(0);
+    } catch (NullPointerException e) {
+      LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
+      return null;
+    }
+  }
+
   private boolean doSendMessage(String message, Server server, String channel) {
-    Guild guild = getJDAInstance()
-      .getGuildById(server.getId());
+    Guild guild = getGuild(server);
     if (nonNull(guild)) {
-      try {
-        TextChannel textChannel = guild.getTextChannelById(channel);
-        if (isNull(textChannel)) {
+      TextChannel textChannel = getChannel(guild, channel);
+      if (nonNull(textChannel)) {
+        try {
+          return nonNull(textChannel.sendMessage(message).complete());
+        } catch (RuntimeException e) {
           LOGGER.warn(
-            "Erreur lors de l'envoi d'un message dans un channel. Serveur : {}, Channel : {}",
-            server.getReference(), channel);
+            "Erreur lors de l'envoi d'un message. Serveur : {} ; longueur msg : {}",
+            server.getReference(), message.length());
           return false;
         }
-        return nonNull(textChannel.sendMessage(message).complete());
-      } catch (RuntimeException e) {
-        LOGGER.warn(
-          "Erreur lors de l'envoi d'un message. Serveur : {} ; longueur msg : {}",
-          server.getReference(), message.length());
-        return false;
       }
     }
     return false;
   }
 
   private boolean doSendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
-    TextChannel textChannel = getJDAInstance().getTextChannelsByName(channel, true).get(0);
-    try {
-      MessageAction msg = isSpoiler ? textChannel.sendFile(fileData, fileName, AttachmentOption.SPOILER) : textChannel.sendFile(fileData, fileName);
-      return nonNull(msg.complete());
-    } catch (RuntimeException e) {
-      LOGGER.warn(
-        "Erreur lors de l'envoi d'un fichier. Serveur : {} ; Fichier : {}",
-        server.getReference(), fileName);
-      return false;
+    Guild guild = getGuild(server);
+    if (nonNull(guild)) {
+      TextChannel textChannel = getChannel(guild, channel);
+      if (nonNull(textChannel)) {
+        try {
+          MessageAction msg = isSpoiler ? textChannel.sendFile(fileData, fileName, AttachmentOption.SPOILER) : textChannel.sendFile(fileData, fileName);
+          return nonNull(msg.complete());
+        } catch (RuntimeException e) {
+          LOGGER.warn(
+            "Erreur lors de l'envoi d'un fichier. Serveur : {} ; Fichier : {}",
+            server.getReference(), fileName);
+          return false;
+        }
+      }
     }
+    return false;
   }
 }

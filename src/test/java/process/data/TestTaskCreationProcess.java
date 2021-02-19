@@ -48,7 +48,7 @@ public class TestTaskCreationProcess {
         Member validMember = mock(Member.class);
         when(validMember.getRoles()).thenReturn(Collections.singletonList(validRole));
         assertAll(
-                () -> assertDoesNotThrow(() -> PROCESS.create(TASK, validMember, validServer)),
+                () -> assertDoesNotThrow(() -> PROCESS.create(TASK.getDescription(), TASK.getDueDate(), TASK.getDueTime(),validMember, validServer)),
                 () -> assertNotNull(Model.read(TASK.getId(), Task.class))
         );
     }

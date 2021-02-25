@@ -3,6 +3,12 @@ package process.data;
 import models.Server;
 import models.Task;
 import net.dv8tion.jda.api.entities.Member;
+import utils.DateUtils;
+
+import java.text.ParseException;
+import java.util.Date;
+
+import static java.util.Objects.isNull;
 
 /**
  * Gère l'accès aux différentes tâches via commande utilisateur.
@@ -31,5 +37,16 @@ public abstract class TaskAccessor {
   protected boolean isMemberAuthorized(Member member) {
     return member.getRoles().stream()
       .anyMatch(role -> role.getName().equals(TASK_ADMIN_ROLE));
+  }
+
+  protected boolean isValid(String description, String dueDate, String dueTime) {
+    if (description.equals("")) return false;
+    try {
+      DateUtils.stringToDate(dueDate);
+      DateUtils.stringToTime(dueTime);
+    } catch (ParseException e) {
+      return false;
+    }
+    return true;
   }
 }

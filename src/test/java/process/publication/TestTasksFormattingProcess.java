@@ -24,12 +24,12 @@ public class TestTasksFormattingProcess {
   private static final String RES_NO_TASK = "```\nAucune tâche en cours\n```";
   private static final String RES_ONE_TASK = "```\n" +
     "LISTE DES TÂCHES EN COURS :" +
-    "\n   - Tâche 1 : 01-01-2020 - 10:00" +
+    "\n   - [1] Tâche 1 : 01-01-2020 - 10:00" +
     "\n```";
   private static final String RES_MULTIPLE_TASKS = "```\n" +
     "LISTE DES TÂCHES EN COURS :" +
-    "\n   - Tâche 1 : 01-01-2020 - 10:00" +
-    "\n   - Tâche 2 : 01-01-2020 - 10:00" +
+    "\n   - [1] Tâche 1 : 01-01-2020 - 10:00" +
+    "\n   - [2] Tâche 2 : 01-01-2020 - 10:00" +
     "\n```";
 
   @BeforeAll
@@ -39,7 +39,9 @@ public class TestTasksFormattingProcess {
     ONE_TASK = new ArrayList<>();
     MULTIPLE_TASKS = new ArrayList<>();
     Task t1 = new Task("Tâche 1", stringToDate("01-01-2020"), stringToTime("10:00"), null);
+    t1.setId(1);
     Task t2 = new Task("Tâche 2", stringToDate("01-01-2020"), stringToTime("10:00"), null);
+    t2.setId(2);
     ONE_TASK.add(t1);
     MULTIPLE_TASKS.add(t1);
     MULTIPLE_TASKS.add(t2);

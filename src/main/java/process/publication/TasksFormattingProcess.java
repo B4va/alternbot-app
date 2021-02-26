@@ -28,6 +28,7 @@ public class TasksFormattingProcess {
 
   private void formatTask(Task task, StringBuilder sb) {
     sb.append("\n   - ")
+      .append("[").append(task.getId()).append("] ")
       .append(task.getDescription()).append(" : ")
       .append(dateToString(task.getDueDate())).append(" - ")
       .append(timeToString(task.getDueTime()));

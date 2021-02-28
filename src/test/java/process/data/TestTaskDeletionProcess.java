@@ -1,5 +1,6 @@
 package process.data;
 
+import exceptions.InvalidIdException;
 import exceptions.MemberAccessException;
 import exceptions.ServerAccessException;
 import models.Model;
@@ -77,10 +78,7 @@ public class TestTaskDeletionProcess {
     when(validRole.getName()).thenReturn(TaskAccessor.TASK_ADMIN_ROLE);
     Member validMember = mock(Member.class);
     when(validMember.getRoles()).thenReturn(Collections.singletonList(validRole));
-    assertAll(
-      () -> assertDoesNotThrow(() -> PROCESS.delete(TASK.getId() + 1, validServer, validMember)),
-      () -> assertNotNull(Model.read(TASK.getId(), Task.class))
-    );
+    assertThrows(InvalidIdException.class, () -> PROCESS.delete(TASK.getId() + 1, validServer, validMember));
   }
 
   @Test

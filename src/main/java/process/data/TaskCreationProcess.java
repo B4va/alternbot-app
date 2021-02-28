@@ -6,7 +6,11 @@ import models.Server;
 import models.Task;
 import net.dv8tion.jda.api.entities.Member;
 
+import java.text.ParseException;
 import java.util.Date;
+
+import static utils.DateUtils.stringToDate;
+import static utils.DateUtils.stringToTime;
 
 /**
  * Process de création d'une tâche par un utilisateur autorisé.
@@ -23,7 +27,7 @@ public class TaskCreationProcess extends TaskAccessor {
    * @throws MemberAccessException l'utilisateur n'est pas autorisé à créer les tâches
    * @throws InvalidDataException  les informations saisies sont invalides
    */
-  public boolean create(String description, Date dueDate, Date dueTime, Member member, Server server) throws MemberAccessException, InvalidDataException {
+  public boolean create(String description, String dueDate, String dueTime, Member member, Server server) throws MemberAccessException, InvalidDataException, ParseException {
     Task task = validateTask(description, dueDate, dueTime, server);
     if (isMemberAuthorized(member)) {
       task.create();
@@ -42,11 +46,11 @@ public class TaskCreationProcess extends TaskAccessor {
    * @return Task l'instance de la tâche si elle est valide
    * @throws InvalidDataException les informations saisies sont invalides
    */
-  private Task validateTask(String description, Date dueDate, Date dueTime, Server server) throws InvalidDataException {
+  private Task validateTask(String description, String dueDate, String dueTime, Server server) throws InvalidDataException, ParseException {
     if (description == null || dueDate == null || dueTime == null) {
       throw new InvalidDataException();
     } else {
-      return new Task(description, dueDate, dueTime, server);
+      return new Task(description, stringToDate(dueDate), stringToTime(dueTime), server);
     }
   }
 }

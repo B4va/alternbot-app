@@ -3,6 +3,7 @@ package controllers.workers.task;
 import controllers.workers.DailyWorker;
 import models.Model;
 import models.Server;
+import process.publication.TasksPublicationProcess;
 
 /**
  * Gère la publication régulière de la liste des tâches en cours sur l'ensemble des serveurs.
@@ -18,9 +19,8 @@ public class TasksPublicationWorker extends DailyWorker {
 
   @Override
   protected void doRunOne() {
-    // todo
-//    Model.readAll(Server.class)
-//      .forEach(s -> new TasksPublicationProcess().sendPublication(CHANNEL, s.getReference(), DAYS));
+    Model.readAll(Server.class)
+      .forEach(s -> new TasksPublicationProcess().sendPublication(CHANNEL, s.getReference(), DAYS));
   }
 
   @Override

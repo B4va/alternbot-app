@@ -9,7 +9,7 @@
 
 **Travaux/Tâches :**
 
-- `$task` : Obtenir la liste des tâches en cours.
-- `$tâche -c [ <description> ] <date prévue JJ-MM-AAAA> <horaire prévu HH:MM>` : Créer une tâche. Cette opération est réservée aux utilisateurs ayant le rôle `TasksAdmin`. *Ex : `$task -c [ Nouvelle tâche ] 01-01-2000 10:00`*.
-- `$tâche -u <id> [ <description> ] <date prévue JJ-MM-AAAA> <horaire prévu HH:MM>` : Modifier une tâche. Cette opération est réservée aux utilisateurs ayant le rôle `TasksAdmin`. *Ex : `$task -u 1 [ Tâche renomée ] 01-01-2000 10:00`*.
-- `$tâche -d <id>` : Supprimer une tâche. Cette opération est réservée aux utilisateurs ayant le rôle `TasksAdmin`. *Ex : `$task -d 1`*.
+- `$tache` : Obtenir la liste des tâches en cours.
+- `$tache -c [ <description> ] <date prévue JJ-MM-AAAA> <horaire prévu HH:MM>` : Créer une tâche. Cette opération est réservée aux utilisateurs ayant le rôle `TasksAdmin`. *Ex : `$task -c [ Nouvelle tâche ] 01-01-2000 10:00`*.
+- `$tache -u <id> [ <description> ] <date prévue JJ-MM-AAAA> <horaire prévu HH:MM>` : Modifier une tâche. Cette opération est réservée aux utilisateurs ayant le rôle `TasksAdmin`. *Ex : `$task -u 1 [ Tâche renomée ] 01-01-2000 10:00`*.
+- `$tache -d <id>` : Supprimer une tâche. Cette opération est réservée aux utilisateurs ayant le rôle `TasksAdmin`. *Ex : `$task -d 1`*.

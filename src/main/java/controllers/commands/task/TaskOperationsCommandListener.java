@@ -1,11 +1,20 @@
 package controllers.commands.task;
 
 import controllers.commands.CommandListener;
+import exceptions.InvalidDataException;
+import exceptions.InvalidIdException;
+import exceptions.MemberAccessException;
+import exceptions.ServerAccessException;
 import models.Model;
 import models.Server;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import process.data.TaskCreationProcess;
+import process.data.TaskDeletionProcess;
+import process.data.TaskUpdateProcess;
+import process.publication.TasksPublicationProcess;
 
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -32,7 +41,10 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   @Override
   protected void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
-    Server server = Model.read(event.getGuild().getId(), Server.class);
+    Server server = Model.readAll(Server.class).stream()
+      .filter(s -> s.getReference().equals(event.getGuild().getId()))
+      .findFirst()
+      .orElse(null);
     Member member = event.getMember();
     if (hasParameter(message, CREATE_PARAMETER)) {
       runTaskCreation(message, server, member, event);
@@ -46,102 +58,97 @@ public class TaskOperationsCommandListener extends CommandListener {
   }
 
   private void runTaskCreation(List<String> message, Server server, Member member, GuildMessageReceivedEvent event) {
-    // todo
-//    try {
-//      Map<String, String> parsedMessage = parseMessage(message);
-//      if (new TaskCreationProcess().create(
-//        parsedMessage.get(MAP_DESCRIPTION),
-//        parsedMessage.get(MAP_DUE_DATE),
-//        parsedMessage.get(MAP_DUE_TIME),
-//        server, member)) {
-//        event.getChannel()
-//          .sendMessage(member.getAsMention() + " La tâche a bien été créée !")
-//          .queue();
-//      } else {
-//        event.getChannel()
-//          .sendMessage(member.getAsMention() + ERROR_SERVER)
-//          .queue();
-//      }
-//    } catch (MemberAccessException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à créer une tâche.")
-//        .queue();
-//    } catch (InvalidDataException | ArrayIndexOutOfBoundsException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + ERROR_FORMAT)
-//        .queue();
-//    }
+    try {
+      Map<String, String> parsedMessage = parseMessage(message);
+      if (new TaskCreationProcess().create(
+        parsedMessage.get(MAP_DESCRIPTION),
+        parsedMessage.get(MAP_DUE_DATE),
+        parsedMessage.get(MAP_DUE_TIME),
+        member, server)) {
+        event.getChannel()
+          .sendMessage(member.getAsMention() + " La tâche a bien été créée !")
+          .queue();
+      } else {
+        event.getChannel()
+          .sendMessage(member.getAsMention() + ERROR_SERVER)
+          .queue();
+      }
+    } catch (MemberAccessException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à créer une tâche.")
+        .queue();
+    } catch (InvalidDataException | ArrayIndexOutOfBoundsException | ParseException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + ERROR_FORMAT)
+        .queue();
+    }
   }
 
   private void runTaskUpdate(List<String> message, Server server, Member member, GuildMessageReceivedEvent event) {
-    //todo
-//    try {
-//      int taskId = Integer.parseInt(message.get(2));
-//      Map<String, String> parsedMessage = parseMessage(message);
-//      if (new TaskUpdateProcess().update(taskId,
-//        parsedMessage.get(MAP_DESCRIPTION),
-//        parsedMessage.get(MAP_DUE_DATE),
-//        parsedMessage.get(MAP_DUE_TIME),
-//        member, server)) {
-//        event.getChannel()
-//          .sendMessage(member.getAsMention() + " La tâche a bien été modifiée !")
-//          .queue();
-//      } else {
-//        event.getChannel()
-//          .sendMessage(member.getAsMention() + ERROR_SERVER)
-//          .queue();
-//      }
-//    } catch (ServerAccessException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + ERROR_SERVER_ACCESS)
-//        .queue();
-//    } catch (InvalidIdException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + ERROR_NO_TASK)
-//        .queue();
-//    } catch (MemberAccessException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à modifier une tâche.")
-//        .queue();
-//    } catch (InvalidDataException | ArrayIndexOutOfBoundsException | NumberFormatException | ParseException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + ERROR_FORMAT)
-//        .queue();
-//    }
+    try {
+      int taskId = Integer.parseInt(message.get(2));
+      Map<String, String> parsedMessage = parseMessage(message);
+      if (new TaskUpdateProcess().update(taskId,
+        parsedMessage.get(MAP_DESCRIPTION),
+        parsedMessage.get(MAP_DUE_DATE),
+        parsedMessage.get(MAP_DUE_TIME),
+        member, server)) {
+        event.getChannel()
+          .sendMessage(member.getAsMention() + " La tâche a bien été modifiée !")
+          .queue();
+      } else {
+        event.getChannel()
+          .sendMessage(member.getAsMention() + ERROR_SERVER)
+          .queue();
+      }
+    } catch (ServerAccessException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + ERROR_SERVER_ACCESS)
+        .queue();
+    } catch (InvalidIdException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + ERROR_NO_TASK)
+        .queue();
+    } catch (MemberAccessException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à modifier une tâche.")
+        .queue();
+    } catch (InvalidDataException | ArrayIndexOutOfBoundsException | NumberFormatException | ParseException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + ERROR_FORMAT)
+        .queue();
+    }
   }
 
   private void runTaskDeletion(List<String> message, Server server, Member member, GuildMessageReceivedEvent event) {
-    // todo
-//    try {
-//      int taskId = Integer.parseInt(message.get(2));
-//      parseMessage(message);
-//      if (new TaskDeletionProcess().delete(taskId, server, member)) {
-//        event.getChannel()
-//          .sendMessage(member.getAsMention() + " La tâche a bien été supprimée !")
-//          .queue();
-//      } else {
-//        event.getChannel()
-//          .sendMessage(member.getAsMention() + ERROR_SERVER)
-//          .queue();
-//      }
-//    } catch (ServerAccessException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + ERROR_SERVER_ACCESS)
-//        .queue();
-//    } catch (InvalidIdException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + ERROR_NO_TASK)
-//        .queue();
-//    } catch (MemberAccessException e) {
-//      event.getChannel()
-//        .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à supprimer une tâche.")
-//        .queue();
-//    }
+    try {
+      int taskId = Integer.parseInt(message.get(2));
+      if (new TaskDeletionProcess().delete(taskId, server, member)) {
+        event.getChannel()
+          .sendMessage(member.getAsMention() + " La tâche a bien été supprimée !")
+          .queue();
+      } else {
+        event.getChannel()
+          .sendMessage(member.getAsMention() + ERROR_SERVER)
+          .queue();
+      }
+    } catch (ServerAccessException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + ERROR_SERVER_ACCESS)
+        .queue();
+    } catch (InvalidIdException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + ERROR_NO_TASK)
+        .queue();
+    } catch (MemberAccessException e) {
+      event.getChannel()
+        .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à supprimer une tâche.")
+        .queue();
+    }
   }
 
   private void runTaskPublication(String serverId, String channel) {
-    // todo
-//    new TasksPublicationProcess().sendPublication(channel, serverId, -1);
+    new TasksPublicationProcess().sendPublication(channel, serverId, -1);
   }
 
   public static Map<String, String> parseMessage(List<String> message) {

@@ -2,7 +2,6 @@ package process.data;
 
 import exceptions.InvalidDataException;
 import exceptions.MemberAccessException;
-import exceptions.ServerAccessException;
 import models.Model;
 import models.Schedule;
 import models.Server;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Collections;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -51,15 +49,15 @@ public class TestTaskCreationProcess {
   }
 
   @Test
-  public void testCreation_ok() throws InvalidDataException, ServerAccessException, MemberAccessException, ParseException {
+  public void testCreation_ok() throws InvalidDataException, MemberAccessException, ParseException {
     Server validServer = new Server();
     validServer.setId(SERVER.getId());
     Role validRole = mock(Role.class);
     when(validRole.getName()).thenReturn(TaskAccessor.TASK_ADMIN_ROLE);
     Member validMember = mock(Member.class);
     when(validMember.getRoles()).thenReturn(Collections.singletonList(validRole));
-    final Date dueDate = stringToDate("01-01-2020");
-    final Date dueTime = stringToTime("10:00");
+    final String dueDate = "01-01-2020";
+    final String dueTime = "10:00";
     PROCESS.create(DESCRIPTION, dueDate, dueTime, validMember, validServer);
     Task task = Model.readAll(Task.class)
       .stream().filter(t -> t.getDescription().equals(DESCRIPTION))
@@ -68,21 +66,21 @@ public class TestTaskCreationProcess {
     assertNotNull(task);
     assertAll(
       () -> assertEquals(task.getDescription(), DESCRIPTION),
-      () -> assertEquals(task.getDueDate(), dueDate),
-      () -> assertEquals(task.getDueTime(), dueTime)
+      () -> assertEquals(task.getDueDate(), stringToDate(dueDate)),
+      () -> assertEquals(task.getDueTime(), stringToTime(dueTime))
     );
   }
 
   @Test
-  public void testCreation_invalid_member() throws ParseException {
+  public void testCreation_invalid_member() {
     Server validServer = new Server();
     validServer.setId(SERVER.getId());
     Role validRole = mock(Role.class);
     when(validRole.getName()).thenReturn("invalide");
     Member invalidMember = mock(Member.class);
     when(invalidMember.getRoles()).thenReturn(Collections.singletonList(validRole));
-    final Date dueDate = stringToDate("01-01-2020");
-    final Date dueTime = stringToTime("10:00");
+    final String dueDate = "01-01-2020";
+    final String dueTime = "10:00";
     assertThrows(MemberAccessException.class, () -> PROCESS.create(DESCRIPTION, dueDate, dueTime, invalidMember, validServer));
   }
 

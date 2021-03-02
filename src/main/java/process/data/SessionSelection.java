@@ -24,7 +24,7 @@ public abstract class SessionSelection {
    */
   public List<Session> orderSessionsByDateAndStart(List<Session> sessions) {
     if (isNull(sessions) || sessions.isEmpty()) {
-      LOGGER.warn("La liste de cours donnée est null ou vide.");
+      LOGGER.debug("La liste de cours donnée est null ou vide.");
       return null;
     }
 

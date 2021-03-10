@@ -35,6 +35,7 @@ public class TestTasksFormattingProcess {
     "LISTE DES TÂCHES EN COURS (J+1) :" +
     "\n   - [1] Tâche 1 : 01-01-2020 - 10:00" +
     "\n```";
+  private static final String RES_PLUS_ONE_DAY_NO_TASK = "```\nAucune tâche en cours (J+1)\n```";
 
   @BeforeAll
   public static void init() throws ParseException {
@@ -69,5 +70,10 @@ public class TestTasksFormattingProcess {
   @Test
   public void testFormat_period() {
     assertEquals(PROCESS.format(ONE_TASK, 1), RES_PLUS_ONE_DAY);
+  }
+
+  @Test
+  public void testFormat_period_no_tasks() {
+    assertEquals(PROCESS.format(NO_TASK, 1), RES_PLUS_ONE_DAY_NO_TASK);
   }
 }

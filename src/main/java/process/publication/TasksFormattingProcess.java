@@ -30,7 +30,7 @@ public class TasksFormattingProcess {
    * @return message créé à partir de la liste de tâches
    */
   public String format(List<Task> tasks, int nbDays) {
-    if (tasks.isEmpty()) return "```\nAucune tâche en cours\n```";
+    if (tasks.isEmpty()) return "```\nAucune tâche en cours" + (nbDays > -1 ? " (J+" + nbDays+ ")" : "") + "\n```";
     StringBuilder sb = new StringBuilder("```\nLISTE DES TÂCHES EN COURS ");
     sb.append(nbDays > -1 ? "(J+" + nbDays + ") :" : ":");
     tasks.forEach(t -> formatTask(t, sb));

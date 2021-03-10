@@ -2,11 +2,11 @@ package controllers.commands.general;
 
 import controllers.commands.CommandListener;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import process.data.DocumentationParsingProcess;
+import process.general.data.DocumentationParsingProcess;
 
 import java.util.List;
 
-import static process.data.DocumentationParsingProcess.DOCUMENTATION_FILE;
+import static process.general.data.DocumentationParsingProcess.DOCUMENTATION_FILE;
 
 /**
  * Gère la commande permettant d'obtenir la documentation du bot.

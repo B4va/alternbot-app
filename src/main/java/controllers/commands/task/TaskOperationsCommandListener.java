@@ -9,10 +9,10 @@ import models.Model;
 import models.Server;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import process.data.TaskCreationProcess;
-import process.data.TaskDeletionProcess;
-import process.data.TaskUpdateProcess;
-import process.publication.TasksPublicationProcess;
+import process.task.data.TaskCreationProcess;
+import process.task.data.TaskDeletionProcess;
+import process.task.data.TaskUpdateProcess;
+import process.task.publication.TasksPublicationProcess;
 
 import java.text.ParseException;
 import java.util.*;

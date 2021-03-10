@@ -3,7 +3,7 @@ package controllers.workers.task;
 import controllers.workers.DailyWorker;
 import models.Model;
 import models.Server;
-import process.publication.TasksPublicationProcess;
+import process.task.publication.TasksPublicationProcess;
 
 /**
  * Gère la publication régulière de la liste des tâches en cours sur l'ensemble des serveurs.

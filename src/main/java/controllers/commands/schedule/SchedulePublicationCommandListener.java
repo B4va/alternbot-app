@@ -2,8 +2,8 @@ package controllers.commands.schedule;
 
 import controllers.commands.CommandListener;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import process.publication.DailySchedulePublicationProcess;
-import process.publication.ScheduleFileExportProcess;
+import process.schedule.publication.DailySchedulePublicationProcess;
+import process.schedule.publication.ScheduleFileExportProcess;
 
 import java.text.ParseException;
 import java.util.Calendar;

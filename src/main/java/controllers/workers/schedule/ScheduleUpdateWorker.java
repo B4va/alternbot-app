@@ -1,7 +1,7 @@
 package controllers.workers.schedule;
 
 import controllers.workers.IntervalWorker;
-import process.data.SchedulesUpdateProcess;
+import process.schedule.data.SchedulesUpdateProcess;
 
 /**
  * Gère la mise à jour régulière des données relative aux emplois du temps

@@ -1,7 +1,7 @@
 package controllers.workers.schedule;
 
 import controllers.workers.DailyWorker;
-import process.publication.DailySchedulePublicationProcess;
+import process.schedule.publication.DailySchedulePublicationProcess;
 
 import java.util.Calendar;
 

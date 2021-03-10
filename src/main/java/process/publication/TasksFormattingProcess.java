@@ -19,8 +19,20 @@ public class TasksFormattingProcess {
    * @return message créé à partir de la liste de tâches
    */
   public String format(List<Task> tasks) {
+    return format(tasks, -1);
+  }
+
+  /**
+   * Formate une liste de tâches en indiquant la période concernée.
+   *
+   * @param tasks  liste de tâches à formater
+   * @param nbDays nombre de jours à compter de la date actuelle
+   * @return message créé à partir de la liste de tâches
+   */
+  public String format(List<Task> tasks, int nbDays) {
     if (tasks.isEmpty()) return "```\nAucune tâche en cours\n```";
-    StringBuilder sb = new StringBuilder("```\nLISTE DES TÂCHES EN COURS :");
+    StringBuilder sb = new StringBuilder("```\nLISTE DES TÂCHES EN COURS ");
+    sb.append(nbDays > -1 ? "(J+" + nbDays + ") :" : ":");
     tasks.forEach(t -> formatTask(t, sb));
     sb.append("\n```");
     return sb.toString();

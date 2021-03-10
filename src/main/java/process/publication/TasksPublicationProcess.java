@@ -30,7 +30,7 @@ public class TasksPublicationProcess extends Publication {
       .orElse(null);
     if (nonNull(server)) {
       List<Task> tasks = new TasksSelectionProcess().select(server, daysAfter);
-      String message = new TasksFormattingProcess().format(tasks);
+      String message = new TasksFormattingProcess().format(tasks, daysAfter);
       if (sendMessage(message, server, channel)) res = true;
     }
     return res;

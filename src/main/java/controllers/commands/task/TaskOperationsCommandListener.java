@@ -148,7 +148,7 @@ public class TaskOperationsCommandListener extends CommandListener {
   }
 
   private void runTaskPublication(String serverId, String channel) {
-    new TasksPublicationProcess().sendPublication(channel, serverId, -1);
+    new TasksPublicationProcess().sendPublication(channel, serverId);
   }
 
   public static Map<String, String> parseMessage(List<String> message) {

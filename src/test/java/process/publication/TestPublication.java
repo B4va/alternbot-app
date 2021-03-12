@@ -52,6 +52,13 @@ public class TestPublication {
   }
 
   @Test
+  public void testSendMessageLong(){
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertFalse(PROCESS.sendMessage(LONG_MESSAGE, server, CHANNEL));
+  }
+
+  @Test
   public void testSendMessage_invalid_server() {
     Server server = new Server(INVALID_SERVER_REF, null);
     assertFalse(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
@@ -105,10 +112,4 @@ public class TestPublication {
     assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), null, false, server, CHANNEL));
   }
 
-  @Test
-  public void testSendMessageLong(){
-    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
-    if (isNull(server.getReference())) fail();
-    assertFalse(PROCESS.sendMessage(LONG_MESSAGE, server, CHANNEL));
-  }
 }

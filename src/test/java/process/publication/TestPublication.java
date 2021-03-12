@@ -40,7 +40,7 @@ public class TestPublication {
     };
     CHANNEL = EnvironmentVariablesUtils.getString(CHANNEL_TEST, CHANNEL);
     for(int i=0;i<2001;i++){
-      LONG_MESSAGE+="a";
+      LONG_MESSAGE+="a ";
     }
   }
 

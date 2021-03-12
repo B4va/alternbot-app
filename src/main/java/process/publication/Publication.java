@@ -60,7 +60,9 @@ public abstract class Publication {
           if(message.charAt(j) == ' ') espaceTrouve = true;
           j++;
         }
-        res.add("("+i+"/"+nbDecomposition+") "+message.substring(2000*i,j));
+        if (2000 * i != j) {
+          res.add("(" + i + "/" + nbDecomposition + ") " + message.substring(2000 * i, j));
+        }
       }
       return res;
   }

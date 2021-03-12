@@ -2,9 +2,11 @@ package process.data;
 
 import models.Model;
 import models.Server;
+import models.Session;
 import models.Task;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,11 +29,14 @@ public class TasksSelectionProcess {
     Date after = calendar.getTime();
     calendar.add(Calendar.DAY_OF_MONTH, days + 1);
     Date before = calendar.getTime();
+    Comparator<Task> byDate = Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder()));
+    Comparator<Task> byTime = Comparator.comparing(Task::getDueTime, Comparator.nullsLast(Comparator.naturalOrder()));
     return Model.readAll(Task.class)
       .stream()
       .filter(t -> t.getServer().getId() == server.getId())
       .filter(t -> t.getDueDate().after(after))
       .filter(t -> days == -1 || t.getDueDate().before(before))
+      .sorted(byDate.thenComparing(byTime))
       .collect(Collectors.toList());
   }
 

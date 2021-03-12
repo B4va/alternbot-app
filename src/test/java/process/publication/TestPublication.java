@@ -27,6 +27,7 @@ public class TestPublication {
   private static String CHANNEL = "général";
   private static final String INVALID_SERVER_REF = "ref";
   private static final String NOT_EXISTING_CHANNEL = "nochan";
+  private static String LONG_MESSAGE = "";
 
   @BeforeAll
   public static void init() throws LoginException, InterruptedException {
@@ -38,6 +39,9 @@ public class TestPublication {
       }
     };
     CHANNEL = EnvironmentVariablesUtils.getString(CHANNEL_TEST, CHANNEL);
+    for(int i=0;i<2001;i++){
+      LONG_MESSAGE+=LONG_MESSAGE;
+    }
   }
 
   @Test
@@ -99,5 +103,12 @@ public class TestPublication {
     if (isNull(server.getReference())) fail();
     assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), "", false, server, CHANNEL));
     assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), null, false, server, CHANNEL));
+  }
+
+  @Test
+  public void testSendMessageLong(){
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertFalse(PROCESS.sendMessage(LONG_MESSAGE, server, CHANNEL));
   }
 }

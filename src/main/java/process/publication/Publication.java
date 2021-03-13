@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.utils.AttachmentOption;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
+import java.util.ArrayList;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static utils.JDAUtils.getJDAInstance;
@@ -29,11 +31,51 @@ public abstract class Publication {
    */
   protected boolean sendMessage(String message, Server server, String channel) {
     Guild guild = getGuild(server);
+    if(message.length() > 2000){
+      ArrayList<String> messages = decomposerMessage(message);
+      sendLongMessage(messages,server,channel);
+      return false;
+    }
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
       return doSendMessage(message, server, channel);
     } else {
       return false;
+    }
+  }
+
+  /**
+   *
+   * @param message à décomposer
+   * @return le message sous forme de sous messages
+   */
+  protected ArrayList<String> decomposerMessage(String message){
+      ArrayList<String> res = new ArrayList<String>();
+      int nbDecomposition = message.length()/2000 + 1;
+      res.add("(1/"+nbDecomposition+") "+message.substring(0,1999));
+      for(int i = 1 ; i<nbDecomposition + 1;i++){
+        boolean espaceTrouve = false;
+        int j = 2000 * i;
+        while(!espaceTrouve && j < message.length()){
+          if(message.charAt(j) == ' ') espaceTrouve = true;
+          j++;
+        }
+        if (2000 * i != j) {
+          res.add("(" + i + "/" + nbDecomposition + ") " + message.substring(2000 * i, j));
+        }
+      }
+      return res;
+  }
+
+  /**
+   *
+   * @param messages qui sont décomposés du message original en une liste
+   * @param server qui reçoit le message
+   * @param channel qui reçoit le message
+   */
+  protected void sendLongMessage(ArrayList<String> messages, Server server, String channel){
+    for(String s:messages){
+      sendMessage(s,server,channel);
     }
   }
 

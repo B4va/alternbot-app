@@ -1,7 +1,7 @@
 package process.schedule.data;
 
-import models.Schedule;
-import models.Session;
+import models.dao.Schedule;
+import models.dao.Session;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;

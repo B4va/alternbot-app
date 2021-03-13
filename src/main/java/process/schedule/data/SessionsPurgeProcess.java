@@ -1,7 +1,7 @@
 package process.schedule.data;
 
-import models.Model;
-import models.Session;
+import models.dao.ModelDAO;
+import models.dao.Session;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
@@ -18,7 +18,7 @@ public class SessionsPurgeProcess {
    * Supprime les cours ayant le statut 'mis à jour'.
    */
   public void purgeAllUpdated() {
-    List<Session> sessions = Model.readAll(Session.class);
+    List<Session> sessions = ModelDAO.readAll(Session.class);
     sessions.stream()
       .filter(Session::isUpdated)
       .forEach(Session::delete);
@@ -37,7 +37,7 @@ public class SessionsPurgeProcess {
     }
 
     AtomicInteger counter = new AtomicInteger(0);
-    List<Session> sessions = Model.readAll(Session.class);
+    List<Session> sessions = ModelDAO.readAll(Session.class);
     sessions.stream()
       .filter(s -> s.isPast(daysThreshold))
       .forEach(s -> {

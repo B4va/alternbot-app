@@ -1,13 +1,12 @@
 package process.schedule.data;
 
-import models.Model;
-import models.Schedule;
-import models.Session;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Session;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.schedule.data.SessionsPurgeProcess;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -44,7 +43,7 @@ public class TestSessionsPurgeProcess {
   @AfterEach
   public void tearDownEach() {
     if (nonNull(SESSION_TEST)) {
-      Session session = Model.read(SESSION_TEST.getId(), Session.class);
+      Session session = ModelDAO.read(SESSION_TEST.getId(), Session.class);
       if (nonNull(session)) session.delete();
     }
   }
@@ -55,9 +54,9 @@ public class TestSessionsPurgeProcess {
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     SESSION_TEST.setUpdated(true);
     SESSION_TEST.setId(SESSION_TEST.create());
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     PROCESS.purgeAllUpdated();
-    int updatedNbSessions = Model.readAll(Session.class).size();
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     assertEquals(updatedNbSessions, nbSessions - 1);
   }
 
@@ -66,9 +65,9 @@ public class TestSessionsPurgeProcess {
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     SESSION_TEST.setId(SESSION_TEST.create());
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     PROCESS.purgeAllUpdated();
-    int updatedNbSessions = Model.readAll(Session.class).size();
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     assertEquals(updatedNbSessions, nbSessions);
   }
 
@@ -95,9 +94,9 @@ public class TestSessionsPurgeProcess {
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     SESSION_TEST.setId(SESSION_TEST.create());
 
-    final int nbSessions = Model.readAll(Session.class).size();
+    final int nbSessions = ModelDAO.readAll(Session.class).size();
     assertEquals(0, PROCESS.purgePastDaysThreshold(4));
-    assertEquals(nbSessions, Model.readAll(Session.class).size());
+    assertEquals(nbSessions, ModelDAO.readAll(Session.class).size());
   }
 
   @Test
@@ -123,8 +122,8 @@ public class TestSessionsPurgeProcess {
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     session_test_3.setId(session_test_3.create());
 
-    final int nbSessions = Model.readAll(Session.class).size();
+    final int nbSessions = ModelDAO.readAll(Session.class).size();
     assertEquals(2, PROCESS.purgePastDaysThreshold(30));
-    assertEquals(nbSessions - 2, Model.readAll(Session.class).size());
+    assertEquals(nbSessions - 2, ModelDAO.readAll(Session.class).size());
   }
 }

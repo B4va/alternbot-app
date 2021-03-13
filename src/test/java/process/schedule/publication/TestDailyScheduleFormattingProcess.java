@@ -1,9 +1,8 @@
 package process.schedule.publication;
 
-import models.Session;
+import models.dao.Session;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.schedule.publication.DailyScheduleFormattingProcess;
 
 import java.text.ParseException;
 import java.util.ArrayList;

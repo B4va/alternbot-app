@@ -1,13 +1,12 @@
 package process.task.data;
 
-import models.Model;
-import models.Schedule;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Task;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.task.data.TasksSelectionProcess;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -72,9 +71,9 @@ public class TestTasksSelectionProcess {
   @AfterAll
   public static void tearDown() {
     Arrays.asList(TASK0, TASK1, TASK2, TASK3, TASK4, TASK5, TASK6)
-      .forEach(Model::delete);
+      .forEach(ModelDAO::delete);
     Arrays.asList(SERVER_MULTIPLE_TASKS, SERVER_ONE_TASK, SERVER_NO_TASK, SERVER_OLD_TASK, SERVER_NOT_SORTED_TASKS)
-      .forEach(Model::delete);
+      .forEach(ModelDAO::delete);
     SCHEDULE.delete();
   }
 

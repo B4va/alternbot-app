@@ -3,9 +3,9 @@ package process.task.data;
 import exceptions.InvalidIdException;
 import exceptions.MemberAccessException;
 import exceptions.ServerAccessException;
-import models.Model;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 
 import static java.util.Objects.isNull;
@@ -26,7 +26,7 @@ public class TaskDeletionProcess extends TaskAccessor {
    * @throws MemberAccessException l'utilisateur n'est pas autorisé à modifier les tâches
    */
   public boolean delete(int taskId, Server server, Member member) throws ServerAccessException, MemberAccessException, InvalidIdException {
-    Task task = Model.read(taskId, Task.class);
+    Task task = ModelDAO.read(taskId, Task.class);
     if (isNull(task)) throw new InvalidIdException();
     if (!isServerAuthorized(task, server)) throw new ServerAccessException();
     if (!isMemberAuthorized(member)) throw new MemberAccessException();

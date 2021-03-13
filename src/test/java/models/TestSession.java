@@ -1,5 +1,8 @@
 package models;
 
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Session;
 import org.junit.jupiter.api.*;
 
 import javax.persistence.PersistenceException;
@@ -38,11 +41,11 @@ public class TestSession implements TestModel {
 
   @AfterAll
   public static void tearDown() {
-    SESSION = Model.read(ID_SESSION, Session.class);
+    SESSION = ModelDAO.read(ID_SESSION, Session.class);
     if (nonNull(SESSION)) {
       SESSION.delete();
     }
-    SCHEDULE = Model.read(ID_SCHEDULE, Schedule.class);
+    SCHEDULE = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     if (nonNull(SCHEDULE)) {
       SCHEDULE.delete();
     }
@@ -61,7 +64,7 @@ public class TestSession implements TestModel {
       fail();
     }
     ID_SESSION = SESSION.create();
-    List<Session> sessions = Model.readAll(Session.class);
+    List<Session> sessions = ModelDAO.readAll(Session.class);
     assertTrue(sessions.stream().anyMatch(s -> s.getId() == ID_SESSION));
   }
 
@@ -255,7 +258,7 @@ public class TestSession implements TestModel {
     }
     SESSION.setUpdated(true);
     SESSION.update();
-    SESSION = Model.read(ID_SESSION, Session.class);
+    SESSION = ModelDAO.read(ID_SESSION, Session.class);
     assertAll(
       () -> assertEquals(SESSION.getName(), UPDATED_NAME),
       () -> assertEquals(SESSION.getLocation(), UPDATED_LOCATION),
@@ -279,7 +282,7 @@ public class TestSession implements TestModel {
   @Override
   public void testDelete() {
     SESSION.delete();
-    Session session = Model.read(ID_SESSION, Session.class);
+    Session session = ModelDAO.read(ID_SESSION, Session.class);
     assertNull(session);
   }
 }

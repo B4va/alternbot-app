@@ -1,6 +1,6 @@
 package process.commons;
 
-import models.Server;
+import models.dao.Server;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;

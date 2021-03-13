@@ -1,14 +1,11 @@
 package process.task.data;
 
-import models.Server;
-import models.Task;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 import utils.DateUtils;
 
 import java.text.ParseException;
-import java.util.Date;
-
-import static java.util.Objects.isNull;
 
 /**
  * Gère l'accès aux différentes tâches via commande utilisateur.

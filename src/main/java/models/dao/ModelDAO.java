@@ -1,4 +1,4 @@
-package models;
+package models.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Méthodes d'accès aux données propres aux différents modèles.
  */
-public abstract class Model {
+public abstract class ModelDAO {
 
   public abstract int getId();
 
@@ -37,7 +37,7 @@ public abstract class Model {
    * @param c  classe de l'objet
    * @return objet mappé
    */
-  public static <T extends Model> T read(Serializable id, Class<T> c) {
+  public static <T extends ModelDAO> T read(Serializable id, Class<T> c) {
     Session session = DbUtils.getSessionFactory().openSession();
     T object = session.get(c, id);
     session.close();

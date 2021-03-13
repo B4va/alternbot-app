@@ -1,7 +1,7 @@
 package process.schedule.data;
 
-import models.Schedule;
-import models.Session;
+import models.dao.Schedule;
+import models.dao.Session;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 

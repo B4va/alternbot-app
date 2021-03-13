@@ -1,10 +1,9 @@
 package process.schedule.publication;
 
-import models.Session;
+import models.dao.Session;
 import models.business.SessionChange;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.schedule.publication.ScheduleChangeFormattingProcess;
 
 import java.text.ParseException;
 import java.util.Arrays;

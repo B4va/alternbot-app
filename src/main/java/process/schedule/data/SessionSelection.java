@@ -1,6 +1,6 @@
 package process.schedule.data;
 
-import models.Session;
+import models.dao.Session;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 

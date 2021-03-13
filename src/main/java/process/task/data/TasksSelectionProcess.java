@@ -1,9 +1,8 @@
 package process.task.data;
 
-import models.Model;
-import models.Server;
-import models.Session;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Server;
+import models.dao.Task;
 
 import java.util.Calendar;
 import java.util.Comparator;
@@ -31,7 +30,7 @@ public class TasksSelectionProcess {
     Date before = calendar.getTime();
     Comparator<Task> byDate = Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder()));
     Comparator<Task> byTime = Comparator.comparing(Task::getDueTime, Comparator.nullsLast(Comparator.naturalOrder()));
-    return Model.readAll(Task.class)
+    return ModelDAO.readAll(Task.class)
       .stream()
       .filter(t -> t.getServer().getId() == server.getId())
       .filter(t -> t.getDueDate().after(after))

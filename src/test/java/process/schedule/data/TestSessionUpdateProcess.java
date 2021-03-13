@@ -1,15 +1,14 @@
 package process.schedule.data;
 
-import models.Model;
-import models.Schedule;
-import models.Session;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Session;
 import models.business.SessionChange;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
-import process.schedule.data.SessionUpdateProcess;
 
 import java.text.ParseException;
 import java.util.*;
@@ -90,10 +89,10 @@ public class TestSessionUpdateProcess {
 
   @AfterAll
   public static void tearDown() {
-    List<Session> sessions = Model.readAll(Session.class);
+    List<Session> sessions = ModelDAO.readAll(Session.class);
     sessions.stream()
       .filter(s -> s.getName().equals(NAME_TEST))
-      .forEach(Model::delete);
+      .forEach(ModelDAO::delete);
     SESSION_RDM.delete();
     SESSION_OL_END.delete();
     SESSION_OL_START.delete();
@@ -107,21 +106,21 @@ public class TestSessionUpdateProcess {
     SESSION_RDM.update();
     SESSION_OL_END.update();
     SESSION_OL_START.update();
-    List<Session> sessions = Model.readAll(Session.class);
+    List<Session> sessions = ModelDAO.readAll(Session.class);
     sessions.stream()
       .filter(s -> s.getName().equals(NAME_TEST))
-      .forEach(Model::delete);
+      .forEach(ModelDAO::delete);
     OLD_SESSION.setUpdated(false);
     OLD_SESSION.update();
   }
 
   @Test
   public void testUpdateWithNew_new_session() {
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_RDM);
     changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
@@ -132,11 +131,11 @@ public class TestSessionUpdateProcess {
 
   @Test
   public void testUpdateWithNew_new_session_no_old() {
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.emptySet();
     changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
@@ -147,12 +146,12 @@ public class TestSessionUpdateProcess {
 
   @Test
   public void testUpdateWithNew_overlapping_session_with_end() {
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_END);
     changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
-    Session oldSession = Model.read(SESSION_OL_END.getId(), Session.class);
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
+    Session oldSession = ModelDAO.read(SESSION_OL_END.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
@@ -166,12 +165,12 @@ public class TestSessionUpdateProcess {
 
   @Test
   public void testUpdateWithNew_overlapping_session_with_start() {
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_START);
     changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
-    Session oldSession = Model.read(SESSION_OL_START.getId(), Session.class);
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
+    Session oldSession = ModelDAO.read(SESSION_OL_START.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
@@ -185,13 +184,13 @@ public class TestSessionUpdateProcess {
 
   @Test
   public void testUpdateWithNew_multiple_overlapping() {
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Sets.newSet(SESSION_OL_END, SESSION_OL_START);
     changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
-    Session oldSession1 = Model.read(SESSION_OL_END.getId(), Session.class);
-    Session oldSession2 = Model.read(SESSION_OL_START.getId(), Session.class);
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
+    Session oldSession1 = ModelDAO.read(SESSION_OL_END.getId(), Session.class);
+    Session oldSession2 = ModelDAO.read(SESSION_OL_START.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
@@ -210,11 +209,11 @@ public class TestSessionUpdateProcess {
     Session alreadySaved = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     alreadySaved.setId(alreadySaved.create());
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(alreadySaved);
     changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions),
@@ -227,11 +226,11 @@ public class TestSessionUpdateProcess {
   public void testUpdateWithNew_same_time_sessions() throws ParseException {
     Session sameTimeSession = new Session(NAME_TEST, TEACHER_OL_START, LOCATION_TEST, stringToDate(DATE_OL_START),
       stringToTime(START_OL_START), stringToTime(END_OL_START), SCHEDULE);
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_START);
     changes = PROCESS.updateWithNew(sameTimeSession, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),
@@ -245,12 +244,12 @@ public class TestSessionUpdateProcess {
 
   @Test
   public void testUpdateWithNew_new_session_all_over_the_old() {
-    int nbSessions = Model.readAll(Session.class).size();
+    int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OVER);
     changes = PROCESS.updateWithNew(SESSION_TEST, oldSessions, changes);
-    int updatedNbSessions = Model.readAll(Session.class).size();
-    Session oldSession = Model.read(SESSION_OVER.getId(), Session.class);
+    int updatedNbSessions = ModelDAO.readAll(Session.class).size();
+    Session oldSession = ModelDAO.read(SESSION_OVER.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
       () -> assertEquals(updatedNbSessions, nbSessions + 1),

@@ -1,9 +1,8 @@
 package process.task.publication;
 
-import models.Task;
+import models.dao.Task;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.task.publication.TasksFormattingProcess;
 
 import java.text.ParseException;
 import java.util.ArrayList;

@@ -1,9 +1,8 @@
 package process.commons;
 
-import models.Server;
+import models.dao.Server;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.commons.Publication;
 import utils.EnvironmentVariablesUtils;
 
 import javax.security.auth.login.LoginException;

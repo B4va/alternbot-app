@@ -1,7 +1,7 @@
 package process.schedule.publication;
 
-import models.Server;
-import models.Session;
+import models.dao.Server;
+import models.dao.Session;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;

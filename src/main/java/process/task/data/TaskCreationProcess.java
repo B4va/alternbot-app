@@ -2,8 +2,8 @@ package process.task.data;
 
 import exceptions.InvalidDataException;
 import exceptions.MemberAccessException;
-import models.Server;
-import models.Task;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.text.ParseException;

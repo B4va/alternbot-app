@@ -1,8 +1,8 @@
 package process.schedule.publication;
 
-import models.Schedule;
-import models.Server;
-import models.Session;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Session;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

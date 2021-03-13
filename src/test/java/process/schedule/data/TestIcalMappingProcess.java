@@ -1,10 +1,9 @@
 package process.schedule.data;
 
-import models.Schedule;
-import models.Session;
+import models.dao.Schedule;
+import models.dao.Session;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.schedule.data.IcalMappingProcess;
 
 import java.util.List;
 

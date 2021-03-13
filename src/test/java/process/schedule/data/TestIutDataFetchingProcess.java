@@ -1,11 +1,10 @@
 package process.schedule.data;
 
-import models.Schedule;
+import models.dao.Schedule;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.schedule.data.IutDataFetchingProcess;
 import utils.EnvironmentVariablesUtils;
 
 import static java.util.Objects.isNull;

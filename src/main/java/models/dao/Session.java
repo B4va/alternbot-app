@@ -1,4 +1,4 @@
-package models;
+package models.dao;
 
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "sessions")
-public class Session extends Model {
+public class Session extends ModelDAO {
 
   @Id
   @Generated(GenerationTime.INSERT)

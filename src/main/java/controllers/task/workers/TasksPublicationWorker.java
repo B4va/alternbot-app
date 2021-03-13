@@ -1,8 +1,8 @@
 package controllers.task.workers;
 
 import controllers.commons.workers.DailyWorker;
-import models.Model;
-import models.Server;
+import models.dao.ModelDAO;
+import models.dao.Server;
 import process.task.publication.TasksPublicationProcess;
 
 /**
@@ -19,7 +19,7 @@ public class TasksPublicationWorker extends DailyWorker {
 
   @Override
   protected void doRunOne() {
-    Model.readAll(Server.class)
+    ModelDAO.readAll(Server.class)
       .forEach(s -> new TasksPublicationProcess().sendPublication(CHANNEL, s.getReference(), DAYS));
   }
 

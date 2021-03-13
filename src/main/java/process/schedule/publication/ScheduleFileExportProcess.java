@@ -1,8 +1,8 @@
 package process.schedule.publication;
 
-import models.Model;
-import models.Server;
-import models.Session;
+import models.dao.ModelDAO;
+import models.dao.Server;
+import models.dao.Session;
 import org.apache.logging.log4j.Logger;
 import process.commons.Publication;
 import process.schedule.data.ScheduleExportSessionSelectionProcess;
@@ -51,7 +51,7 @@ public class ScheduleFileExportProcess extends Publication {
       return false;
     }
 
-    final Server server = Model.readAll(Server.class).stream()
+    final Server server = ModelDAO.readAll(Server.class).stream()
       .filter(srv -> srv.getReference().equals(serverRef))
       .findAny().orElse(null);
     if (isNull(server) || isNull(server.getSchedule())) {

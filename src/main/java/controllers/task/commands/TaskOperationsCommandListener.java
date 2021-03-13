@@ -5,8 +5,9 @@ import exceptions.InvalidDataException;
 import exceptions.InvalidIdException;
 import exceptions.MemberAccessException;
 import exceptions.ServerAccessException;
-import models.Model;
-import models.Server;
+import models.dao.ModelDAO;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import process.task.data.TaskCreationProcess;
@@ -18,7 +19,7 @@ import java.text.ParseException;
 import java.util.*;
 
 /**
- * Gère les opérations de CRUD réalisées sur les {@link models.Task}.
+ * Gère les opérations de CRUD réalisées sur les {@link Task}.
  */
 public class TaskOperationsCommandListener extends CommandListener {
 
@@ -41,7 +42,7 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   @Override
   protected void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
-    Server server = Model.readAll(Server.class).stream()
+    Server server = ModelDAO.readAll(Server.class).stream()
       .filter(s -> s.getReference().equals(event.getGuild().getId()))
       .findFirst()
       .orElse(null);

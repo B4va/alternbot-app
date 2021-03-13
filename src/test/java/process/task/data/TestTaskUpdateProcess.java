@@ -4,17 +4,15 @@ import exceptions.InvalidDataException;
 import exceptions.InvalidIdException;
 import exceptions.MemberAccessException;
 import exceptions.ServerAccessException;
-import models.Model;
-import models.Schedule;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.task.data.TaskAccessor;
-import process.task.data.TaskUpdateProcess;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -59,7 +57,7 @@ public class TestTaskUpdateProcess {
   @Test
   public void testUpdate_ok() throws ServerAccessException, InvalidDataException, ParseException, MemberAccessException, InvalidIdException {
     PROCESS.update(TASK.getId(), VALID_DESCRIPTION, VALID_DUE_DATE, VALID_DUE_TIME, VALID_MEMBER, SERVER);
-    Task task = Model.read(TASK.getId(), Task.class);
+    Task task = ModelDAO.read(TASK.getId(), Task.class);
     assertAll(
       () -> assertEquals(task.getDescription(), VALID_DESCRIPTION),
       () -> assertEquals(task.getDueDate(), stringToDate(VALID_DUE_DATE)),
@@ -115,8 +113,8 @@ public class TestTaskUpdateProcess {
 
   @AfterAll
   public static void tearDown() {
-    if (nonNull(Model.read(TASK.getId(), Task.class))) TASK.delete();
-    if (nonNull(Model.read(SERVER.getId(), Server.class))) SERVER.delete();
-    if (nonNull(Model.read(SCHEDULE.getId(), Schedule.class))) SCHEDULE.delete();
+    if (nonNull(ModelDAO.read(TASK.getId(), Task.class))) TASK.delete();
+    if (nonNull(ModelDAO.read(SERVER.getId(), Server.class))) SERVER.delete();
+    if (nonNull(ModelDAO.read(SCHEDULE.getId(), Schedule.class))) SCHEDULE.delete();
   }
 }

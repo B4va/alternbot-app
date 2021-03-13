@@ -1,8 +1,8 @@
 package process.task.publication;
 
-import models.Model;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Server;
+import models.dao.Task;
 import process.commons.Publication;
 import process.task.data.TasksSelectionProcess;
 
@@ -25,7 +25,7 @@ public class TasksPublicationProcess extends Publication {
    */
   public boolean sendPublication(String channel, String serverRef, int daysAfter) {
     boolean res = false;
-    Server server = Model.readAll(Server.class).stream()
+    Server server = ModelDAO.readAll(Server.class).stream()
       .filter(s -> s.getReference().equals(serverRef))
       .findAny()
       .orElse(null);

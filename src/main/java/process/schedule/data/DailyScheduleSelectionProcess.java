@@ -1,7 +1,7 @@
 package process.schedule.data;
 
-import models.Schedule;
-import models.Session;
+import models.dao.Schedule;
+import models.dao.Session;
 
 import java.util.Calendar;
 import java.util.Collections;

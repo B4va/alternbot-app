@@ -1,9 +1,8 @@
 package process.schedule.data;
 
-import models.Session;
+import models.dao.Session;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.schedule.data.SessionSelection;
 
 import java.text.ParseException;
 import java.util.ArrayList;

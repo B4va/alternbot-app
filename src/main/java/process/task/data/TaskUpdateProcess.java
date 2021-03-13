@@ -4,9 +4,9 @@ import exceptions.InvalidDataException;
 import exceptions.InvalidIdException;
 import exceptions.MemberAccessException;
 import exceptions.ServerAccessException;
-import models.Model;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.text.ParseException;
@@ -37,7 +37,7 @@ public class TaskUpdateProcess extends TaskAccessor {
    * @throws ParseException        les dates saisies ne sont pas au bon format
    */
   public boolean update(int taskId, String description, String dueDate, String dueTime, Member member, Server server) throws MemberAccessException, ServerAccessException, InvalidDataException, ParseException, InvalidIdException {
-    Task task = Model.read(taskId, Task.class);
+    Task task = ModelDAO.read(taskId, Task.class);
     if (isNull(task)) throw new InvalidIdException();
     if (!isServerAuthorized(task, server)) throw new ServerAccessException();
     if (!isMemberAuthorized(member)) throw new MemberAccessException();

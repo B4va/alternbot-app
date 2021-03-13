@@ -1,7 +1,9 @@
 package models;
 
+import models.dao.ModelDAO;
+
 /**
- * Méthodes de test de l'implémentation du système de CRUD pour les {@link Model}.
+ * Méthodes de test de l'implémentation du système de CRUD pour les {@link ModelDAO}.
  */
 public interface TestModel {
 

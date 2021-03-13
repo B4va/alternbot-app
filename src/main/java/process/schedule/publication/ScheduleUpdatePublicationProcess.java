@@ -1,6 +1,6 @@
 package process.schedule.publication;
 
-import models.Schedule;
+import models.dao.Schedule;
 import models.business.SessionChange;
 import process.commons.Publication;
 

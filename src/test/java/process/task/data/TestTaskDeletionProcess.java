@@ -3,15 +3,13 @@ package process.task.data;
 import exceptions.InvalidIdException;
 import exceptions.MemberAccessException;
 import exceptions.ServerAccessException;
-import models.Model;
-import models.Schedule;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.junit.jupiter.api.*;
-import process.task.data.TaskAccessor;
-import process.task.data.TaskDeletionProcess;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -43,8 +41,8 @@ public class TestTaskDeletionProcess {
 
   @AfterAll
   public static void tearDown() {
-    if (nonNull(Model.read(SERVER.getId(), Server.class))) SERVER.delete();
-    if (nonNull(Model.read(SCHEDULE.getId(), Schedule.class))) SCHEDULE.delete();
+    if (nonNull(ModelDAO.read(SERVER.getId(), Server.class))) SERVER.delete();
+    if (nonNull(ModelDAO.read(SCHEDULE.getId(), Schedule.class))) SCHEDULE.delete();
   }
 
   @BeforeEach
@@ -55,7 +53,7 @@ public class TestTaskDeletionProcess {
 
   @AfterEach
   public void tearDownEach() {
-    if (nonNull(Model.read(TASK.getId(), Task.class))) TASK.delete();
+    if (nonNull(ModelDAO.read(TASK.getId(), Task.class))) TASK.delete();
   }
 
   @Test
@@ -68,7 +66,7 @@ public class TestTaskDeletionProcess {
     when(validMember.getRoles()).thenReturn(Collections.singletonList(validRole));
     assertAll(
       () -> assertDoesNotThrow(() -> PROCESS.delete(TASK.getId(), validServer, validMember)),
-      () -> assertNull(Model.read(TASK.getId(), Task.class))
+      () -> assertNull(ModelDAO.read(TASK.getId(), Task.class))
     );
   }
 
@@ -93,7 +91,7 @@ public class TestTaskDeletionProcess {
     when(validMember.getRoles()).thenReturn(Collections.singletonList(validRole));
     assertAll(
       () -> assertThrows(ServerAccessException.class, () -> PROCESS.delete(TASK.getId(), invalidServer, validMember)),
-      () -> assertNotNull(Model.read(TASK.getId(), Task.class))
+      () -> assertNotNull(ModelDAO.read(TASK.getId(), Task.class))
     );
   }
 
@@ -107,7 +105,7 @@ public class TestTaskDeletionProcess {
     when(invalidMember.getRoles()).thenReturn(Collections.singletonList(invalidRole));
     assertAll(
       () -> assertThrows(MemberAccessException.class, () -> PROCESS.delete(TASK.getId(), validServer, invalidMember)),
-      () -> assertNotNull(Model.read(TASK.getId(), Task.class))
+      () -> assertNotNull(ModelDAO.read(TASK.getId(), Task.class))
     );
   }
 }

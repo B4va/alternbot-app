@@ -1,8 +1,8 @@
 package process.schedule.data;
 
-import models.Model;
-import models.Schedule;
-import models.Session;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Session;
 import models.business.SessionChange;
 import process.schedule.publication.ScheduleUpdatePublicationProcess;
 
@@ -21,7 +21,7 @@ public class SchedulesUpdateProcess {
    * Met à jour les données de la base en récupérant les données de l'IUT.
    */
   public void update() {
-    List<Schedule> schedules = Model.readAll(Schedule.class);
+    List<Schedule> schedules = ModelDAO.readAll(Schedule.class);
     IutDataFetchingProcess iutDataFetchingProcess = new IutDataFetchingProcess();
     IcalMappingProcess icalMappingProcess = new IcalMappingProcess();
     schedules.forEach(s -> {

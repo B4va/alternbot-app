@@ -2,17 +2,15 @@ package process.task.data;
 
 import exceptions.InvalidDataException;
 import exceptions.MemberAccessException;
-import models.Model;
-import models.Schedule;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Task;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.task.data.TaskAccessor;
-import process.task.data.TaskCreationProcess;
 
 import java.text.ParseException;
 import java.util.Collections;
@@ -43,9 +41,9 @@ public class TestTaskCreationProcess {
 
   @AfterAll
   public static void tearDown() {
-      Model.readAll(Task.class).stream()
+      ModelDAO.readAll(Task.class).stream()
         .filter(t -> t.getDescription().equals(DESCRIPTION))
-        .forEach(Model::delete);
+        .forEach(ModelDAO::delete);
       SERVER.delete();
       SCHEDULE.delete();
   }
@@ -61,7 +59,7 @@ public class TestTaskCreationProcess {
     final String dueDate = "01-01-2020";
     final String dueTime = "10:00";
     PROCESS.create(DESCRIPTION, dueDate, dueTime, validMember, validServer);
-    Task task = Model.readAll(Task.class)
+    Task task = ModelDAO.readAll(Task.class)
       .stream().filter(t -> t.getDescription().equals(DESCRIPTION))
       .findFirst()
       .orElse(null);

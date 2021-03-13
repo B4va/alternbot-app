@@ -1,11 +1,10 @@
 package process.task.publication;
 
-import models.Schedule;
-import models.Server;
+import models.dao.Schedule;
+import models.dao.Server;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import process.task.publication.TasksPublicationProcess;
 import utils.EnvironmentVariablesUtils;
 
 import javax.security.auth.login.LoginException;

@@ -1,6 +1,6 @@
 package process.task.publication;
 
-import models.Task;
+import models.dao.Task;
 
 import java.util.List;
 

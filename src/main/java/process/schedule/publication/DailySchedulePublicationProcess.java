@@ -1,9 +1,9 @@
 package process.schedule.publication;
 
-import models.Model;
-import models.Schedule;
-import models.Server;
-import models.Session;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Session;
 import process.commons.Publication;
 import process.schedule.data.DailyScheduleSelectionProcess;
 
@@ -27,7 +27,7 @@ public class DailySchedulePublicationProcess extends Publication {
    */
   public boolean sendPublication(Date date) {
     AtomicBoolean res = new AtomicBoolean(true);
-    List<Schedule> schedules = Model.readAll(Schedule.class);
+    List<Schedule> schedules = ModelDAO.readAll(Schedule.class);
     schedules.forEach(schedule -> {
       List<Session> sessions = new DailyScheduleSelectionProcess().select(schedule, date);
       String message = new DailyScheduleFormattingProcess().format(sessions, date);
@@ -47,7 +47,7 @@ public class DailySchedulePublicationProcess extends Publication {
    * @param channel   channel dans lequel publier l'edt
    */
   public void sendPublication(Date date, String serverRef, String channel) {
-    Server server = Model.readAll(Server.class).stream()
+    Server server = ModelDAO.readAll(Server.class).stream()
       .filter(s -> s.getReference().equals(serverRef))
       .findAny()
       .orElse(null);

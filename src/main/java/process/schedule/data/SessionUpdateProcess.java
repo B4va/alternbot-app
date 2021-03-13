@@ -1,6 +1,6 @@
 package process.schedule.data;
 
-import models.Session;
+import models.dao.Session;
 import models.business.SessionChange;
 
 import java.util.ArrayList;

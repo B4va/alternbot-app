@@ -157,8 +157,6 @@ public class Session extends Model {
    * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire)
    */
   public boolean isPast() {
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DAY_OF_MONTH, -1);
-    return date.before(calendar.getTime());
+    return this.isPast(-1);
   }
 }

@@ -101,20 +101,22 @@ public class TestSessionsPurgeProcess {
 
   @Test
   public void testPurgePastDaysThreshold_ok() throws ParseException {
-    // Cours 5 jours en avance sur le seuil, ne sera pas supprimé
+    // Cours en avance de 1 jour sur le seuil, ne sera pas supprimé
     Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DAY_OF_MONTH, -25);
+    calendar.add(Calendar.DAY_OF_MONTH, -29);
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, calendar.getTime(),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     SESSION_TEST.setId(SESSION_TEST.create());
 
     // Cours dont la date est égale au seuil, sera supprimé
+    calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -30);
     Session session_test_2 = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, calendar.getTime(),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
     session_test_2.setId(session_test_2.create());
 
     // Cours dont la date est au-delà du seuil, sera supprimé
+    calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -31);
     Session session_test_3 = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, calendar.getTime(),
       stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);

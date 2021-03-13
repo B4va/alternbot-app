@@ -27,7 +27,6 @@ public class TestPublication {
   private static String CHANNEL = "général";
   private static final String INVALID_SERVER_REF = "ref";
   private static final String NOT_EXISTING_CHANNEL = "nochan";
-  private static String LONG_MESSAGE = "";
 
   @BeforeAll
   public static void init() throws LoginException, InterruptedException {
@@ -39,9 +38,6 @@ public class TestPublication {
       }
     };
     CHANNEL = EnvironmentVariablesUtils.getString(CHANNEL_TEST, CHANNEL);
-    for(int i=0;i<2001;i++){
-      LONG_MESSAGE+="a ";
-    }
   }
 
   @Test
@@ -51,11 +47,19 @@ public class TestPublication {
     assertTrue(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
   }
 
+  /**
+   * Formatage à confirmer dans le serveur de test.
+   */
   @Test
   public void testSendMessageLong(){
+    StringBuilder longMessage = new StringBuilder("Test\n").append("```\n");
+    for(int i = 0 ; i < 200 ; i++){
+      longMessage.append("Information de cours\n");
+    }
+    longMessage.append("```").append("\ntest");
     Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
     if (isNull(server.getReference())) fail();
-    assertFalse(PROCESS.sendMessage(LONG_MESSAGE, server, CHANNEL));
+    assertTrue(PROCESS.sendMessage(longMessage.toString(), server, CHANNEL));
   }
 
   @Test

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -31,10 +32,10 @@ public abstract class Publication {
    */
   protected boolean sendMessage(String message, Server server, String channel) {
     Guild guild = getGuild(server);
-    if(message.length() > 2000){
-      ArrayList<String> messages = decomposerMessage(message);
-      sendLongMessage(messages,server,channel);
-      return false;
+    if (message.length() > 2000) {
+      List<String> messages = decomposerMessage(message);
+      sendLongMessage(messages, server, channel);
+      return true;
     }
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
@@ -45,38 +46,43 @@ public abstract class Publication {
   }
 
   /**
+   * Décompose le message en tenant compte des sauts de lignes et du
+   * formattage en mode code (```).
    *
    * @param message à décomposer
    * @return le message sous forme de sous messages
    */
-  protected ArrayList<String> decomposerMessage(String message){
-      ArrayList<String> res = new ArrayList<String>();
-      int nbDecomposition = message.length()/2000 + 1;
-      res.add("(1/"+nbDecomposition+") "+message.substring(0,1999));
-      for(int i = 1 ; i<nbDecomposition + 1;i++){
-        boolean espaceTrouve = false;
-        int j = 2000 * i;
-        while(!espaceTrouve && j < message.length()){
-          if(message.charAt(j) == ' ') espaceTrouve = true;
-          j++;
-        }
-        if (2000 * i != j) {
-          res.add("(" + i + "/" + nbDecomposition + ") " + message.substring(2000 * i, j));
-        }
+  protected List<String> decomposerMessage(String message) {
+    String[] splited = message.split("\n");
+    int i = 0;
+    int codeMarker = 0;
+    List<String> messages = new ArrayList<>();
+    StringBuilder stringBuilder = null;
+    while (i < splited.length) {
+      if (isNull(stringBuilder)) {
+        stringBuilder = new StringBuilder();
+        if (codeMarker % 2 != 0) stringBuilder.append("```\n");
+      } else if ((stringBuilder.toString() + splited[i]).length() > 1900) {
+        if (codeMarker % 2 != 0) stringBuilder.append("\n```");
+        messages.add(stringBuilder.toString());
+        stringBuilder = null;
+      } else {
+        stringBuilder.append(splited[i]).append("\n");
+        if (splited[i].equals("```")) codeMarker++;
+        i++;
       }
-      return res;
+    }
+    if (nonNull(stringBuilder)) messages.add(stringBuilder.toString());
+    return messages;
   }
 
   /**
-   *
    * @param messages qui sont décomposés du message original en une liste
-   * @param server qui reçoit le message
-   * @param channel qui reçoit le message
+   * @param server   qui reçoit le message
+   * @param channel  qui reçoit le message
    */
-  protected void sendLongMessage(ArrayList<String> messages, Server server, String channel){
-    for(String s:messages){
-      sendMessage(s,server,channel);
-    }
+  protected void sendLongMessage(List<String> messages, Server server, String channel) {
+    messages.forEach(m -> doSendMessage(m, server, channel));
   }
 
   /**

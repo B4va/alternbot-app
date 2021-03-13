@@ -36,7 +36,7 @@ public class SchedulesUpdateProcess {
         new ScheduleUpdatePublicationProcess().sendPublication(changes, s);
       }
     });
-    new SessionsPurgeProcess().purge();
+    new SessionsPurgeProcess().purgeAllUpdated();
   }
 
   private List<SessionChange> doUpdate(List<SessionChange> changes, List<Session> newSessions, Set<Session> oldSessions) {

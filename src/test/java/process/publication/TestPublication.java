@@ -47,6 +47,21 @@ public class TestPublication {
     assertTrue(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
   }
 
+  /**
+   * Formatage à confirmer dans le serveur de test.
+   */
+  @Test
+  public void testSendMessageLong(){
+    StringBuilder longMessage = new StringBuilder("Test\n").append("```\n");
+    for(int i = 0 ; i < 200 ; i++){
+      longMessage.append("Information de cours\n");
+    }
+    longMessage.append("```").append("\ntest");
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertTrue(PROCESS.sendMessage(longMessage.toString(), server, CHANNEL));
+  }
+
   @Test
   public void testSendMessage_invalid_server() {
     Server server = new Server(INVALID_SERVER_REF, null);
@@ -100,4 +115,5 @@ public class TestPublication {
     assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), "", false, server, CHANNEL));
     assertFalse(PROCESS.sendFile(TEST_FILE_CONTENT.getBytes(StandardCharsets.UTF_8), null, false, server, CHANNEL));
   }
+
 }

@@ -8,6 +8,9 @@ import net.dv8tion.jda.api.utils.AttachmentOption;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static utils.JDAUtils.getJDAInstance;
@@ -29,12 +32,57 @@ public abstract class Publication {
    */
   protected boolean sendMessage(String message, Server server, String channel) {
     Guild guild = getGuild(server);
+    if (message.length() > 2000) {
+      List<String> messages = decomposerMessage(message);
+      sendLongMessage(messages, server, channel);
+      return true;
+    }
     if (isNull(guild)) return false;
     if (hasChannel(guild, channel)) {
       return doSendMessage(message, server, channel);
     } else {
       return false;
     }
+  }
+
+  /**
+   * Décompose le message en tenant compte des sauts de lignes et du
+   * formattage en mode code (```).
+   *
+   * @param message à décomposer
+   * @return le message sous forme de sous messages
+   */
+  protected List<String> decomposerMessage(String message) {
+    String[] splited = message.split("\n");
+    int i = 0;
+    int codeMarker = 0;
+    List<String> messages = new ArrayList<>();
+    StringBuilder stringBuilder = null;
+    while (i < splited.length) {
+      if (isNull(stringBuilder)) {
+        stringBuilder = new StringBuilder();
+        if (codeMarker % 2 != 0) stringBuilder.append("```\n");
+      } else if ((stringBuilder.toString() + splited[i]).length() > 1900) {
+        if (codeMarker % 2 != 0) stringBuilder.append("\n```");
+        messages.add(stringBuilder.toString());
+        stringBuilder = null;
+      } else {
+        stringBuilder.append(splited[i]).append("\n");
+        if (splited[i].equals("```")) codeMarker++;
+        i++;
+      }
+    }
+    if (nonNull(stringBuilder)) messages.add(stringBuilder.toString());
+    return messages;
+  }
+
+  /**
+   * @param messages qui sont décomposés du message original en une liste
+   * @param server   qui reçoit le message
+   * @param channel  qui reçoit le message
+   */
+  protected void sendLongMessage(List<String> messages, Server server, String channel) {
+    messages.forEach(m -> doSendMessage(m, server, channel));
   }
 
   /**

@@ -143,7 +143,7 @@ public class Session extends Model {
 
   /**
    * Indique si la date du cours est passée d'au moins le nombre de jours donné.
-   * @param nbDays
+   * @param nbDays Nombre de jours.
    * @return true si la date du cours est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
    */
   public boolean isPast(int nbDays) {

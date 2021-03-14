@@ -142,12 +142,21 @@ public class Session extends Model {
   }
 
   /**
+   * Indique si la date du cours est passée d'au moins le nombre de jours donné.
+   * @param nbDays Nombre de jours.
+   * @return true si la date du cours est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
+   */
+  public boolean isPast(int nbDays) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_MONTH, -nbDays);
+    return date.equals(calendar.getTime()) || date.before(calendar.getTime());
+  }
+
+  /**
    * Indique si le cours est considéré comme passé.
-   * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire
+   * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire)
    */
   public boolean isPast() {
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DAY_OF_MONTH, -1);
-    return date.before(calendar.getTime());
+    return this.isPast(-1);
   }
 }

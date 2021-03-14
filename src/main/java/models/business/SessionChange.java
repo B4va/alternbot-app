@@ -1,6 +1,6 @@
 package models.business;
 
-import models.Session;
+import models.dao.Session;
 
 import java.util.List;
 

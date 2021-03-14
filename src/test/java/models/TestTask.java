@@ -1,10 +1,13 @@
 package models;
 
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Task;
 import org.junit.jupiter.api.*;
 
 import javax.persistence.PersistenceException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
@@ -39,19 +42,24 @@ public class TestTask implements TestModel {
 
   @AfterAll
   public static void tearDown() {
-    TASK = Model.read(TASK_ID, Task.class);
+    TASK = ModelDAO.read(TASK_ID, Task.class);
     if (nonNull(TASK)) {
       TASK.delete();
     }
 
-    UPDATED_SERVER = Model.read(UPDATED_SERVER_ID, Server.class);
+    UPDATED_SERVER = ModelDAO.read(UPDATED_SERVER_ID, Server.class);
     if (nonNull(UPDATED_SERVER)) {
       UPDATED_SERVER.delete();
     }
 
-    SERVER = Model.read(SERVER_ID, Server.class);
+    SERVER = ModelDAO.read(SERVER_ID, Server.class);
     if (nonNull(SERVER)) {
       SERVER.delete();
+    }
+
+    SCHEDULE = ModelDAO.read(SCHEDULE_ID, Schedule.class);
+    if (nonNull(SCHEDULE)) {
+      SCHEDULE.delete();
     }
   }
 
@@ -72,7 +80,7 @@ public class TestTask implements TestModel {
     }
 
     TASK_ID = TASK.create();
-    final List<Task> tasks = Model.readAll(Task.class);
+    final List<Task> tasks = ModelDAO.readAll(Task.class);
     assertTrue(tasks.stream().anyMatch(t -> t.getId() == TASK_ID));
   }
 
@@ -169,7 +177,7 @@ public class TestTask implements TestModel {
     }
 
     TASK.update();
-    TASK = Model.read(TASK_ID, Task.class);
+    TASK = ModelDAO.read(TASK_ID, Task.class);
     assertAll(
       () -> assertEquals(UPDATED_SERVER_REFERENCE, TASK.getServer().getReference()),
       () -> assertEquals(UPDATED_TASK_DESCRIPTION, TASK.getDescription()),
@@ -225,7 +233,7 @@ public class TestTask implements TestModel {
   @Override
   public void testDelete() {
     TASK.delete();
-    Task task = Model.read(TASK_ID, Task.class);
+    Task task = ModelDAO.read(TASK_ID, Task.class);
     assertNull(task);
   }
 }

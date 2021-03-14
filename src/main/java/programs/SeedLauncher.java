@@ -1,9 +1,9 @@
 package programs;
 
-import models.Model;
-import models.Schedule;
-import models.Server;
-import models.Task;
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Task;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -52,10 +52,10 @@ public class SeedLauncher {
   }
 
   private static void deleteAll() {
-    Model.deleteAll(Task.class);
-    Model.deleteAll(Server.class);
-    Model.deleteAll(models.Session.class);
-    Model.deleteAll(Schedule.class);
+    ModelDAO.deleteAll(Task.class);
+    ModelDAO.deleteAll(Server.class);
+    ModelDAO.deleteAll(models.dao.Session.class);
+    ModelDAO.deleteAll(Schedule.class);
   }
 
   private static List<Schedule> seedSchedules(Session session) {
@@ -83,12 +83,12 @@ public class SeedLauncher {
     return servers;
   }
 
-  private static List<models.Session> seedSessions(Session session, List<Schedule> schedules) throws ParseException {
-    logSeed(models.Session.class);
-    List<models.Session> sessions = Arrays.asList(
-      new models.Session("Math", "Dupond Dupond", "F13", stringToDate("20-01-2020"), stringToTime("14:00"), stringToTime("15:00"), schedules.get(0)),
-      new models.Session("Philosophie", "Loïc Steinmetz", "L32", stringToDate("20-01-2020"), stringToTime("16:00"), stringToTime("17:00"), schedules.get(0)),
-      new models.Session("Anglais", "Marie Curie", "A12", stringToDate("22-01-2020"), stringToTime("11:00"), stringToTime("12:00"), schedules.get(1))
+  private static List<models.dao.Session> seedSessions(Session session, List<Schedule> schedules) throws ParseException {
+    logSeed(models.dao.Session.class);
+    List<models.dao.Session> sessions = Arrays.asList(
+      new models.dao.Session("Math", "Dupond Dupond", "F13", stringToDate("20-01-2020"), stringToTime("14:00"), stringToTime("15:00"), schedules.get(0)),
+      new models.dao.Session("Philosophie", "Loïc Steinmetz", "L32", stringToDate("20-01-2020"), stringToTime("16:00"), stringToTime("17:00"), schedules.get(0)),
+      new models.dao.Session("Anglais", "Marie Curie", "A12", stringToDate("22-01-2020"), stringToTime("11:00"), stringToTime("12:00"), schedules.get(1))
     );
     sessions.forEach(session::persist);
     return sessions;

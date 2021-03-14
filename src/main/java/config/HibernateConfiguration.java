@@ -1,9 +1,9 @@
 package config;
 
-import models.Schedule;
-import models.Server;
-import models.Session;
-import models.Task;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Session;
+import models.dao.Task;
 import org.hibernate.cfg.Configuration;
 import utils.EnvironmentVariablesUtils;
 

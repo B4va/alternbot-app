@@ -1,5 +1,9 @@
 package models;
 
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Session;
 import org.junit.jupiter.api.*;
 
 import javax.persistence.PersistenceException;
@@ -31,11 +35,11 @@ public class TestSchedule implements TestModel {
 
   @AfterAll
   public static void tearDown() {
-    Session session = Model.read(ID_SESSION, Session.class);
+    Session session = ModelDAO.read(ID_SESSION, Session.class);
     if (nonNull(session)) session.delete();
-    Server server = Model.read(ID_SERVER, Server.class);
+    Server server = ModelDAO.read(ID_SERVER, Server.class);
     if (nonNull(server)) server.delete();
-    SCHEDULE = Model.read(ID_SCHEDULE, Schedule.class);
+    SCHEDULE = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     if (nonNull(SCHEDULE)) SCHEDULE.delete();
   }
 
@@ -45,7 +49,7 @@ public class TestSchedule implements TestModel {
   public void testCreate() {
     SCHEDULE = new Schedule(PROMOTION_TEST, URL_TEST);
     ID_SCHEDULE = SCHEDULE.create();
-    List<Schedule> schedules = Model.readAll(Schedule.class);
+    List<Schedule> schedules = ModelDAO.readAll(Schedule.class);
     assertTrue(schedules.stream().anyMatch(s -> s.getId() == ID_SCHEDULE));
   }
 
@@ -69,7 +73,7 @@ public class TestSchedule implements TestModel {
   @Order(3)
   @Override
   public void testRead() {
-    Schedule schedule = Model.read(ID_SCHEDULE, Schedule.class);
+    Schedule schedule = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertAll(
       () -> assertNotNull(schedule),
       () -> assertEquals(schedule.getId(), SCHEDULE.getId()),
@@ -83,7 +87,7 @@ public class TestSchedule implements TestModel {
   public void testAssociations() {
     ID_SERVER = new Server(REF_SERVER, SCHEDULE).create();
     ID_SESSION = new Session(SESSION_NAME, SESSION_TEACHER, SESSION_LOCATION, new Date(), new Date(), new Date(), SCHEDULE).create();
-    Schedule finalSchedule = Model.read(ID_SCHEDULE, Schedule.class);
+    Schedule finalSchedule = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertAll(
       () -> assertEquals(finalSchedule.getServers().size(), 1),
       () -> assertEquals(new ArrayList<>(finalSchedule.getServers()).get(0).getId(), ID_SERVER),
@@ -115,7 +119,7 @@ public class TestSchedule implements TestModel {
     SCHEDULE.setPromotion(PROMOTION_UPDATE);
     SCHEDULE.setUrl(URL_UPDATE);
     SCHEDULE.update();
-    SCHEDULE = Model.read(ID_SCHEDULE, Schedule.class);
+    SCHEDULE = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertNotNull(SCHEDULE);
     assertAll(
       () -> assertEquals(SCHEDULE.getPromotion(), PROMOTION_UPDATE),
@@ -133,12 +137,12 @@ public class TestSchedule implements TestModel {
   @Order(9)
   @Override
   public void testDelete() {
-    Session session = Model.read(ID_SESSION, Session.class);
+    Session session = ModelDAO.read(ID_SESSION, Session.class);
     if (nonNull(session)) session.delete();
-    Server server = Model.read(ID_SERVER, Server.class);
+    Server server = ModelDAO.read(ID_SERVER, Server.class);
     if (nonNull(server)) server.delete();
     SCHEDULE.delete();
-    Schedule schedule = Model.read(ID_SCHEDULE, Schedule.class);
+    Schedule schedule = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertNull(schedule);
   }
 }

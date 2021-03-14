@@ -1,5 +1,9 @@
 package models;
 
+import models.dao.ModelDAO;
+import models.dao.Schedule;
+import models.dao.Server;
+import models.dao.Task;
 import org.junit.jupiter.api.*;
 
 import javax.persistence.PersistenceException;
@@ -30,15 +34,15 @@ public class TestServer implements TestModel {
 
   @AfterAll
   public static void tearDown() {
-    SERVER = Model.read(ID_SERVER, Server.class);
+    SERVER = ModelDAO.read(ID_SERVER, Server.class);
     if (nonNull(SERVER)) {
       SERVER.delete();
     }
-    SCHEDULE = Model.read(ID_SCHEDULE, Schedule.class);
+    SCHEDULE = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     if (nonNull(SCHEDULE)) {
       SCHEDULE.delete();
     }
-    TASK = Model.read(ID_TASK, Task.class);
+    TASK = ModelDAO.read(ID_TASK, Task.class);
     if (nonNull(TASK)) {
       TASK.delete();
     }
@@ -52,7 +56,7 @@ public class TestServer implements TestModel {
     ID_SCHEDULE = SCHEDULE.create();
     SERVER = new Server(REFERENCE_TEST, Schedule.read(ID_SCHEDULE, Schedule.class));
     ID_SERVER = SERVER.create();
-    List<Server> servers = Model.readAll(Server.class);
+    List<Server> servers = ModelDAO.readAll(Server.class);
     assertTrue(servers.stream().anyMatch(s -> s.getId() == ID_SERVER));
   }
 
@@ -85,7 +89,7 @@ public class TestServer implements TestModel {
   @Order(5)
   @Override
   public void testRead() {
-    Server s = Model.read(ID_SERVER, Server.class);
+    Server s = ModelDAO.read(ID_SERVER, Server.class);
     assertAll(
       () -> assertNotNull(s),
       () -> assertEquals(s.getId(), SERVER.getId()),
@@ -98,7 +102,7 @@ public class TestServer implements TestModel {
   @Order(6)
   public void testAssociations() {
     ID_TASK = new Task(TASK_DESCRIPTION_TEST, new Date(), new Date(), SERVER).create();
-    Server server = Model.read(ID_SERVER, Server.class);
+    Server server = ModelDAO.read(ID_SERVER, Server.class);
     assertAll(
       () -> assertEquals(1, server.getTasks().size()),
       () -> assertEquals(ID_TASK, new ArrayList<>(server.getTasks()).get(0).getId())
@@ -112,7 +116,7 @@ public class TestServer implements TestModel {
     SERVER.setReference(UPDATED_REFERENCE);
     SERVER.setSchedule(SCHEDULE);
     SERVER.update();
-    SERVER = Model.read(ID_SERVER, Server.class);
+    SERVER = ModelDAO.read(ID_SERVER, Server.class);
     assertNotNull(SERVER);
     assertEquals(SERVER.getReference(), UPDATED_REFERENCE);
   }
@@ -141,9 +145,9 @@ public class TestServer implements TestModel {
   @Order(11)
   @Override
   public void testDelete() {
-    Model.read(ID_TASK, Task.class).delete();
-    Model.read(ID_SERVER, Server.class).delete();
-    Server s = Model.read(ID_SERVER, Server.class);
+    ModelDAO.read(ID_TASK, Task.class).delete();
+    ModelDAO.read(ID_SERVER, Server.class).delete();
+    Server s = ModelDAO.read(ID_SERVER, Server.class);
     assertNull(s);
   }
 }

@@ -1,7 +1,7 @@
 package app;
 
-import controllers.commands.CommandsController;
-import controllers.workers.WorkersController;
+import controllers.commons.commands.CommandsController;
+import controllers.commons.workers.WorkersController;
 import org.apache.logging.log4j.Logger;
 import programs.MigrationsLauncher;
 import utils.EnvironmentVariablesUtils;

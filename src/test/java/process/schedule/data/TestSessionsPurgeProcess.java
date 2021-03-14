@@ -82,7 +82,7 @@ public class TestSessionsPurgeProcess {
   }
 
   @Test
-  public void testPurgePastDaysThreshold_no_sessions() throws ParseException {
+  public void testPurgePastDaysThreshold_no_sessions() {
     assertEquals(0, PROCESS.purgePastDaysThreshold(1));
   }
 

@@ -56,6 +56,11 @@ public class TestTask implements TestModel {
     if (nonNull(SERVER)) {
       SERVER.delete();
     }
+
+    SCHEDULE = ModelDAO.read(SCHEDULE_ID, Schedule.class);
+    if (nonNull(SCHEDULE)) {
+      SCHEDULE.delete();
+    }
   }
 
   @Test

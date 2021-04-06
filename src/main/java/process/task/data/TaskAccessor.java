@@ -41,7 +41,7 @@ public abstract class TaskAccessor {
    * @param description
    * @param dueDate
    * @param dueTime
-   * @return true si valide, sinon faux
+   * @return true si est valide, sinon faux
    */
   protected boolean isValid(String description, String dueDate, String dueTime) {
     if (description.equals("")) return false;

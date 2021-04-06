@@ -34,6 +34,11 @@ public class Server extends ModelDAO {
   public Server() {
   }
 
+  /**
+   *
+   * @param reference
+   * @param schedule
+   */
   public Server(String reference, Schedule schedule) {
     this.reference = reference;
     this.schedule = schedule;

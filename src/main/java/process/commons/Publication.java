@@ -105,12 +105,23 @@ public abstract class Publication {
     }
   }
 
+  /**
+   *
+   * @param guild
+   * @param channel
+   * @return true si il y'a le channel sinon faux
+   */
   private boolean hasChannel(Guild guild, String channel) {
     boolean b = !guild.getTextChannelsByName(channel, true).isEmpty();
     if (!b) LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
     return b;
   }
 
+  /**
+   *
+   * @param server
+   * @return guild du server
+   */
   private Guild getGuild(Server server) {
     try {
       return getJDAInstance().getGuildById(server.getReference());
@@ -120,6 +131,12 @@ public abstract class Publication {
     }
   }
 
+  /**
+   *
+   * @param guild
+   * @param channel
+   * @return channel
+   */
   private TextChannel getChannel(Guild guild, String channel) {
     try {
       return guild.getTextChannelsByName(channel, true).get(0);
@@ -129,6 +146,13 @@ public abstract class Publication {
     }
   }
 
+  /**
+   *
+   * @param message
+   * @param server
+   * @param channel
+   * @return vrai si envoyé, sinon faux
+   */
   private boolean doSendMessage(String message, Server server, String channel) {
     Guild guild = getGuild(server);
     if (nonNull(guild)) {
@@ -147,6 +171,15 @@ public abstract class Publication {
     return false;
   }
 
+  /**
+   *
+   * @param fileData
+   * @param fileName
+   * @param isSpoiler
+   * @param server
+   * @param channel
+   * @return true si envoyé, sinon faux
+   */
   private boolean doSendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
     Guild guild = getGuild(server);
     if (nonNull(guild)) {

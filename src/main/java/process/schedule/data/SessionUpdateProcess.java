@@ -53,6 +53,12 @@ public class SessionUpdateProcess {
     return changes;
   }
 
+  /**
+   *
+   * @param session
+   * @param changes
+   * @return true si déjà changé, sinon faux
+   */
   private boolean isAlreadyChanged(Session session, List<SessionChange> changes) {
     return changes.stream()
       .anyMatch(c -> c.getReplacedSessions().stream().anyMatch(s -> s.equals(session)));

@@ -36,6 +36,13 @@ public abstract class TaskAccessor {
       .anyMatch(role -> role.getName().equals(TASK_ADMIN_ROLE));
   }
 
+  /**
+   *
+   * @param description
+   * @param dueDate
+   * @param dueTime
+   * @return true si valide, sinon faux
+   */
   protected boolean isValid(String description, String dueDate, String dueTime) {
     if (description.equals("")) return false;
     try {

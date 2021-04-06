@@ -46,6 +46,13 @@ public class SchedulePublicationCommandListener extends CommandListener {
     }
   }
 
+  /**
+   *
+   * @param m
+   * @param reqDate
+   * @return Date
+   * @throws Exception
+   */
   private Date handlePlusParameter(List<String> m, Date reqDate) throws Exception {
     String plus = getParameter(m, PLUS_PARAMETER);
     if (nonNull(plus)) {
@@ -61,6 +68,13 @@ public class SchedulePublicationCommandListener extends CommandListener {
     return reqDate;
   }
 
+  /**
+   *
+   * @param m
+   * @param reqDate
+   * @return
+   * @throws Exception
+   */
   private Date handleDateParameter(List<String> m, Date reqDate) throws Exception {
     String date = getParameter(m, DATE_PARAMETER);
     if (nonNull(date)) {

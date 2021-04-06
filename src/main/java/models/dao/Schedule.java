@@ -36,6 +36,11 @@ public class Schedule extends ModelDAO {
   public Schedule() {
   }
 
+  /**
+   *
+   * @param promotion
+   * @param url
+   */
   public Schedule(String promotion, String url) {
     this.promotion = promotion;
     this.url = url;

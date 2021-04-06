@@ -51,6 +51,16 @@ public class Session extends ModelDAO {
 
   }
 
+  /**
+   *
+   * @param name
+   * @param teacher
+   * @param location
+   * @param date
+   * @param start
+   * @param end
+   * @param schedule
+   */
   public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule) {
     this.name = name;
     this.teacher = teacher;

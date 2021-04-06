@@ -72,7 +72,7 @@ public class IcalMappingProcess {
     }
     sessions.removeAll(Collections.singleton(null));
     return sessions.stream()
-      .filter(s -> !s.isPast())
+      .filter(s -> !s.isPast(1))
       .collect(Collectors.toList());
   }
 

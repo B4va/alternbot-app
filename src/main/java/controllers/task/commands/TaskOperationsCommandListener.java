@@ -42,6 +42,7 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   @Override
   protected void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
+    // todo
     Server server = ModelDAO.readAll(Server.class).stream()
       .filter(s -> s.getReference().equals(event.getGuild().getId()))
       .findFirst()

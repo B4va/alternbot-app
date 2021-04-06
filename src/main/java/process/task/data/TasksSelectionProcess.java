@@ -30,6 +30,7 @@ public class TasksSelectionProcess {
     Date before = calendar.getTime();
     Comparator<Task> byDate = Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder()));
     Comparator<Task> byTime = Comparator.comparing(Task::getDueTime, Comparator.nullsLast(Comparator.naturalOrder()));
+    // todo
     return ModelDAO.readAll(Task.class)
       .stream()
       .filter(t -> t.getServer().getId() == server.getId())

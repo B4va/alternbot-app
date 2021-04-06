@@ -47,6 +47,7 @@ public class DailySchedulePublicationProcess extends Publication {
    * @param channel   channel dans lequel publier l'edt
    */
   public void sendPublication(Date date, String serverRef, String channel) {
+    // todo
     Server server = ModelDAO.readAll(Server.class).stream()
       .filter(s -> s.getReference().equals(serverRef))
       .findAny()

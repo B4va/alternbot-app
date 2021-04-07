@@ -86,9 +86,9 @@ public class SeedLauncher {
   private static List<models.dao.Session> seedSessions(Session session, List<Schedule> schedules) throws ParseException {
     logSeed(models.dao.Session.class);
     List<models.dao.Session> sessions = Arrays.asList(
-      new models.dao.Session("Math", "Dupond Dupond", "F13", stringToDate("20-01-2020"), stringToTime("14:00"), stringToTime("15:00"), schedules.get(0)),
-      new models.dao.Session("Philosophie", "Loïc Steinmetz", "L32", stringToDate("20-01-2020"), stringToTime("16:00"), stringToTime("17:00"), schedules.get(0)),
-      new models.dao.Session("Anglais", "Marie Curie", "A12", stringToDate("22-01-2020"), stringToTime("11:00"), stringToTime("12:00"), schedules.get(1))
+      new models.dao.Session("Math", "Dupond Dupond", "F13", stringToDate("20-01-2020"), stringToTime("14:00"), stringToTime("15:00"), schedules.get(0), "TD"),
+      new models.dao.Session("Philosophie", "Loïc Steinmetz", "L32", stringToDate("20-01-2020"), stringToTime("16:00"), stringToTime("17:00"), schedules.get(0), "CM"),
+      new models.dao.Session("Anglais", "Marie Curie", "A12", stringToDate("22-01-2020"), stringToTime("11:00"), stringToTime("12:00"), schedules.get(1), "EXAM")
     );
     sessions.forEach(session::persist);
     return sessions;

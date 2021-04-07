@@ -43,6 +43,9 @@ public class Session extends ModelDAO {
   @Column(name = "updated")
   private boolean updated;
 
+  @Column(name = "type")
+  private String type;
+
   @ManyToOne
   @JoinColumn(name = "schedule_id", nullable = false)
   private Schedule schedule;
@@ -51,7 +54,7 @@ public class Session extends ModelDAO {
 
   }
 
-  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule) {
+  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule, String type) {
     this.name = name;
     this.teacher = teacher;
     this.location = location;
@@ -59,6 +62,7 @@ public class Session extends ModelDAO {
     this.start = start;
     this.end = end;
     this.schedule = schedule;
+    this.type = type;
   }
 
   @Override
@@ -134,6 +138,14 @@ public class Session extends ModelDAO {
     this.schedule = schedule;
   }
 
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
   public boolean equals(Session session) {
     return name.equals(session.getName()) &&
       start.equals(session.getStart()) &&
@@ -143,6 +155,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si la date du cours est passée d'au moins le nombre de jours donné.
+   *
    * @param nbDays Nombre de jours.
    * @return true si la date du cours est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
    */
@@ -154,6 +167,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si le cours est considéré comme passé.
+   *
    * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire)
    */
   public boolean isPast() {

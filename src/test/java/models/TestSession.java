@@ -37,6 +37,8 @@ public class TestSession implements TestModel {
   private static final String UPDATED_LOCATION = "B02";
   private static final String TEACHER = "M. Prof";
   private static final String UPDATED_TEACHER = "Mme Teach";
+  private static final String TYPE = "EI";
+  private static final String UPDATED_TYPE = "EXAM";
   private static final String NAME = "Info";
 
   @AfterAll
@@ -59,7 +61,7 @@ public class TestSession implements TestModel {
     ID_SCHEDULE = SCHEDULE.create();
     try {
       SESSION = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -74,7 +76,7 @@ public class TestSession implements TestModel {
     Session session = null;
     try {
       session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -88,7 +90,7 @@ public class TestSession implements TestModel {
     Session session = null;
     try {
       session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -103,7 +105,7 @@ public class TestSession implements TestModel {
     Session session = null;
     try {
       session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -118,7 +120,7 @@ public class TestSession implements TestModel {
     Session session = null;
     try {
       session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -132,7 +134,7 @@ public class TestSession implements TestModel {
     Session session = null;
     try {
       session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -146,7 +148,7 @@ public class TestSession implements TestModel {
     Session session = null;
     try {
       session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -160,7 +162,7 @@ public class TestSession implements TestModel {
     Session session = null;
     try {
       session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
-        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class));
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
     } catch (ParseException e) {
       fail();
     }
@@ -170,6 +172,21 @@ public class TestSession implements TestModel {
 
   @Test
   @Order(9)
+  public void testCreate_type_null() {
+    Session session = null;
+    try {
+      session = new Session(NAME, TEACHER, LOCATION, stringToDate(DATE),
+        stringToTime(START_TIME), stringToTime(END_TIME), Schedule.read(ID_SCHEDULE, Schedule.class), TYPE);
+    } catch (ParseException e) {
+      fail();
+    }
+    session.setType(null);
+    assertDoesNotThrow(session::create);
+    session.delete();
+  }
+
+  @Test
+  @Order(10)
   @Override
   public void testRead() {
     Session session = Session.read(ID_SESSION, Session.class);
@@ -182,12 +199,13 @@ public class TestSession implements TestModel {
       () -> assertEquals(session.getDate(), SESSION.getDate()),
       () -> assertEquals(session.getStart(), SESSION.getStart()),
       () -> assertEquals(session.getEnd(), SESSION.getEnd()),
-      () -> assertFalse(session.isUpdated())
+      () -> assertFalse(session.isUpdated()),
+      () -> assertEquals(session.getType(), SESSION.getType())
     );
   }
 
   @Test
-  @Order(10)
+  @Order(11)
   public void testUpdate_name_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setName(null);
@@ -195,7 +213,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(11)
+  @Order(12)
   public void testUpdate_teacher_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setTeacher(null);
@@ -203,7 +221,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(12)
+  @Order(13)
   public void testUpdate_location_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setLocation(null);
@@ -211,7 +229,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(13)
+  @Order(14)
   public void testUpdate_schedule_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setSchedule(null);
@@ -219,7 +237,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(14)
+  @Order(15)
   public void testUpdate_date_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setDate(null);
@@ -227,7 +245,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(15)
+  @Order(16)
   public void testUpdate_start_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setStart(null);
@@ -235,7 +253,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(16)
+  @Order(17)
   public void testUpdate_end_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setEnd(null);
@@ -243,7 +261,15 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(17)
+  @Order(18)
+  public void testUpdate_type_null() {
+    Session session = Session.read(ID_SESSION, Session.class);
+    session.setType(null);
+    assertDoesNotThrow(session::update);
+  }
+
+  @Test
+  @Order(19)
   @Override
   public void testUpdate() {
     SESSION.setName(UPDATED_NAME);
@@ -257,6 +283,7 @@ public class TestSession implements TestModel {
       fail();
     }
     SESSION.setUpdated(true);
+    SESSION.setType(UPDATED_TYPE);
     SESSION.update();
     SESSION = ModelDAO.read(ID_SESSION, Session.class);
     assertAll(
@@ -266,19 +293,20 @@ public class TestSession implements TestModel {
       () -> assertEquals(SESSION.getDate(), stringToDate(UPDATED_DATE)),
       () -> assertEquals(SESSION.getStart(), stringToTime(UPDATED_START)),
       () -> assertEquals(SESSION.getEnd(), stringToTime(UPDATED_END)),
-      () -> assertTrue(SESSION.isUpdated())
+      () -> assertTrue(SESSION.isUpdated()),
+      () -> assertEquals(SESSION.getType(), UPDATED_TYPE)
     );
 
   }
 
   @Test
-  @Order(18)
+  @Order(20)
   public void testDelete_schedule_with_associated_sessions() {
     assertThrows(PersistenceException.class, SCHEDULE::delete);
   }
 
   @Test
-  @Order(19)
+  @Order(21)
   @Override
   public void testDelete() {
     SESSION.delete();

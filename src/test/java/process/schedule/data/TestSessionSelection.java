@@ -35,15 +35,15 @@ public class TestSessionSelection {
     };
 
     final Session session1 = new Session("Maths", "Prof 1", "F4",
-      stringToDate("01-02-2021"), stringToTime("08:00"), stringToTime("10:00"), null);
+      stringToDate("01-02-2021"), stringToTime("08:00"), stringToTime("10:00"), null, "CM");
     final Session session2 = new Session("CondProj", "Prof 2", "F4",
-      stringToDate("01-02-2021"), stringToTime("10:05"), stringToTime("12:00"), null);
+      stringToDate("01-02-2021"), stringToTime("10:05"), stringToTime("12:00"), null, "TD");
     final Session session3 = new Session("Maths", "Prof 1", "F4",
-      stringToDate("02-02-2021"), stringToTime("08:00"), stringToTime("09:00"), null);
+      stringToDate("02-02-2021"), stringToTime("08:00"), stringToTime("09:00"), null, "TD");
     final Session session_null_date = new Session("Maths", "Prof 1", "F4",
-      null, stringToTime("08:00"), stringToTime("09:00"), null);
+      null, stringToTime("08:00"), stringToTime("09:00"), null, "EXAM");
     final Session session_null_time = new Session("Maths", "Prof 1", "F4",
-      stringToDate("02-02-2021"), null, null, null);
+      stringToDate("02-02-2021"), null, null, null, "TD");
 
     UNORDERED_SESSIONS = new ArrayList<Session>() {{
       add(session2);

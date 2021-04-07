@@ -42,11 +42,7 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   @Override
   protected void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
-    // todo
-    Server server = ModelDAO.readAll(Server.class).stream()
-      .filter(s -> s.getReference().equals(event.getGuild().getId()))
-      .findFirst()
-      .orElse(null);
+    Server server = Server.getByReference(event.getGuild().getId());
     Member member = event.getMember();
     if (hasParameter(message, CREATE_PARAMETER)) {
       runTaskCreation(message, server, member, event);

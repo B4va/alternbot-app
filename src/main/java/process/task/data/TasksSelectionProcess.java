@@ -1,14 +1,9 @@
 package process.task.data;
 
-import models.dao.ModelDAO;
 import models.dao.Server;
 import models.dao.Task;
 
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Process de sélection des {@link Task} associées à un {@link Server}.
@@ -23,21 +18,7 @@ public class TasksSelectionProcess {
    * @return liste des tâches associées au serveur
    */
   public List<Task> select(Server server, int days) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DAY_OF_MONTH, -1);
-    Date after = calendar.getTime();
-    calendar.add(Calendar.DAY_OF_MONTH, days + 1);
-    Date before = calendar.getTime();
-    Comparator<Task> byDate = Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder()));
-    Comparator<Task> byTime = Comparator.comparing(Task::getDueTime, Comparator.nullsLast(Comparator.naturalOrder()));
-    // todo
-    return ModelDAO.readAll(Task.class)
-      .stream()
-      .filter(t -> t.getServer().getId() == server.getId())
-      .filter(t -> t.getDueDate().after(after))
-      .filter(t -> days == -1 || t.getDueDate().before(before))
-      .sorted(byDate.thenComparing(byTime))
-      .collect(Collectors.toList());
+    return Task.getByServer(server, days);
   }
 
   /**

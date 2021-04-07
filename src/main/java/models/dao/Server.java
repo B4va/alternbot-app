@@ -44,13 +44,13 @@ public class Server extends ModelDAO {
     this.schedule = schedule;
   }
 
-  public static Server getByReference(String id) {
+  public static Server getByReference(String reference) {
     EntityManager entityManager = DbUtils.getSessionFactory().createEntityManager();
     CriteriaBuilder builder = entityManager.getCriteriaBuilder();
     CriteriaQuery<Server> criteria = builder.createQuery(Server.class);
     Root<Server> root = criteria.from(Server.class);
     criteria.select(root);
-    criteria.where(builder.equal(root.get("reference"), id));
+    criteria.where(builder.equal(root.get("reference"), reference));
     return entityManager.createQuery(criteria).getSingleResult();
   }
 

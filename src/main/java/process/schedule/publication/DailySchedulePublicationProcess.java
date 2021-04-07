@@ -4,9 +4,12 @@ import models.dao.ModelDAO;
 import models.dao.Schedule;
 import models.dao.Server;
 import models.dao.Session;
+import org.apache.logging.log4j.Logger;
 import process.commons.Publication;
 import process.schedule.data.DailyScheduleSelectionProcess;
+import utils.LoggerUtils;
 
+import javax.persistence.NoResultException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,6 +21,7 @@ import static java.util.Objects.nonNull;
  */
 public class DailySchedulePublicationProcess extends Publication {
 
+  private static final Logger LOGGER = LoggerUtils.buildLogger(DailySchedulePublicationProcess.class);
 
   /**
    * Envoi la liste des cours d'un jour spécifique à tous les serveur,
@@ -47,15 +51,15 @@ public class DailySchedulePublicationProcess extends Publication {
    * @param channel   channel dans lequel publier l'edt
    */
   public void sendPublication(Date date, String serverRef, String channel) {
-    // todo
-    Server server = ModelDAO.readAll(Server.class).stream()
-      .filter(s -> s.getReference().equals(serverRef))
-      .findAny()
-      .orElse(null);
-    if (nonNull(server) && nonNull(server.getSchedule())) {
-      List<Session> sessions = new DailyScheduleSelectionProcess().select(server.getSchedule(), date);
-      String message = new DailyScheduleFormattingProcess().format(sessions, date);
-      sendMessage(message, server, channel);
+    try {
+      Server server = Server.getByReference(serverRef);
+      if (nonNull(server.getSchedule())) {
+        List<Session> sessions = new DailyScheduleSelectionProcess().select(server.getSchedule(), date);
+        String message = new DailyScheduleFormattingProcess().format(sessions, date);
+        sendMessage(message, server, channel);
+      }
+    } catch (NoResultException e) {
+      LOGGER.warn("Le serveur n'est pas référencé : {}.", serverRef);
     }
   }
 }

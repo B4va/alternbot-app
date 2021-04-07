@@ -39,13 +39,6 @@ public class SchedulesUpdateProcess {
     new SessionsPurgeProcess().purgeAllUpdated();
   }
 
-  /**
-   *
-   * @param changes
-   * @param newSessions
-   * @param oldSessions
-   * @return List de SessionChange
-   */
   private List<SessionChange> doUpdate(List<SessionChange> changes, List<Session> newSessions, Set<Session> oldSessions) {
     SessionUpdateProcess sessionUpdateProcess = new SessionUpdateProcess();
     // Passe les nouveaux cours en revue pour les enregistrer et marquer les cours qu'ils remplacent potentiellement.

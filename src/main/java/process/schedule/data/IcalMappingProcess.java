@@ -88,13 +88,6 @@ public class IcalMappingProcess {
       .collect(Collectors.toList());
   }
 
-  /**
-   *
-   * @param event
-   * @param schedule
-   * @param errorCount
-   * @return Session
-   */
   private Session mapSession(VEvent event, Schedule schedule, AtomicInteger errorCount) {
     try {
       String name = event.getDescription().getValue().split(" - ")[0];

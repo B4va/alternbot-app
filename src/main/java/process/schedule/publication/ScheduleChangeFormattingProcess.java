@@ -68,11 +68,6 @@ public class ScheduleChangeFormattingProcess {
     }
   }
 
-  /**
-   *
-   * @param message
-   * @param c
-   */
   private void fillMessageWithReplacedSessions(StringBuilder message, SessionChange c) {
     if (!c.getReplacedSessions().isEmpty()) {
       message.append("\n> Cours supprimés/modifiés :");
@@ -89,11 +84,7 @@ public class ScheduleChangeFormattingProcess {
     }
   }
 
-  /**
-   *
-   * @param message
-   * @param c
-   */
+
   private void fillMessageWithDeletedSession(StringBuilder message, SessionChange c) {
     Session deletedSession = c.getReplacedSessions().get(0);
     message.append("\n\nCOURS SUPPRIME :\n");

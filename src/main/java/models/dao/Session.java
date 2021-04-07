@@ -66,6 +66,11 @@ public class Session extends ModelDAO {
     this.schedule = schedule;
   }
 
+  /**
+   * Récupère les sessions mises à jour suite à la récupération des données de l'IUT.
+   *
+   * @return liste de sessions
+   */
   public static List<Session> getUpdated() {
     EntityManager entityManager = DbUtils.getSessionFactory().createEntityManager();
     CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -158,6 +163,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si la date du cours est passée d'au moins le nombre de jours donné.
+   *
    * @param nbDays Nombre de jours.
    * @return true si la date du cours est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
    */
@@ -169,6 +175,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si le cours est considéré comme passé.
+   *
    * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire)
    */
   public boolean isPast() {

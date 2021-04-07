@@ -3,7 +3,6 @@ package models.dao;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.criterion.Restrictions;
 import utils.DbUtils;
 
 import javax.persistence.*;
@@ -55,6 +54,13 @@ public class Task extends ModelDAO {
     setServer(server);
   }
 
+  /**
+   * Récupère les tâches associées à un serveur.
+   *
+   * @param server serveur auquel sont rattachées les tâches
+   * @param days   période à publier, en jours à partir de la date d'aujourd'hui
+   * @return liste de tâches
+   */
   public static List<Task> getByServer(Server server, int days) {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -1);

@@ -1,6 +1,5 @@
 package models.dao;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
@@ -44,6 +43,12 @@ public class Server extends ModelDAO {
     this.schedule = schedule;
   }
 
+  /**
+   * Récupère un serveur à partir de sa référence.
+   *
+   * @param reference référence du serveur
+   * @return serveur associé à la référence
+   */
   public static Server getByReference(String reference) {
     EntityManager entityManager = DbUtils.getSessionFactory().createEntityManager();
     CriteriaBuilder builder = entityManager.getCriteriaBuilder();

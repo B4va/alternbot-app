@@ -113,7 +113,10 @@ public abstract class Publication {
    */
   private boolean hasChannel(Guild guild, String channel) {
     boolean b = !guild.getTextChannelsByName(channel, true).isEmpty();
-    if (!b) LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
+    if (!b) {
+      LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
+      guild.createTextChannel(channel);
+    }
     return b;
   }
 

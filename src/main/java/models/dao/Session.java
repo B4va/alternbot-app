@@ -3,10 +3,15 @@ package models.dao;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
+import utils.DbUtils;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "sessions")
@@ -59,6 +64,21 @@ public class Session extends ModelDAO {
     this.start = start;
     this.end = end;
     this.schedule = schedule;
+  }
+
+  /**
+   * Récupère les sessions mises à jour suite à la récupération des données de l'IUT.
+   *
+   * @return liste de sessions
+   */
+  public static List<Session> getUpdated() {
+    EntityManager entityManager = DbUtils.getSessionFactory().createEntityManager();
+    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Session> criteria = builder.createQuery(Session.class);
+    Root<Session> root = criteria.from(Session.class);
+    criteria.select(root);
+    criteria.where(builder.equal(root.get("updated"), true));
+    return entityManager.createQuery(criteria).getResultList();
   }
 
   @Override
@@ -143,6 +163,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si la date du cours est passée d'au moins le nombre de jours donné.
+   *
    * @param nbDays Nombre de jours.
    * @return true si la date du cours est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
    */
@@ -154,6 +175,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si le cours est considéré comme passé.
+   *
    * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire)
    */
   public boolean isPast() {

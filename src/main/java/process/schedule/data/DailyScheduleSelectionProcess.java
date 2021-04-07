@@ -34,13 +34,6 @@ public class DailyScheduleSelectionProcess extends SessionSelection {
     return isNull(sessions) ? Collections.emptyList() : sessions;
   }
 
-  /**
-   *
-   * @param reqDate
-   * @param sessionDate
-   * @param session
-   * @return boolean
-   */
   private boolean compareDates(Calendar reqDate, Calendar sessionDate, Session session) {
     sessionDate.setTime(session.getDate());
     return reqDate.get(Calendar.DAY_OF_MONTH) == sessionDate.get(Calendar.DAY_OF_MONTH) &&

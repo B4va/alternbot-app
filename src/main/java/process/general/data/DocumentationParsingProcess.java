@@ -34,13 +34,7 @@ public class DocumentationParsingProcess {
       throw new FileSystemNotFoundException();
     }
   }
-
-  /**
-   *
-   * @param inputStream
-   * @return String
-   * @throws IOException
-   */
+  
   private String readFromInputStream(InputStream inputStream) throws IOException {
     StringBuilder resultStringBuilder = new StringBuilder();
     try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {

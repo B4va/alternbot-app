@@ -51,7 +51,7 @@ public class Server extends ModelDAO {
     Root<Server> root = criteria.from(Server.class);
     criteria.select(root);
     criteria.where(builder.equal(root.get("reference"), reference));
-    return entityManager.createQuery(criteria).getSingleResult();
+    return entityManager.createQuery(criteria).getResultList().get(0);
   }
 
   public int getId() {

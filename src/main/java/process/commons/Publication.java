@@ -115,9 +115,13 @@ public abstract class Publication {
     boolean b = !guild.getTextChannelsByName(channel, true).isEmpty();
     if (!b) {
       LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
-      guild.createTextChannel(channel);
+      createChannel(guild,channel);
     }
     return b;
+  }
+
+  private void createChannel(Guild guild, String channel){
+      guild.createTextChannel(channel);
   }
 
   /**

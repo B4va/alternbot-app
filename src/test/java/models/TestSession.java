@@ -206,6 +206,23 @@ public class TestSession implements TestModel {
 
   @Test
   @Order(11)
+  public void testGetUpdated() {
+    Session s = Session.read(ID_SESSION, Session.class);
+    s.setUpdated(true);
+    s.update();
+    List<Session> updatedSessions = Session.getUpdated();
+    assertAll(
+      () -> assertEquals(updatedSessions.size(), 1),
+      () -> assertTrue(updatedSessions.get(0).isUpdated())
+    );
+    s.setUpdated(false);
+    s.update();
+    assertTrue(Session.getUpdated().isEmpty());
+  }
+
+  @Test
+
+  @Order(12)
   public void testUpdate_name_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setName(null);
@@ -213,7 +230,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(12)
+  @Order(13)
   public void testUpdate_teacher_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setTeacher(null);
@@ -221,7 +238,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(13)
+  @Order(14)
   public void testUpdate_location_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setLocation(null);
@@ -229,7 +246,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(14)
+  @Order(15)
   public void testUpdate_schedule_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setSchedule(null);
@@ -237,7 +254,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(15)
+  @Order(16)
   public void testUpdate_date_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setDate(null);
@@ -245,7 +262,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(16)
+  @Order(17)
   public void testUpdate_start_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setStart(null);
@@ -253,7 +270,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(17)
+  @Order(18)
   public void testUpdate_end_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setEnd(null);
@@ -261,7 +278,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(18)
+  @Order(19)
   public void testUpdate_type_null() {
     Session session = Session.read(ID_SESSION, Session.class);
     session.setType(null);
@@ -269,7 +286,7 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(19)
+  @Order(20)
   @Override
   public void testUpdate() {
     SESSION.setName(UPDATED_NAME);
@@ -300,13 +317,13 @@ public class TestSession implements TestModel {
   }
 
   @Test
-  @Order(20)
+  @Order(21)
   public void testDelete_schedule_with_associated_sessions() {
     assertThrows(PersistenceException.class, SCHEDULE::delete);
   }
 
   @Test
-  @Order(21)
+  @Order(22)
   @Override
   public void testDelete() {
     SESSION.delete();

@@ -32,16 +32,17 @@ public abstract class Publication {
    */
   protected boolean sendMessage(String message, Server server, String channel) {
     Guild guild = getGuild(server);
+    if (isNull(guild))
+      return false;
+    if (!hasChannel(guild, channel))
+      return false;
+
     if (message.length() > 2000) {
       List<String> messages = decomposerMessage(message);
       sendLongMessage(messages, server, channel);
       return true;
-    }
-    if (isNull(guild)) return false;
-    if (hasChannel(guild, channel)) {
-      return doSendMessage(message, server, channel);
     } else {
-      return false;
+      return doSendMessage(message, server, channel);
     }
   }
 
@@ -123,7 +124,7 @@ public abstract class Publication {
   private TextChannel getChannel(Guild guild, String channel) {
     try {
       return guild.getTextChannelsByName(channel, true).get(0);
-    } catch (NullPointerException e) {
+    } catch (IndexOutOfBoundsException | NullPointerException e) {
       LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
       return null;
     }

@@ -32,6 +32,7 @@ public class TestSchedule implements TestModel {
   public static final String SESSION_NAME = "session";
   public static final String SESSION_TEACHER = "prof";
   public static final String SESSION_LOCATION = "location";
+  public static final String SESSION_TYPE = "EXAM";
 
   @AfterAll
   public static void tearDown() {
@@ -86,7 +87,7 @@ public class TestSchedule implements TestModel {
   @Order(4)
   public void testAssociations() {
     ID_SERVER = new Server(REF_SERVER, SCHEDULE).create();
-    ID_SESSION = new Session(SESSION_NAME, SESSION_TEACHER, SESSION_LOCATION, new Date(), new Date(), new Date(), SCHEDULE).create();
+    ID_SESSION = new Session(SESSION_NAME, SESSION_TEACHER, SESSION_LOCATION, new Date(), new Date(), new Date(), SCHEDULE, SESSION_TYPE).create();
     Schedule finalSchedule = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertAll(
       () -> assertEquals(finalSchedule.getServers().size(), 1),

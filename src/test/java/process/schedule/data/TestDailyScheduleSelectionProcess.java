@@ -35,16 +35,16 @@ public class TestDailyScheduleSelectionProcess {
   public static void init() throws ParseException {
     DATE = stringToDate(REQ_DATE);
     CORRESPONDING_SESSION_1 = new Session(null, null, null, stringToDate(REQ_DATE),
-      null, null, null);
+      null, null, null, null);
     CORRESPONDING_SESSION_1.setId(CS_1_ID);
     CORRESPONDING_SESSION_2 = new Session(null, null, null, stringToDate(REQ_DATE),
-      null, null, null);
+      null, null, null, null);
     CORRESPONDING_SESSION_2.setId(CS_2_ID);
     PAST_SESSION = new Session(null, null, null, stringToDate(PAST_DATE),
-      null, null, null);
+      null, null, null, null);
     PAST_SESSION.setId(PS_ID);
     FUTURE_SESSION = new Session(null, null, null, stringToDate(FUTURE_DATE),
-      null, null, null);
+      null, null, null, null);
     FUTURE_SESSION.setId(FS_ID);
   }
 

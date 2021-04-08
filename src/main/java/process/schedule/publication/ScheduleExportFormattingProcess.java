@@ -125,7 +125,8 @@ public class ScheduleExportFormattingProcess {
     if (this.isIcalTimezoneValid)
       endDayTime.setTimeZone(this.icalTimezone);
 
-    VEvent event = new VEvent(startDayTime, endDayTime, session.getName());
+    final String eventName = session.getType() != null ? session.getName() + " - " + session.getType() : session.getName();
+    VEvent event = new VEvent(startDayTime, endDayTime, eventName);
     event.getProperties().add(new Location(session.getLocation()));
 
     if (this.isIcalTimezoneValid)

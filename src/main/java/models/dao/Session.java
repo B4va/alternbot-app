@@ -48,6 +48,9 @@ public class Session extends ModelDAO {
   @Column(name = "updated")
   private boolean updated;
 
+  @Column(name = "type")
+  private String type;
+
   @ManyToOne
   @JoinColumn(name = "schedule_id", nullable = false)
   private Schedule schedule;
@@ -56,7 +59,7 @@ public class Session extends ModelDAO {
 
   }
 
-  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule) {
+  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule, String type) {
     this.name = name;
     this.teacher = teacher;
     this.location = location;
@@ -64,6 +67,7 @@ public class Session extends ModelDAO {
     this.start = start;
     this.end = end;
     this.schedule = schedule;
+    this.type = type;
   }
 
   /**
@@ -152,6 +156,14 @@ public class Session extends ModelDAO {
 
   public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public boolean equals(Session session) {

@@ -37,10 +37,9 @@ public abstract class TaskAccessor {
   }
 
   /**
-   *
-   * @param description
-   * @param dueDate
-   * @param dueTime
+   * @param description description de la tâche
+   * @param dueDate     échéance (date)
+   * @param dueTime     échéance (horaire)
    * @return true si est valide, sinon faux
    */
   protected boolean isValid(String description, String dueDate, String dueTime) {

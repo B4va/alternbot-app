@@ -40,11 +40,10 @@ public class Task extends ModelDAO {
   }
 
   /**
-   *
-   * @param description
-   * @param dueDate
-   * @param dueTime
-   * @param server
+   * @param description description de la tâche
+   * @param dueDate     échéance (date)
+   * @param dueTime     échéance (horaire)
+   * @param server      serveur auquel est rattachée la tâche
    */
   public Task(String description, Date dueDate, Date dueTime, Server server) {
     setDescription(description);

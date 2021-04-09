@@ -37,9 +37,8 @@ public class Schedule extends ModelDAO {
   }
 
   /**
-   *
-   * @param promotion
-   * @param url
+   * @param promotion promotion correspondante
+   * @param url       url de récupération des cours
    */
   public Schedule(String promotion, String url) {
     this.promotion = promotion;

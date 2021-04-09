@@ -1,7 +1,7 @@
 package process.schedule.publication;
 
-import models.dao.Session;
 import models.business.SessionChange;
+import models.dao.Session;
 
 import java.util.List;
 
@@ -27,11 +27,6 @@ public class ScheduleChangeFormattingProcess {
     return message.toString();
   }
 
-  /**
-   *
-   * @param changes
-   * @param message
-   */
   private void fillMessage(List<SessionChange> changes, StringBuilder message) {
     for (SessionChange c : changes) {
       if (isNewSession(c)) {
@@ -47,11 +42,6 @@ public class ScheduleChangeFormattingProcess {
     return nonNull(change.getNewSession());
   }
 
-  /**
-   *
-   * @param message
-   * @param c
-   */
   private void fillMessageWithNewSession(StringBuilder message, SessionChange c) {
     Session ns = c.getNewSession();
     message.append(c.getReplacedSessions().isEmpty() ? "\n\nNOUVEAU COURS :\n" : "\n\nMODIFICATION :\n");
@@ -83,7 +73,6 @@ public class ScheduleChangeFormattingProcess {
       }
     }
   }
-
 
   private void fillMessageWithDeletedSession(StringBuilder message, SessionChange c) {
     Session deletedSession = c.getReplacedSessions().get(0);

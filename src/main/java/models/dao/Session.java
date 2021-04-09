@@ -52,14 +52,13 @@ public class Session extends ModelDAO {
   }
 
   /**
-   *
-   * @param name
-   * @param teacher
-   * @param location
-   * @param date
-   * @param start
-   * @param end
-   * @param schedule
+   * @param name     nom du cours
+   * @param teacher  professeur
+   * @param location salle
+   * @param date     date (sans l'horaire)
+   * @param start    heure de début
+   * @param end      heure de fin
+   * @param schedule emploi du temps auquel est rattaché le cours
    */
   public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule) {
     this.name = name;
@@ -153,6 +152,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si la date du cours est passée d'au moins le nombre de jours donné.
+   *
    * @param nbDays Nombre de jours.
    * @return true si la date du cours est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
    */
@@ -164,6 +164,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si le cours est considéré comme passé.
+   *
    * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire)
    */
   public boolean isPast() {

@@ -1,7 +1,7 @@
 package process.schedule.publication;
 
-import models.dao.Session;
 import models.business.SessionChange;
+import models.dao.Session;
 
 import java.util.List;
 

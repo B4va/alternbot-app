@@ -38,6 +38,10 @@ public class Server extends ModelDAO {
   public Server() {
   }
 
+  /**
+   * @param reference identifiant du serveur Discord
+   * @param schedule  emploi du temps rattaché au serveur
+   */
   public Server(String reference, Schedule schedule) {
     this.reference = reference;
     this.schedule = schedule;

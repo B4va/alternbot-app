@@ -56,6 +56,9 @@ public class ScheduleChangeFormattingProcess {
     if (nonNull(ns.getLocation())) {
       message.append(" - ").append(ns.getLocation());
     }
+    if (nonNull(ns.getType())) {
+      message.append(" - ").append(ns.getType());
+    }
   }
 
   private void fillMessageWithReplacedSessions(StringBuilder message, SessionChange c) {

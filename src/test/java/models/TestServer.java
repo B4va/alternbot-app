@@ -100,8 +100,22 @@ public class TestServer implements TestModel {
 
   @Test
   @Order(6)
-  public void testAssociations() {
+  public void testReadByReference() {
     ID_TASK = new Task(TASK_DESCRIPTION_TEST, new Date(), new Date(), SERVER).create();
+    Server s = Server.getByReference(REFERENCE_TEST);
+    assertAll(
+      () -> assertNotNull(s),
+      () -> assertEquals(s.getId(), SERVER.getId()),
+      () -> assertEquals(s.getReference(), SERVER.getReference()),
+      () -> assertEquals(s.getSchedule().getId(), ID_SCHEDULE),
+      () -> assertEquals(1, s.getTasks().size()),
+      () -> assertEquals(ID_TASK, new ArrayList<>(s.getTasks()).get(0).getId())
+    );
+  }
+
+  @Test
+  @Order(7)
+  public void testAssociations() {
     Server server = ModelDAO.read(ID_SERVER, Server.class);
     assertAll(
       () -> assertEquals(1, server.getTasks().size()),
@@ -110,7 +124,7 @@ public class TestServer implements TestModel {
   }
 
   @Test
-  @Order(7)
+  @Order(8)
   @Override
   public void testUpdate() {
     SERVER.setReference(UPDATED_REFERENCE);
@@ -122,27 +136,27 @@ public class TestServer implements TestModel {
   }
 
   @Test
-  @Order(8)
+  @Order(9)
   public void testUpdate_reference_null() {
     SERVER.setReference(null);
     assertThrows(PersistenceException.class, SERVER::update);
   }
 
   @Test
-  @Order(9)
+  @Order(10)
   public void testUpdate_schedule_null() {
     SERVER.setSchedule(null);
     assertThrows(PersistenceException.class, SERVER::update);
   }
 
   @Test
-  @Order(10)
+  @Order(11)
   public void testDelete_schedule_with_associated_server() {
     assertThrows(PersistenceException.class, SCHEDULE::delete);
   }
 
   @Test
-  @Order(11)
+  @Order(12)
   @Override
   public void testDelete() {
     ModelDAO.read(ID_TASK, Task.class).delete();

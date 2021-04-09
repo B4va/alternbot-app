@@ -40,10 +40,10 @@ public class TestScheduleExportFormattingProcess {
     Schedule schedule = new Schedule(SCHEDULE_PROMO, SCHEDULE_URL);
     SERVER = new Server(SERVER_REF, schedule);
     SESSIONS = Arrays.asList(
-      new Session("Arts martiaux", "Pai Mei", "F13", stringToDate("18-01-2021"), stringToTime("08:00"), stringToTime("13:00"), schedule),
-      new Session("Chimie organique", "Marie Curie", "R86", stringToDate("20-01-2021"), stringToTime("11:00"), stringToTime("18:30"), schedule),
-      new Session("Escrime", "Tesshin", "F13", stringToDate("20-01-2021"), stringToTime("14:30"), stringToTime("17:00"), schedule),
-      new Session("Physique nucléaire", "Emmett Brown", "F13", stringToDate("22-10-2080"), stringToTime("01:15"), stringToTime("13:00"), schedule)
+      new Session("Arts martiaux", "Pai Mei", "F13", stringToDate("18-01-2021"), stringToTime("08:00"), stringToTime("13:00"), schedule, "TP"),
+      new Session("Chimie organique", "Marie Curie", "R86", stringToDate("20-01-2021"), stringToTime("11:00"), stringToTime("18:30"), schedule, "TD"),
+      new Session("Escrime", "Tesshin", "F13", stringToDate("20-01-2021"), stringToTime("14:30"), stringToTime("17:00"), schedule, null),
+      new Session("Physique nucléaire", "Emmett Brown", "F13", stringToDate("22-10-2080"), stringToTime("01:15"), stringToTime("13:00"), schedule, "EXAM")
     );
 
     ICAL_CONTENT_OK = new String(

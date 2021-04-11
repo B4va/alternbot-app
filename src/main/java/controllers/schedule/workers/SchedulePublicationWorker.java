@@ -14,6 +14,10 @@ public class SchedulePublicationWorker extends DailyWorker {
     super(hour, minute, delay);
   }
 
+  public SchedulePublicationWorker(int hour, int minute, long delay, boolean skipSunday) {
+    super(hour, minute, delay, skipSunday);
+  }
+
   @Override
   public void doRunOne() {
     Calendar calendar = Calendar.getInstance();

@@ -1,7 +1,7 @@
 package process.schedule.publication;
 
-import models.dao.Session;
 import models.business.SessionChange;
+import models.dao.Session;
 
 import java.util.List;
 
@@ -55,6 +55,9 @@ public class ScheduleChangeFormattingProcess {
     }
     if (nonNull(ns.getLocation())) {
       message.append(" - ").append(ns.getLocation());
+    }
+    if (nonNull(ns.getType())) {
+      message.append(" - ").append(ns.getType());
     }
   }
 

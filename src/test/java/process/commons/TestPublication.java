@@ -24,6 +24,7 @@ import static utils.JDAUtils.initializeJDA;
 public class TestPublication {
 
   private static Publication PROCESS;
+  private static String LONG_MESSAGE;
   private static final String MESSAGE = "test";
   private static final String TEST_FILE_CONTENT = "Bleep bloop. I am a robot.";
   private static final String TEST_FILE_NAME = "test.txt";
@@ -90,7 +91,7 @@ public class TestPublication {
 
     @Test
     public void testSendMessageLong_not_existing_channel() {
-      assertTrue(PROCESS.sendMessage(MESSAGE, NOTEXISTINGCHANNEL_SERVER, NOT_EXISTING_CHANNEL));
+      assertTrue(PROCESS.sendMessage(LONG_MESSAGE, NOTEXISTINGCHANNEL_SERVER, NOT_EXISTING_CHANNEL));
       assertTrue(hasChannel(NOTEXISTINGCHANNEL_SERVER, NOT_EXISTING_CHANNEL));
     }
   }
@@ -105,6 +106,12 @@ public class TestPublication {
       }
     };
     CHANNEL = EnvironmentVariablesUtils.getString(CHANNEL_TEST, CHANNEL);
+
+    StringBuilder longMessage = new StringBuilder("Test\n").append("```\n");
+    for (int i = 0; i < 200; i++)
+      longMessage.append("Information de cours\n");
+    longMessage.append("```").append("\ntest");
+    LONG_MESSAGE = longMessage.toString();
   }
 
   @Test
@@ -114,25 +121,26 @@ public class TestPublication {
     assertTrue(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
   }
 
-  /**
-   * Formatage à confirmer dans le serveur de test.
-   */
-  @Test
-  public void testSendMessageLong() {
-    StringBuilder longMessage = new StringBuilder("Test\n").append("```\n");
-    for (int i = 0; i < 200; i++) {
-      longMessage.append("Information de cours\n");
-    }
-    longMessage.append("```").append("\ntest");
-    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
-    if (isNull(server.getReference())) fail();
-    assertTrue(PROCESS.sendMessage(longMessage.toString(), server, CHANNEL));
-  }
-
   @Test
   public void testSendMessage_invalid_server() {
     Server server = new Server(INVALID_SERVER_REF, null);
     assertFalse(PROCESS.sendMessage(MESSAGE, server, CHANNEL));
+  }
+
+  /**
+   * Formatage à confirmer dans le serveur de test.
+   */
+  @Test
+  public void testSendMessageLong_ok() {
+    Server server = new Server(EnvironmentVariablesUtils.getString(SERVER_TEST), null);
+    if (isNull(server.getReference())) fail();
+    assertTrue(PROCESS.sendMessage(LONG_MESSAGE, server, CHANNEL));
+  }
+
+  @Test
+  public void testSendMessageLong_invalid_server() {
+    Server server = new Server(INVALID_SERVER_REF, null);
+    assertFalse(PROCESS.sendMessage(LONG_MESSAGE, server, CHANNEL));
   }
 
   @Test

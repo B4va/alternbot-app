@@ -16,7 +16,11 @@ import process.task.data.TaskUpdateProcess;
 import process.task.publication.TasksPublicationProcess;
 
 import java.text.ParseException;
+import java.time.DateTimeException;
 import java.util.*;
+
+import static controllers.task.commands.TaskOperationsCommandListener.ParsingState.*;
+import static java.lang.Integer.parseInt;
 
 /**
  * Gère les opérations de CRUD réalisées sur les {@link Task}.
@@ -35,6 +39,10 @@ public class TaskOperationsCommandListener extends CommandListener {
   public static final String MAP_DUE_DATE = "MAP_DUE_DATE";
   public static final String MAP_DUE_TIME = "MAP_DUE_TIME";
 
+  enum ParsingState {
+    MESSAGE_START, TASK_NAME, MESSAGE_END
+  }
+
   @Override
   protected String getCommand() {
     return COMMAND;
@@ -42,10 +50,7 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   @Override
   protected void handleCommand(GuildMessageReceivedEvent event, List<String> message) {
-    Server server = ModelDAO.readAll(Server.class).stream()
-      .filter(s -> s.getReference().equals(event.getGuild().getId()))
-      .findFirst()
-      .orElse(null);
+    Server server = Server.getByReference(event.getGuild().getId());
     Member member = event.getMember();
     if (hasParameter(message, CREATE_PARAMETER)) {
       runTaskCreation(message, server, member, event);
@@ -78,7 +83,7 @@ public class TaskOperationsCommandListener extends CommandListener {
       event.getChannel()
         .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à créer une tâche.")
         .queue();
-    } catch (InvalidDataException | ArrayIndexOutOfBoundsException | ParseException e) {
+    } catch (InvalidDataException | ArrayIndexOutOfBoundsException | ParseException | DateTimeException e) {
       event.getChannel()
         .sendMessage(member.getAsMention() + ERROR_FORMAT)
         .queue();
@@ -87,7 +92,7 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   private void runTaskUpdate(List<String> message, Server server, Member member, GuildMessageReceivedEvent event) {
     try {
-      int taskId = Integer.parseInt(message.get(2));
+      int taskId = parseInt(message.get(2));
       Map<String, String> parsedMessage = parseMessage(message);
       if (new TaskUpdateProcess().update(taskId,
         parsedMessage.get(MAP_DESCRIPTION),
@@ -114,7 +119,7 @@ public class TaskOperationsCommandListener extends CommandListener {
       event.getChannel()
         .sendMessage(member.getAsMention() + " Vous n'être pas autorisé à modifier une tâche.")
         .queue();
-    } catch (InvalidDataException | ArrayIndexOutOfBoundsException | NumberFormatException | ParseException e) {
+    } catch (InvalidDataException | ArrayIndexOutOfBoundsException | NumberFormatException | ParseException | DateTimeException e) {
       event.getChannel()
         .sendMessage(member.getAsMention() + ERROR_FORMAT)
         .queue();
@@ -123,7 +128,7 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   private void runTaskDeletion(List<String> message, Server server, Member member, GuildMessageReceivedEvent event) {
     try {
-      int taskId = Integer.parseInt(message.get(2));
+      int taskId = parseInt(message.get(2));
       if (new TaskDeletionProcess().delete(taskId, server, member)) {
         event.getChannel()
           .sendMessage(member.getAsMention() + " La tâche a bien été supprimée !")
@@ -154,25 +159,39 @@ public class TaskOperationsCommandListener extends CommandListener {
 
   public static Map<String, String> parseMessage(List<String> message) {
     Map<String, String> res = new HashMap<>();
-    int parsingState = 0;
+    ParsingState parsingState = MESSAGE_START;
     List<String> description = new ArrayList<>();
     Iterator<String> iterator = message.iterator();
     List<String> date = new ArrayList<>();
     while (iterator.hasNext()) {
       String s = iterator.next();
       if (s.equals("[")) {
-        parsingState = 1;
+        parsingState = TASK_NAME;
       } else if (s.equals("]")) {
-        parsingState = 2;
-      } else if (parsingState == 1) {
+        parsingState = MESSAGE_END;
+      } else if (parsingState == TASK_NAME) {
         description.add(s);
-      } else if (parsingState == 2) {
+      } else if (parsingState == MESSAGE_END) {
         date.add(s);
       }
     }
     res.put(MAP_DESCRIPTION, String.join(" ", description));
     res.put(MAP_DUE_DATE, date.get(0));
-    res.put(MAP_DUE_TIME, date.get(1));
+    res.put(MAP_DUE_TIME, verifyTime(date.get(1)));
     return res;
+  }
+
+  private static String verifyTime(String time) {
+    if (time.contains(":")) {
+      String[] split = time.split(":");
+      if (split.length == 2) {
+        int hours = parseInt(split[0]);
+        int minutes = parseInt(split[1]);
+        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+          throw new DateTimeException("L'horaire doit avoir le format HH:MM");
+        }
+      }
+    }
+    return time;
   }
 }

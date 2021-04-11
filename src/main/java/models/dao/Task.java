@@ -3,9 +3,17 @@ package models.dao;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
+import utils.DbUtils;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Tâche (contrôle, devoir à rendre, ...).
@@ -39,11 +47,46 @@ public class Task extends ModelDAO {
   public Task() {
   }
 
+  /**
+   * @param description description de la tâche
+   * @param dueDate     échéance (date)
+   * @param dueTime     échéance (horaire)
+   * @param server      serveur auquel est rattachée la tâche
+   */
   public Task(String description, Date dueDate, Date dueTime, Server server) {
     setDescription(description);
     setDueDate(dueDate);
     setDueTime(dueTime);
     setServer(server);
+  }
+
+  /**
+   * Récupère les tâches associées à un serveur.
+   *
+   * @param server serveur auquel sont rattachées les tâches
+   * @param days   période à publier, en jours à partir de la date d'aujourd'hui
+   * @return liste de tâches
+   */
+  public static List<Task> getByServer(Server server, int days) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_MONTH, -1);
+    Date after = calendar.getTime();
+    calendar.add(Calendar.DAY_OF_MONTH, days);
+    Date before = calendar.getTime();
+    EntityManager entityManager = DbUtils.getSessionFactory().createEntityManager();
+    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
+    Root<Task> root = criteria.from(Task.class);
+    criteria.select(root);
+    List<Predicate> predicates = new ArrayList<>();
+    predicates.add((builder.equal(root.get("server"), server.getId())));
+    predicates.add(builder.greaterThan(root.get("dueDate"), after));
+    if (days > 0) {
+      predicates.add(builder.lessThan(root.get("dueDate"), before));
+    }
+    criteria.where(predicates.toArray(new Predicate[]{}));
+    criteria.orderBy(builder.asc(root.get("dueDate")), builder.asc(root.get("dueTime")));
+    return entityManager.createQuery(criteria).getResultList();
   }
 
   public int getId() {

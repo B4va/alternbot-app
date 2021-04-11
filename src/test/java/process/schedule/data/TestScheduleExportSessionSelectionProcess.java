@@ -40,10 +40,10 @@ public class TestScheduleExportSessionSelectionProcess {
 
     EMPTY_SCHEDULE.setSessions(Collections.emptySet());
 
-    SESSION_18_01 = new Session("Arts martiaux", "Pai Mei", "F13", stringToDate("18-01-2021"), stringToTime("08:00"), stringToTime("13:00"), VALID_SCHEDULE);
-    SESSION_20_01_1 = new Session("Chimie organique", "Marie Curie", "R86", stringToDate("20-01-2021"), stringToTime("11:00"), stringToTime("18:30"), VALID_SCHEDULE);
-    SESSION_20_01_2 = new Session("Escrime", "Tesshin", "F13", stringToDate("20-01-2021"), stringToTime("14:30"), stringToTime("17:00"), VALID_SCHEDULE);
-    SESSION_22_01 = new Session("Physique nucléaire", "Emmett Brown", "F13", stringToDate("22-01-2021"), stringToTime("01:15"), stringToTime("13:00"), VALID_SCHEDULE);
+    SESSION_18_01 = new Session("Arts martiaux", "Pai Mei", "F13", stringToDate("18-01-2021"), stringToTime("08:00"), stringToTime("13:00"), VALID_SCHEDULE, "EXAM");
+    SESSION_20_01_1 = new Session("Chimie organique", "Marie Curie", "R86", stringToDate("20-01-2021"), stringToTime("11:00"), stringToTime("18:30"), VALID_SCHEDULE, "TD");
+    SESSION_20_01_2 = new Session("Escrime", "Tesshin", "F13", stringToDate("20-01-2021"), stringToTime("14:30"), stringToTime("17:00"), VALID_SCHEDULE, "TP");
+    SESSION_22_01 = new Session("Physique nucléaire", "Emmett Brown", "F13", stringToDate("22-01-2021"), stringToTime("01:15"), stringToTime("13:00"), VALID_SCHEDULE, "TD");
 
     // Les sessions sont volontairement dans le désordre afin de tester le tri du process
     VALID_SCHEDULE.setSessions(new HashSet<Session>(Arrays.asList(

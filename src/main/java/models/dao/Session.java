@@ -3,10 +3,15 @@ package models.dao;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
+import utils.DbUtils;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "sessions")
@@ -43,6 +48,9 @@ public class Session extends ModelDAO {
   @Column(name = "updated")
   private boolean updated;
 
+  @Column(name = "type")
+  private String type;
+
   @ManyToOne
   @JoinColumn(name = "schedule_id", nullable = false)
   private Schedule schedule;
@@ -51,7 +59,17 @@ public class Session extends ModelDAO {
 
   }
 
-  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule) {
+  /**
+   * @param name     nom du cours
+   * @param teacher  professeur
+   * @param location salle
+   * @param date     date (sans l'horaire)
+   * @param start    heure de début
+   * @param end      heure de fin
+   * @param schedule emploi du temps auquel est rattaché le cours
+   * @param type     type de cours (ex : TD, Devoir, ...)
+   */
+  public Session(String name, String teacher, String location, Date date, Date start, Date end, Schedule schedule, String type) {
     this.name = name;
     this.teacher = teacher;
     this.location = location;
@@ -59,6 +77,22 @@ public class Session extends ModelDAO {
     this.start = start;
     this.end = end;
     this.schedule = schedule;
+    this.type = type;
+  }
+
+  /**
+   * Récupère les sessions mises à jour suite à la récupération des données de l'IUT.
+   *
+   * @return liste de sessions
+   */
+  public static List<Session> getUpdated() {
+    EntityManager entityManager = DbUtils.getSessionFactory().createEntityManager();
+    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Session> criteria = builder.createQuery(Session.class);
+    Root<Session> root = criteria.from(Session.class);
+    criteria.select(root);
+    criteria.where(builder.equal(root.get("updated"), true));
+    return entityManager.createQuery(criteria).getResultList();
   }
 
   @Override
@@ -134,6 +168,14 @@ public class Session extends ModelDAO {
     this.schedule = schedule;
   }
 
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
   public boolean equals(Session session) {
     return name.equals(session.getName()) &&
       start.equals(session.getStart()) &&
@@ -143,6 +185,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si la date du cours est passée d'au moins le nombre de jours donné.
+   *
    * @param nbDays Nombre de jours.
    * @return true si la date du cours est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
    */
@@ -154,6 +197,7 @@ public class Session extends ModelDAO {
 
   /**
    * Indique si le cours est considéré comme passé.
+   *
    * @return true si la date du cours précède le jour actuel (sans prise en compte de l'horaire)
    */
   public boolean isPast() {

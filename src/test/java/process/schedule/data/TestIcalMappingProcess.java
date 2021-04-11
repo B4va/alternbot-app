@@ -22,6 +22,7 @@ public class TestIcalMappingProcess {
   private static final String DATE = "16-09-2030";
   private static final String START = "09:00";
   private static final String END = "10:00";
+  private static final String TYPE = "TD";
   private static final String ICAL_DATA = "BEGIN:VCALENDAR\n" +
     "BEGIN:VEVENT\n" +
     "SUMMARY:Informatique\n" +
@@ -67,6 +68,37 @@ public class TestIcalMappingProcess {
     "TRANSP:OPAQUE\n" +
     "END:VEVENT\n" +
     "END:VCALENDAR\n";
+  private static final String ICAL_DATA_MISFORMATTED_DESCRIPTION = "BEGIN:VCALENDAR\n" +
+    "BEGIN:VEVENT\n" +
+    "SUMMARY:Informatique\n" +
+    "DTSTART;TZID=Europe/Paris:20300916T090000\n" +
+    "DTEND;TZID=Europe/Paris:20300916T100000\n" +
+    "LOCATION:F06\n" +
+    "DESCRIPTION:Informatique -  - - \n" +
+    "TRANSP:OPAQUE\n" +
+    "END:VEVENT\n" +
+    "END:VCALENDAR\n";
+  private static final String ICAL_DATA_WITH_TYPE_1 = "BEGIN:VCALENDAR\n" +
+    "BEGIN:VEVENT\n" +
+    "SUMMARY:Informatique\n" +
+    "DTSTART;TZID=Europe/Paris:20300916T090000\n" +
+    "DTEND;TZID=Europe/Paris:20300916T100000\n" +
+    "LOCATION:F06\n" +
+    "DESCRIPTION:Informatique - TD\n" +
+    "TRANSP:OPAQUE\n" +
+    "END:VEVENT\n" +
+    "END:VCALENDAR\n";
+  private static final String ICAL_DATA_WITH_TYPE_2 = "BEGIN:VCALENDAR\n" +
+    "BEGIN:VEVENT\n" +
+    "SUMMARY:Informatique\n" +
+    "DTSTART;TZID=Europe/Paris:20300916T090000\n" +
+    "DTEND;TZID=Europe/Paris:20300916T100000\n" +
+    "LOCATION:F06\n" +
+    "DESCRIPTION:Informatique - Groupe 1 - F06 - TD\n" +
+    "TRANSP:OPAQUE\n" +
+    "END:VEVENT\n" +
+    "END:VCALENDAR\n";
+
   private static final String INVALID_DATA = "invalid";
   private static Schedule SCHEDULE;
 
@@ -87,7 +119,8 @@ public class TestIcalMappingProcess {
       () -> assertEquals(sessions.get(0).getSchedule().getId(), SCHEDULE.getId()),
       () -> assertEquals(dateToString(sessions.get(0).getDate()), DATE),
       () -> assertEquals(timeToString(sessions.get(0).getStart()), START),
-      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END)
+      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END),
+      () -> assertNull(sessions.get(0).getType())
     );
   }
 
@@ -125,7 +158,8 @@ public class TestIcalMappingProcess {
       () -> assertEquals(sessions.get(0).getSchedule().getId(), SCHEDULE.getId()),
       () -> assertEquals(dateToString(sessions.get(0).getDate()), DATE),
       () -> assertEquals(timeToString(sessions.get(0).getStart()), START),
-      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END)
+      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END),
+      () -> assertNull(sessions.get(0).getType())
     );
   }
 
@@ -133,5 +167,50 @@ public class TestIcalMappingProcess {
   public void testMap_null_data() {
     assertDoesNotThrow(() -> PROCESS.map(null, SCHEDULE));
     assertTrue(PROCESS.map(INVALID_DATA, SCHEDULE).isEmpty());
+  }
+
+  @Test
+  public void testMap_misformatted_description() {
+    List<Session> sessions = PROCESS.map(ICAL_DATA_MISFORMATTED_DESCRIPTION, SCHEDULE);
+    assertAll(
+      () -> assertFalse(sessions.isEmpty()),
+      () -> assertEquals(sessions.get(0).getName(), NAME),
+      () -> assertEquals(sessions.get(0).getLocation(), LOCATION),
+      () -> assertEquals(sessions.get(0).getSchedule().getId(), SCHEDULE.getId()),
+      () -> assertEquals(dateToString(sessions.get(0).getDate()), DATE),
+      () -> assertEquals(timeToString(sessions.get(0).getStart()), START),
+      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END),
+      () -> assertNull(sessions.get(0).getType())
+    );
+  }
+
+  @Test
+  public void testMap_type_1() {
+    List<Session> sessions = PROCESS.map(ICAL_DATA_WITH_TYPE_1, SCHEDULE);
+    assertAll(
+      () -> assertFalse(sessions.isEmpty()),
+      () -> assertEquals(sessions.get(0).getName(), NAME),
+      () -> assertEquals(sessions.get(0).getLocation(), LOCATION),
+      () -> assertEquals(sessions.get(0).getSchedule().getId(), SCHEDULE.getId()),
+      () -> assertEquals(dateToString(sessions.get(0).getDate()), DATE),
+      () -> assertEquals(timeToString(sessions.get(0).getStart()), START),
+      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END),
+      () -> assertEquals(sessions.get(0).getType(), TYPE)
+    );
+  }
+
+  @Test
+  public void testMap_type_2() {
+    List<Session> sessions = PROCESS.map(ICAL_DATA_WITH_TYPE_2, SCHEDULE);
+    assertAll(
+      () -> assertFalse(sessions.isEmpty()),
+      () -> assertEquals(sessions.get(0).getName(), NAME),
+      () -> assertEquals(sessions.get(0).getLocation(), LOCATION),
+      () -> assertEquals(sessions.get(0).getSchedule().getId(), SCHEDULE.getId()),
+      () -> assertEquals(dateToString(sessions.get(0).getDate()), DATE),
+      () -> assertEquals(timeToString(sessions.get(0).getStart()), START),
+      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END),
+      () -> assertEquals(sessions.get(0).getType(), TYPE)
+    );
   }
 }

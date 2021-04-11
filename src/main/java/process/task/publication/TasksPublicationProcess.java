@@ -6,6 +6,7 @@ import models.dao.Task;
 import process.commons.Publication;
 import process.task.data.TasksSelectionProcess;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
@@ -24,17 +25,14 @@ public class TasksPublicationProcess extends Publication {
    * @return true si le message a pu être publié
    */
   public boolean sendPublication(String channel, String serverRef, int daysAfter) {
-    boolean res = false;
-    Server server = ModelDAO.readAll(Server.class).stream()
-      .filter(s -> s.getReference().equals(serverRef))
-      .findAny()
-      .orElse(null);
-    if (nonNull(server)) {
+    try {
+      Server server = Server.getByReference(serverRef);
       List<Task> tasks = new TasksSelectionProcess().select(server, daysAfter);
       String message = new TasksFormattingProcess().format(tasks, daysAfter);
-      if (sendMessage(message, server, channel)) res = true;
+      return sendMessage(message, server, channel);
+    } catch (NoResultException e) {
+      return false;
     }
-    return res;
   }
 
   /**

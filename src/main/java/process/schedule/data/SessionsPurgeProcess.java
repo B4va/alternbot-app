@@ -18,10 +18,7 @@ public class SessionsPurgeProcess {
    * Supprime les cours ayant le statut 'mis à jour'.
    */
   public void purgeAllUpdated() {
-    List<Session> sessions = ModelDAO.readAll(Session.class);
-    sessions.stream()
-      .filter(Session::isUpdated)
-      .forEach(Session::delete);
+    Session.getUpdated().forEach(Session::delete);
   }
 
   /**

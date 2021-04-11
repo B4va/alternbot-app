@@ -29,6 +29,7 @@ public class TestSessionsPurgeProcess {
   private static final String DATE_TEST = "01-01-2021";
   private static final String START_TEST = "10:00";
   private static final String END_TEST = "12:00";
+  private static final String TYPE_TEST = "TD";
 
   @BeforeAll
   public static void init() {
@@ -51,7 +52,7 @@ public class TestSessionsPurgeProcess {
   @Test
   public void testPurgeAllUpdated_updated_session() throws ParseException {
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     SESSION_TEST.setUpdated(true);
     SESSION_TEST.setId(SESSION_TEST.create());
     int nbSessions = ModelDAO.readAll(Session.class).size();
@@ -63,7 +64,7 @@ public class TestSessionsPurgeProcess {
   @Test
   public void testPurgeAllUpdated_no_updated_session() throws ParseException {
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     SESSION_TEST.setId(SESSION_TEST.create());
     int nbSessions = ModelDAO.readAll(Session.class).size();
     PROCESS.purgeAllUpdated();
@@ -74,7 +75,7 @@ public class TestSessionsPurgeProcess {
   @Test
   public void testPurgePastDaysThreshold_fail_invalid_days_threshold() throws ParseException {
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     SESSION_TEST.setId(SESSION_TEST.create());
 
     assertEquals(0, PROCESS.purgePastDaysThreshold(0));
@@ -91,7 +92,7 @@ public class TestSessionsPurgeProcess {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -3);
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, calendar.getTime(),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     SESSION_TEST.setId(SESSION_TEST.create());
 
     final int nbSessions = ModelDAO.readAll(Session.class).size();
@@ -105,21 +106,21 @@ public class TestSessionsPurgeProcess {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -29);
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, calendar.getTime(),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     SESSION_TEST.setId(SESSION_TEST.create());
 
     // Cours dont la date est égale au seuil, sera supprimé
     calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -30);
     Session session_test_2 = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, calendar.getTime(),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     session_test_2.setId(session_test_2.create());
 
     // Cours dont la date est au-delà du seuil, sera supprimé
     calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_MONTH, -31);
     Session session_test_3 = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, calendar.getTime(),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     session_test_3.setId(session_test_3.create());
 
     final int nbSessions = ModelDAO.readAll(Session.class).size();

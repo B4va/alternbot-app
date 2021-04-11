@@ -4,11 +4,11 @@ import models.dao.Server;
 import models.dao.Session;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.Version;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerUtils;
@@ -28,7 +28,6 @@ public class ScheduleExportFormattingProcess {
   private static final String ICAL_PRODUCT_NAME = "Altern'Bot";
 
   private TimeZone icalTimezone;
-  private TzId icalTimezoneId;
   private final boolean isIcalTimezoneValid;
 
   /**
@@ -44,14 +43,15 @@ public class ScheduleExportFormattingProcess {
    */
   public ScheduleExportFormattingProcess(String timeZone) {
     // Init objets timezone
-    try {
-      this.icalTimezone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(timeZone);
-      this.icalTimezoneId = this.icalTimezone.getVTimeZone().getTimeZoneId();
-    } catch (NullPointerException ex) {
+    this.icalTimezone = null;
+    TimeZoneRegistry tzFactory = TimeZoneRegistryFactory.getInstance().createRegistry();
+    if (nonNull(tzFactory) && nonNull(timeZone) && !timeZone.isEmpty()) {
+      this.icalTimezone = tzFactory.getTimeZone(timeZone);
+      this.isIcalTimezoneValid = nonNull(this.icalTimezone);
+    } else {
       LOGGER.warn("Échec de la construction des objets timezone");
+      this.isIcalTimezoneValid = false;
     }
-
-    this.isIcalTimezoneValid = nonNull(this.icalTimezone) && nonNull(this.icalTimezoneId);
   }
 
   /**
@@ -90,6 +90,8 @@ public class ScheduleExportFormattingProcess {
     net.fortuna.ical4j.model.Calendar ical = new net.fortuna.ical4j.model.Calendar();
     ical.getProperties().add(Version.VERSION_2_0);
     ical.getProperties().add(new ProdId("-//" + ICAL_PRODUCT_AUTHOR + "//" + ICAL_PRODUCT_NAME + "//EN"));
+    if (this.isIcalTimezoneValid)
+      ical.getComponents().add(this.icalTimezone.getVTimeZone());
     return ical;
   }
 
@@ -99,8 +101,6 @@ public class ScheduleExportFormattingProcess {
    * @return {@code true} en cas de succès, sinon {@code false}
    */
   private boolean addSessionToIcal(Session session, net.fortuna.ical4j.model.Calendar ical) {
-    // TODO: Faire disparaître ce pavé pour la gestion des dates lorsque iCal4j v4 sera dispo:
-    //  https://ical4j.github.io/2019/06/18/ical4j-4-preview.html
     Calendar cal = Calendar.getInstance();
 
     // Récupère les heures de début et fin de cours
@@ -116,22 +116,18 @@ public class ScheduleExportFormattingProcess {
     cal.setTime(session.getDate());
     cal.set(Calendar.HOUR_OF_DAY, startHour);
     cal.set(Calendar.MINUTE, startMin);
-    DateTime startDayTime = new DateTime(cal.getTime());
+    final DateTime startDayTime = this.isIcalTimezoneValid ? new DateTime(cal.getTime(), this.icalTimezone)
+      : new DateTime(cal.getTime());
     if (this.isIcalTimezoneValid)
       startDayTime.setTimeZone(this.icalTimezone);
     cal.set(Calendar.HOUR_OF_DAY, endHour);
     cal.set(Calendar.MINUTE, endMin);
-    DateTime endDayTime = new DateTime(cal.getTime());
-    if (this.isIcalTimezoneValid)
-      endDayTime.setTimeZone(this.icalTimezone);
+    final DateTime endDayTime = this.isIcalTimezoneValid ? new DateTime(cal.getTime(), this.icalTimezone)
+      : new DateTime(cal.getTime());
 
     final String eventName = session.getType() != null ? session.getName() + " - " + session.getType() : session.getName();
     VEvent event = new VEvent(startDayTime, endDayTime, eventName);
     event.getProperties().add(new Location(session.getLocation()));
-
-    if (this.isIcalTimezoneValid)
-      event.getProperties().add(this.icalTimezoneId);
-
     return ical.getComponents().add(event);
   }
 }

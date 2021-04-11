@@ -36,11 +36,6 @@ public class DailyScheduleFormattingProcess extends Publication {
     return message.toString();
   }
 
-  /**
-   *
-   * @param message
-   * @param s
-   */
   private void formatSession(StringBuilder message, Session s) {
     message
       .append("\n")

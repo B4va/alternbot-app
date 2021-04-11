@@ -45,12 +45,6 @@ public class IcalMappingProcess {
     return mapSessions(icalData, schedule);
   }
 
-  /**
-   *
-   * @param data
-   * @param schedule
-   * @return list de VEvent
-   */
   private List<VEvent> parseIcal(String data, Schedule schedule) {
     CalendarBuilder builder = new CalendarBuilder();
     List<VEvent> events = new ArrayList<>();
@@ -67,12 +61,6 @@ public class IcalMappingProcess {
       .collect(Collectors.toList());
   }
 
-  /**
-   *
-   * @param events
-   * @param schedule
-   * @return list de session
-   */
   private List<Session> mapSessions(List<VEvent> events, Schedule schedule) {
     AtomicInteger errorCount = new AtomicInteger();
     List<Session> sessions = events.stream()
@@ -88,13 +76,6 @@ public class IcalMappingProcess {
       .collect(Collectors.toList());
   }
 
-  /**
-   *
-   * @param event
-   * @param schedule
-   * @param errorCount
-   * @return Session
-   */
   private Session mapSession(VEvent event, Schedule schedule, AtomicInteger errorCount) {
     try {
       String name = event.getDescription().getValue().split(" - ")[0];

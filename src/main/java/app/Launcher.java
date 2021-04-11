@@ -34,9 +34,6 @@ public class Launcher {
     initThreads();
   }
 
-  /**
-   * Méthode d'éxecution des migrations
-   */
   private static void runMigrations() {
     String env = EnvironmentVariablesUtils.getString(EnvironmentVariablesUtils.ENVIRONMENT, DEV_ENV);
     if (env.equals(PROD_ENV)) {
@@ -44,9 +41,6 @@ public class Launcher {
     }
   }
 
-  /**
-   * Permet l'initialisation du JDA
-   */
   private static void initJDA() {
     try {
       initializeJDA();
@@ -57,9 +51,6 @@ public class Launcher {
     }
   }
 
-  /**
-   * Permet l'initialisation des threads
-   */
   private static void initThreads() {
     new Thread(new CommandsController().init(), COMMANDS).start();
     new Thread(new WorkersController().init(), WORKERS).start();

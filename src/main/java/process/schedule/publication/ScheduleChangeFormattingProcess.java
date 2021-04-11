@@ -27,11 +27,6 @@ public class ScheduleChangeFormattingProcess {
     return message.toString();
   }
 
-  /**
-   *
-   * @param changes
-   * @param message
-   */
   private void fillMessage(List<SessionChange> changes, StringBuilder message) {
     for (SessionChange c : changes) {
       if (isNewSession(c)) {
@@ -47,11 +42,6 @@ public class ScheduleChangeFormattingProcess {
     return nonNull(change.getNewSession());
   }
 
-  /**
-   *
-   * @param message
-   * @param c
-   */
   private void fillMessageWithNewSession(StringBuilder message, SessionChange c) {
     Session ns = c.getNewSession();
     message.append(c.getReplacedSessions().isEmpty() ? "\n\nNOUVEAU COURS :\n" : "\n\nMODIFICATION :\n");
@@ -68,11 +58,6 @@ public class ScheduleChangeFormattingProcess {
     }
   }
 
-  /**
-   *
-   * @param message
-   * @param c
-   */
   private void fillMessageWithReplacedSessions(StringBuilder message, SessionChange c) {
     if (!c.getReplacedSessions().isEmpty()) {
       message.append("\n> Cours supprimés/modifiés :");
@@ -89,11 +74,6 @@ public class ScheduleChangeFormattingProcess {
     }
   }
 
-  /**
-   *
-   * @param message
-   * @param c
-   */
   private void fillMessageWithDeletedSession(StringBuilder message, SessionChange c) {
     Session deletedSession = c.getReplacedSessions().get(0);
     message.append("\n\nCOURS SUPPRIME :\n");

@@ -39,13 +39,6 @@ public class Task extends ModelDAO {
   public Task() {
   }
 
-  /**
-   *
-   * @param description
-   * @param dueDate
-   * @param dueTime
-   * @param server
-   */
   public Task(String description, Date dueDate, Date dueTime, Server server) {
     setDescription(description);
     setDueDate(dueDate);

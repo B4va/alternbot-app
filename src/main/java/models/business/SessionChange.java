@@ -12,10 +12,6 @@ public class SessionChange {
   private Session newSession;
   private List<Session> replacedSessions;
 
-  /**
-   * @param newSession nouvelle session
-   * @param replacedSessions sessions remplacées
-   */
   public SessionChange(Session newSession, List<Session> replacedSessions) {
     this.newSession = newSession;
     this.replacedSessions = replacedSessions;

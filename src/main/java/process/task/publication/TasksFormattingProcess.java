@@ -38,11 +38,6 @@ public class TasksFormattingProcess {
     return sb.toString();
   }
 
-  /**
-   *
-   * @param task
-   * @param sb
-   */
   private void formatTask(Task task, StringBuilder sb) {
     sb.append("\n   - ")
       .append("[").append(task.getId()).append("] ")

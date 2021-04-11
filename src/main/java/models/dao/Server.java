@@ -3,8 +3,12 @@ package models.dao;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
+import utils.DbUtils;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Set;
 
 /**
@@ -34,9 +38,29 @@ public class Server extends ModelDAO {
   public Server() {
   }
 
+  /**
+   * @param reference identifiant du serveur Discord
+   * @param schedule  emploi du temps rattaché au serveur
+   */
   public Server(String reference, Schedule schedule) {
     this.reference = reference;
     this.schedule = schedule;
+  }
+
+  /**
+   * Récupère un serveur à partir de sa référence.
+   *
+   * @param reference référence du serveur
+   * @return serveur associé à la référence
+   */
+  public static Server getByReference(String reference) {
+    EntityManager entityManager = DbUtils.getSessionFactory().createEntityManager();
+    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Server> criteria = builder.createQuery(Server.class);
+    Root<Server> root = criteria.from(Server.class);
+    criteria.select(root);
+    criteria.where(builder.equal(root.get("reference"), reference));
+    return entityManager.createQuery(criteria).getResultList().get(0);
   }
 
   public int getId() {

@@ -28,6 +28,8 @@ public class TestDailyScheduleFormattingProcess {
   private static final String END2 = "15:00";
   private static final String SESSION1_NAME = "Session 1";
   private static final String SESSION2_NAME = "Session 2";
+  private static final String SESSION1_TYPE = "TD";
+  private static final String SESSION2_TYPE = "EXAM";
   private static final String TEACHER = "Prof";
   private static final String LOCATION = "A01";
   private static final String MESSAGE_NO_SESSION =
@@ -36,24 +38,24 @@ public class TestDailyScheduleFormattingProcess {
       "\n```";
   private static final String MESSAGE_ONE_SESSION =
     "```\nEmploi du temps du 01-01-2021\n" +
-      "\n13:00 - 14:00 : Session 1 - Prof - A01" +
+      "\n13:00 - 14:00 : Session 1 - Prof - A01 - TD" +
       "\n```";
   private static final String MESSAGE_NO_TEACHER_NO_LOCATION =
     "```\nEmploi du temps du 01-01-2021\n" +
-      "\n14:00 - 15:00 : Session 2" +
+      "\n14:00 - 15:00 : Session 2 - EXAM" +
       "\n```";
   private static final String MESSAGE_MULTIPLE_SESSIONS =
     "```\nEmploi du temps du 01-01-2021\n" +
-      "\n13:00 - 14:00 : Session 1 - Prof - A01" +
-      "\n14:00 - 15:00 : Session 2" +
+      "\n13:00 - 14:00 : Session 1 - Prof - A01 - TD" +
+      "\n14:00 - 15:00 : Session 2 - EXAM" +
       "\n```";
 
   @BeforeAll
   public static void init() throws ParseException {
     SESSION1 = new Session(SESSION1_NAME, TEACHER, LOCATION, stringToDate(DATE),
-      stringToTime(START1), stringToTime(END1), null);
+      stringToTime(START1), stringToTime(END1), null, SESSION1_TYPE);
     SESSION2 = new Session(SESSION2_NAME, null, null, stringToDate(DATE),
-      stringToTime(START2), stringToTime(END2), null);
+      stringToTime(START2), stringToTime(END2), null, SESSION2_TYPE);
   }
 
   @Test

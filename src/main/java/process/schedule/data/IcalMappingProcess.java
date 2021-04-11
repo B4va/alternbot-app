@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -78,7 +80,13 @@ public class IcalMappingProcess {
 
   private Session mapSession(VEvent event, Schedule schedule, AtomicInteger errorCount) {
     try {
-      String name = event.getDescription().getValue().split(" - ")[0];
+      // Le regex extrait le nom du cours et son type, en supposant que la description respecte ce format:
+      // "Réunion Rentrée - promo - F06 - DIV"
+      Matcher matcher = Pattern.compile("(?<name>^.+?(?=\\s-))|(?<type>(?<=-\\s)\\w+$)")
+        .matcher(event.getDescription().getValue());
+      String name = matcher.find() ? matcher.group("name") : event.getDescription().getValue();
+      String type = matcher.find() ? matcher.group("type") : null;
+
       String location = nonNull(event.getLocation()) ? event.getLocation().getValue() : null;
       Date date, start, end;
       try {
@@ -89,7 +97,7 @@ public class IcalMappingProcess {
         errorCount.getAndIncrement();
         return null;
       }
-      return new Session(name, null, location, date, start, end, schedule);
+      return new Session(name, null, location, date, start, end, schedule, type);
     } catch (NullPointerException ex) {
       errorCount.getAndIncrement();
       return null;

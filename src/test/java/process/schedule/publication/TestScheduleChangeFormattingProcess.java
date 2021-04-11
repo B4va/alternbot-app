@@ -25,26 +25,26 @@ public class TestScheduleChangeFormattingProcess {
   private static final String MESSAGE_NEW_SESSION =
     "@everyone \nChangement d'emploi du temps :information_source:\n```"
     + "\n\nNOUVEAU COURS :"
-    + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
+    + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01 - TD"
     + "\n```";
   private static final String MESSAGE_UPDATED_SESSION =
     "@everyone \nChangement d'emploi du temps :information_source:\n```"
     + "\n\nMODIFICATION :"
-    + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
+    + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01 - TD"
     + "\n> Cours supprimés/modifiés :"
     + "\n    - Informatique (14:00 - 15:00)"
     + "\n```";
   private static final String MESSAGE_MULTIPLE_NEW_SESSIONS =
     "@everyone \nChangement d'emploi du temps :information_source:\n```"
       + "\n\nNOUVEAU COURS :"
-      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
+      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01 - TD"
       + "\n\nNOUVEAU COURS :"
-      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
+      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01 - TD"
       + "\n```";
   private static final String MESSAGE_MULTIPLE_UPDATED_SESSIONS =
     "@everyone \nChangement d'emploi du temps :information_source:\n```"
       + "\n\nMODIFICATION :"
-      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01"
+      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - A01 - TD"
       + "\n> Cours supprimés/modifiés :"
       + "\n    - Informatique (14:00 - 15:00)"
       + "\n    - Informatique (14:00 - 15:00)"
@@ -52,12 +52,12 @@ public class TestScheduleChangeFormattingProcess {
   private static final String MESSAGE_SESSION_NO_TEACHER =
     "@everyone \nChangement d'emploi du temps :information_source:\n```"
       + "\n\nNOUVEAU COURS :"
-      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 - A01"
+      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 - A01 - TD"
       + "\n```";
   private static final String MESSAGE_SESSION_NO_LOCATION =
     "@everyone \nChangement d'emploi du temps :information_source:\n```"
       + "\n\nNOUVEAU COURS :"
-      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof)"
+      + "\nINFORMATIQUE - le 01-01-2020 de 14:00 à 15:00 (M. Prof) - TD"
       + "\n```";
   private static final String MESSAGE_DELETED_SESSION =
     "@everyone \nChangement d'emploi du temps :information_source:\n```"
@@ -71,11 +71,12 @@ public class TestScheduleChangeFormattingProcess {
   private static final String SESSION_END = "15:00";
   private static final String SESSION_TEACHER = "M. Prof";
   private static final String SESSION_LOCATION = "A01";
+  private static final String SESSION_TYPE = "TD";
 
   @BeforeAll
   public static void init() throws ParseException {
       SESSION = new Session(SESSION_NAME, SESSION_TEACHER, SESSION_LOCATION,
-        stringToDate(SESSION_DATE), stringToTime(SESSION_START), stringToTime(SESSION_END), null);
+        stringToDate(SESSION_DATE), stringToTime(SESSION_START), stringToTime(SESSION_END), null, SESSION_TYPE);
   }
 
   @Test
@@ -111,7 +112,7 @@ public class TestScheduleChangeFormattingProcess {
   @Test
   public void testFormat_no_teacher() throws ParseException {
     Session session = new Session(SESSION_NAME, null, SESSION_LOCATION, stringToDate(SESSION_DATE),
-        stringToTime(SESSION_START), stringToTime(SESSION_END), null);
+        stringToTime(SESSION_START), stringToTime(SESSION_END), null, SESSION_TYPE);
     List<SessionChange> changes = singletonList(new SessionChange(session, Collections.emptyList()));
     String test = PROCESS.format(changes);
     assertEquals(MESSAGE_SESSION_NO_TEACHER, test);
@@ -120,7 +121,7 @@ public class TestScheduleChangeFormattingProcess {
   @Test
   public void testFormat_no_location() throws ParseException {
     Session session = new Session(SESSION_NAME, SESSION_TEACHER, null, stringToDate(SESSION_DATE),
-        stringToTime(SESSION_START), stringToTime(SESSION_END), null);
+        stringToTime(SESSION_START), stringToTime(SESSION_END), null, SESSION_TYPE);
     List<SessionChange> changes = singletonList(new SessionChange(session, Collections.emptyList()));
     String test = PROCESS.format(changes);
     assertEquals(MESSAGE_SESSION_NO_LOCATION, test);

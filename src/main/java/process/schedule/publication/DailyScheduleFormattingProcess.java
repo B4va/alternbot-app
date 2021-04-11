@@ -54,6 +54,11 @@ public class DailyScheduleFormattingProcess extends Publication {
         .append(" - ")
         .append(s.getLocation());
     }
+    if (nonNull(s.getType())) {
+      message
+        .append(" - ")
+        .append(s.getType());
+    }
   }
 
 }

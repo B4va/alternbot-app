@@ -36,30 +36,35 @@ public class TestSessionUpdateProcess {
   private static final String DATE_TEST = "01-01-2021";
   private static final String START_TEST = "10:00";
   private static final String END_TEST = "12:00";
+  private static final String TYPE_TEST = "CM";
   private static final String NAME_RDM = "CoursTest_TestSessionUpdateProcess_rdm";
   private static final String TEACHER_RDM = null;
   private static final String LOCATION_RDM = "A0";
   private static final String DATE_RDM = "01-01-2000";
   private static final String START_RDM = "10:00";
   private static final String END_RDM = "12:00";
+  private static final String TYPE_RDM = "CM";
   private static final String NAME_OL_END = "CoursTest_TestSessionUpdateProcess_ol_end";
   private static final String TEACHER_OL_END = null;
   private static final String LOCATION_OL_END = "A2";
   private static final String DATE_OL_END = "01-01-2021";
   private static final String START_OL_END = "11:00";
   private static final String END_OL_END = "13:00";
+  private static final String TYPE_OL_END = "EXAM";
   private static final String NAME_OL_START = "CoursTest_TestSessionUpdateProcess_ol_start";
   private static final String TEACHER_OL_START = null;
   private static final String LOCATION_OL_START = "A3";
   private static final String DATE_OL_START = "01-01-2021";
   private static final String START_OL_START = "09:00";
   private static final String END_OL_START = "11:00";
+  private static final String TYPE_OL_START = "EI";
   private static final String NAME_OVER = "CoursTest_TestSessionUpdateProcess_over";
   private static final String TEACHER_OVER = null;
   private static final String LOCATION_OVER = "A4";
   private static final String DATE_OVER = "01-01-2021";
   private static final String START_OVER = "10:30";
   private static final String END_OVER = "11:30";
+  private static final String TYPE_OVER = "DIV";
   private static final String NAME_OLD_SESSION = "CoursTest_OldSession";
   private static final String DATE_OLD_SESSION = "01-01-2030";
 
@@ -68,22 +73,22 @@ public class TestSessionUpdateProcess {
     PROCESS = new SessionUpdateProcess();
     SCHEDULE.setId(SCHEDULE.create());
     SESSION_TEST = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     SESSION_TEST.setId(SESSION_TEST.create());
     OLD_SESSION = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_OLD_SESSION),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     OLD_SESSION.setId(OLD_SESSION.create());
     SESSION_RDM = new Session(NAME_RDM, TEACHER_RDM, LOCATION_RDM, stringToDate(DATE_RDM),
-      stringToTime(START_RDM), stringToTime(END_RDM), SCHEDULE);
+      stringToTime(START_RDM), stringToTime(END_RDM), SCHEDULE, TYPE_RDM);
     SESSION_RDM.setId(SESSION_RDM.create());
     SESSION_OL_END = new Session(NAME_OL_END, TEACHER_OL_END, LOCATION_OL_END, stringToDate(DATE_OL_END),
-      stringToTime(START_OL_END), stringToTime(END_OL_END), SCHEDULE);
+      stringToTime(START_OL_END), stringToTime(END_OL_END), SCHEDULE, TYPE_OL_END);
     SESSION_OL_END.setId(SESSION_OL_END.create());
     SESSION_OL_START = new Session(NAME_OL_START, TEACHER_OL_START, LOCATION_OL_START, stringToDate(DATE_OL_START),
-      stringToTime(START_OL_START), stringToTime(END_OL_START), SCHEDULE);
+      stringToTime(START_OL_START), stringToTime(END_OL_START), SCHEDULE, TYPE_OL_START);
     SESSION_OL_START.setId(SESSION_OL_START.create());
     SESSION_OVER = new Session(NAME_OVER, TEACHER_OVER, LOCATION_OVER, stringToDate(DATE_OVER),
-      stringToTime(START_OVER), stringToTime(END_OVER), SCHEDULE);
+      stringToTime(START_OVER), stringToTime(END_OVER), SCHEDULE, TYPE_OVER);
     SESSION_OVER.setId(SESSION_OVER.create());
   }
 
@@ -207,7 +212,7 @@ public class TestSessionUpdateProcess {
   @Test
   public void testUpdateWithNew_already_saved() throws ParseException {
     Session alreadySaved = new Session(NAME_TEST, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_TEST),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     alreadySaved.setId(alreadySaved.create());
     int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
@@ -225,7 +230,7 @@ public class TestSessionUpdateProcess {
   @Test
   public void testUpdateWithNew_same_time_sessions() throws ParseException {
     Session sameTimeSession = new Session(NAME_TEST, TEACHER_OL_START, LOCATION_TEST, stringToDate(DATE_OL_START),
-      stringToTime(START_OL_START), stringToTime(END_OL_START), SCHEDULE);
+      stringToTime(START_OL_START), stringToTime(END_OL_START), SCHEDULE, TYPE_OL_START);
     int nbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> changes = new ArrayList<>();
     Set<Session> oldSessions = Collections.singleton(SESSION_OL_START);
@@ -287,7 +292,7 @@ public class TestSessionUpdateProcess {
   public void testUpdateFromOld_not_changed() throws ParseException {
     List<SessionChange> changes = new ArrayList<>();
     Session newSession = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_OLD_SESSION),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     List<Session> newSessions = Collections.singletonList(newSession);
     PROCESS.updateFromOld(OLD_SESSION, newSessions, changes);
     assertAll(
@@ -300,7 +305,7 @@ public class TestSessionUpdateProcess {
   public void testUpdateFromOld_already_in_session_changes() throws ParseException {
     List<SessionChange> changes = new ArrayList<>();
     Session alreadyChanged = new Session(NAME_OLD_SESSION, TEACHER_TEST, LOCATION_TEST, stringToDate(DATE_OLD_SESSION),
-      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE);
+      stringToTime(START_TEST), stringToTime(END_TEST), SCHEDULE, TYPE_TEST);
     changes.add(new SessionChange(new Session(), Collections.singletonList(alreadyChanged)));
     List<Session> newSessions = Collections.emptyList();
     PROCESS.updateFromOld(OLD_SESSION, newSessions, changes);

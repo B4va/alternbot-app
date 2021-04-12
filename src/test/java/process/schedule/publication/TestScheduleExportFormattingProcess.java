@@ -23,7 +23,7 @@ import static utils.DateUtils.stringToTime;
  */
 public class TestScheduleExportFormattingProcess {
   private static final ScheduleExportFormattingProcess PROCESS = new ScheduleExportFormattingProcess();
-  private static final ScheduleExportFormattingProcess PROCESS_NO_TZ = new ScheduleExportFormattingProcess("");
+  private static final ScheduleExportFormattingProcess PROCESS_NO_TZ = new ScheduleExportFormattingProcess("blabla");
 
   private static final String SCHEDULE_PROMO = "LP Génie logiciel";
   private static final String SCHEDULE_URL = "url.test";
@@ -54,6 +54,12 @@ public class TestScheduleExportFormattingProcess {
       Files.readAllBytes(Paths.get(TestScheduleExportFormattingProcess.class.getResource(ICAL_NO_TZ_FILENAME).toURI())),
       StandardCharsets.UTF_8
     );
+  }
+
+  @Test
+  public void testConstructor_invalid_timezone_param() {
+    assertDoesNotThrow(() -> new ScheduleExportFormattingProcess(null));
+    assertDoesNotThrow(() -> new ScheduleExportFormattingProcess(""));
   }
 
   @Test

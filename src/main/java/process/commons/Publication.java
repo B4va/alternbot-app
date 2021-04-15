@@ -3,6 +3,7 @@ package process.commons;
 import models.dao.Server;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 import org.apache.logging.log4j.Logger;
@@ -108,8 +109,24 @@ public abstract class Publication {
 
   private boolean hasChannel(Guild guild, String channel) {
     boolean b = !guild.getTextChannelsByName(channel, true).isEmpty();
-    if (!b) LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
-    return b;
+    if (!b) {
+      LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getName());
+      return createChannel(guild, channel);
+    }
+
+    return true;
+  }
+
+  private boolean createChannel(Guild guild, String channel) {
+    try {
+      return !guild.createTextChannel(channel).complete().getId().isEmpty();
+    } catch (InsufficientPermissionException e) {
+      LOGGER.warn("Impossible de créer le channel '{}' sur le serveur '{}' - Permission refusée", channel, guild.getName());
+    } catch (NullPointerException e) {
+      LOGGER.warn("Impossible de créer le channel '{}'", channel);
+    }
+
+    return false;
   }
 
   private Guild getGuild(Server server) {

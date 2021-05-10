@@ -14,7 +14,7 @@ public class ScheduleWorkersHandler extends WorkersHandler {
 
   @Override
   public WorkersHandler init() {
-    runnables.add(new SchedulePublicationWorker(DAILY_HOUR, DAILY_MINUTE, 0));
+    runnables.add(new SchedulePublicationWorker(DAILY_HOUR, DAILY_MINUTE, 0, true));
     runnables.add(new ScheduleUpdateWorker(TimeUnit.HOURS.toMillis(2), 0));
     return this;
   }

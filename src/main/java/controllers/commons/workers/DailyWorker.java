@@ -1,5 +1,6 @@
 package controllers.commons.workers;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,6 +20,7 @@ public abstract class DailyWorker extends Worker {
   private final int minute;
   private int second;
   private final long delay;
+  private boolean skipSunday;
 
   /**
    * Constructeur.
@@ -36,7 +38,20 @@ public abstract class DailyWorker extends Worker {
       this.hour = hour;
       this.minute = minute;
       this.delay = delay;
+      this.skipSunday = false;
     }
+  }
+
+  /**
+   * Constructeur avec la possibilité de sauter les publications des cours le dimanche
+   * @param hour        heure
+   * @param minute      minute
+   * @param delay       delai avant lancement (en secondes)
+   * @param skipSunday  ne pas publier les cours du dimanche
+   */
+  public DailyWorker(int hour, int minute, long delay, boolean skipSunday) {
+    this(hour, minute, delay);
+    this.skipSunday = skipSunday;
   }
 
   /**
@@ -66,8 +81,16 @@ public abstract class DailyWorker extends Worker {
       .withHour(hour)
       .withMinute(minute)
       .withSecond(second);
-    if (now.plusSeconds(delay).isAfter(nextRun)) {
-      nextRun = nextRun.plusDays(1);
+    ZonedDateTime nowPlusDelay = now.plusSeconds(delay);
+    if (nowPlusDelay.isAfter(nextRun)) {
+      //If now + delay = saturday then skip the run on saturday
+      if(skipSunday && nowPlusDelay.getDayOfWeek().equals(DayOfWeek.SATURDAY)){
+        //next run =  sunday
+        nextRun = nextRun.plusDays(2);
+      }
+      else {
+        nextRun = nextRun.plusDays(1);
+      }
     }
     long delay = Duration.between(now, nextRun).getSeconds() * 1000;
     new Timer(getThreadName()).schedule(getTimerTask(), delay, TimeUnit.DAYS.toMillis(1));

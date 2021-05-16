@@ -21,7 +21,6 @@ public class TestTasksFormattingProcess {
   private static List<Task> NO_TASK;
   private static List<Task> ONE_TASK;
   private static List<Task> MULTIPLE_TASKS;
-  private static final String RES_NO_TASK = "```\nAucune tâche en cours\n```";
   private static final String RES_ONE_TASK = "```\n" +
     "LISTE DES TÂCHES EN COURS :" +
     "\n   - [1] Tâche 1 : 01-01-2020 - 10:00" +
@@ -35,7 +34,6 @@ public class TestTasksFormattingProcess {
     "LISTE DES TÂCHES EN COURS (J+1) :" +
     "\n   - [1] Tâche 1 : 01-01-2020 - 10:00" +
     "\n```";
-  private static final String RES_PLUS_ONE_DAY_NO_TASK = "```\nAucune tâche en cours (J+1)\n```";
 
   @BeforeAll
   public static void init() throws ParseException {
@@ -52,10 +50,6 @@ public class TestTasksFormattingProcess {
     MULTIPLE_TASKS.add(t2);
   }
 
-  @Test
-  public void testFormat_no_task() {
-    assertEquals(PROCESS.format(NO_TASK), RES_NO_TASK);
-  }
 
   @Test
   public void testFormat_one_task() {
@@ -71,9 +65,5 @@ public class TestTasksFormattingProcess {
   public void testFormat_period() {
     assertEquals(PROCESS.format(ONE_TASK, 1), RES_PLUS_ONE_DAY);
   }
-
-  @Test
-  public void testFormat_period_no_tasks() {
-    assertEquals(PROCESS.format(NO_TASK, 1), RES_PLUS_ONE_DAY_NO_TASK);
-  }
+  
 }

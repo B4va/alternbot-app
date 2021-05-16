@@ -38,6 +38,10 @@ public abstract class Publication {
     if (!hasChannel(guild, channel))
       return false;
 
+    if(message.contains("Aucun cours prévu ce jour.")){
+      return false;
+    }
+
     if (message.length() > 2000) {
       List<String> messages = decomposerMessage(message);
       sendLongMessage(messages, server, channel);

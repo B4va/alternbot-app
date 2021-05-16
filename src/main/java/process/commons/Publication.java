@@ -38,7 +38,7 @@ public abstract class Publication {
     if (!hasChannel(guild, channel))
       return false;
 
-    if(message.contains("Aucun cours prévu ce jour.")){
+    if(message.contains("Aucun cours prévu ce jour.") || message.contains("Aucune tâche en cours")){
       return false;
     }
 

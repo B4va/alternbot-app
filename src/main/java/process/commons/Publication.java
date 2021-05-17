@@ -3,26 +3,24 @@ package process.commons;
 import models.dao.Server;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 import org.apache.logging.log4j.Logger;
+import utils.JDAUtils;
 import utils.LoggerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static utils.JDAUtils.getJDAInstance;
 
 /**
  * Gestion de la publication dans les différents serveurs Discord.
  */
 public abstract class Publication {
-
   private static final Logger LOGGER = LoggerUtils.buildLogger(Publication.class);
-
   public static final String SCHEDULE_CHANNEL = "emploi-du-temps";
 
   /**
@@ -32,19 +30,39 @@ public abstract class Publication {
    * @param server  qui reçoit le message
    */
   protected boolean sendMessage(String message, Server server, String channel) {
-    Guild guild = getGuild(server);
-    if (isNull(guild))
-      return false;
-    if (!hasChannel(guild, channel))
-      return false;
+    Guild guild = JDAUtils.getGuildFromServer(server);
+    if (isNull(guild)) return false;
+
+    TextChannel textChannel = JDAUtils.getOrCreateTextChannel(guild, channel);
+    if (isNull(textChannel)) return false;
 
     if (message.length() > 2000) {
-      List<String> messages = decomposerMessage(message);
-      sendLongMessage(messages, server, channel);
+      for (String partieMessage : decomposerMessage(message))
+        if (!doSendMessage(textChannel, partieMessage))
+          return false;
+
       return true;
     } else {
-      return doSendMessage(message, server, channel);
+      return doSendMessage(textChannel, message);
     }
+  }
+
+  /**
+   * Poste un fichier sur un channel d'un serveur Discord.
+   *
+   * @param fileData  contenu du fichier à poster
+   * @param fileName  nom du fichier tel qu'il apparaîtra sur Discord
+   * @param isSpoiler indique si il faut marquer le fichier comme spoiler ou pas
+   * @param server    serveur sur lequel le fichier sera posté
+   * @param channel   nom du channel sur lequel le fichier sera posté
+   * @return {@code true} si le fichier a été posté avec succès, {@code false} en cas d'erreur
+   */
+  protected boolean sendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
+    Guild guild = JDAUtils.getGuildFromServer(server);
+    if (isNull(guild)) return false;
+
+    TextChannel textChannel = JDAUtils.getOrCreateTextChannel(guild, channel);
+    return nonNull(textChannel) && doSendFile(textChannel, fileData, fileName, isSpoiler);
   }
 
   /**
@@ -54,7 +72,7 @@ public abstract class Publication {
    * @param message à décomposer
    * @return le message sous forme de sous messages
    */
-  protected List<String> decomposerMessage(String message) {
+  private List<String> decomposerMessage(String message) {
     String[] splited = message.split("\n");
     int i = 0;
     int codeMarker = 0;
@@ -78,109 +96,24 @@ public abstract class Publication {
     return messages;
   }
 
-  /**
-   * @param messages qui sont décomposés du message original en une liste
-   * @param server   qui reçoit le message
-   * @param channel  qui reçoit le message
-   */
-  protected void sendLongMessage(List<String> messages, Server server, String channel) {
-    messages.forEach(m -> doSendMessage(m, server, channel));
-  }
-
-  /**
-   * Poste un fichier sur l'un des channel d'un serveur Discord.
-   *
-   * @param fileData  contenu du fichier à poster
-   * @param fileName  nom du fichier tel qu'il apparaîtra sur Discord
-   * @param isSpoiler indique si il faut marquer le fichier comme spoiler ou pas
-   * @param server    serveur sur lequel le fichier sera posté
-   * @param channel   nom du channel sur lequel le fichier sera posté
-   * @return {@code true} si le fichier a été posté avec succès, {@code false} en cas d'erreur
-   */
-  protected boolean sendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
-    Guild guild = getGuild(server);
-    if (isNull(guild)) return false;
-    if (hasChannel(guild, channel)) {
-      return doSendFile(fileData, fileName, isSpoiler, server, channel);
-    } else {
+  private boolean doSendMessage(TextChannel channel, String message) {
+    try {
+      return nonNull(channel.sendMessage(message).complete());
+    } catch (RuntimeException e) {
+      LOGGER.warn("Erreur lors de l'envoie d'un message - Longueur: {} - Serveur: {} ; Channel {}",
+              message.length(), channel.getGuild().getId(), channel.getName());
       return false;
     }
   }
 
-  private boolean hasChannel(Guild guild, String channel) {
-    boolean b = !guild.getTextChannelsByName(channel, true).isEmpty();
-    if (!b) {
-      LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getName());
-      return createChannel(guild, channel);
-    }
-
-    return true;
-  }
-
-  private boolean createChannel(Guild guild, String channel) {
+  private boolean doSendFile(TextChannel channel, byte[] fileData, String fileName, boolean isSpoiler) {
     try {
-      return !guild.createTextChannel(channel).complete().getId().isEmpty();
-    } catch (InsufficientPermissionException e) {
-      LOGGER.warn("Impossible de créer le channel '{}' sur le serveur '{}' - Permission refusée", channel, guild.getName());
-    } catch (NullPointerException e) {
-      LOGGER.warn("Impossible de créer le channel '{}'", channel);
+      MessageAction msg = isSpoiler ? channel.sendFile(fileData, fileName, AttachmentOption.SPOILER) : channel.sendFile(fileData, fileName);
+      return nonNull(msg.complete());
+    } catch (RuntimeException e) {
+      LOGGER.warn("Erreur lors de l'envoie d'un fichier - Fichier: {} ; Serveur: {} ; Channel {}",
+              fileName, channel.getGuild().getId(), channel.getName());
+      return false;
     }
-
-    return false;
-  }
-
-  private Guild getGuild(Server server) {
-    try {
-      return getJDAInstance().getGuildById(server.getReference());
-    } catch (NumberFormatException | NullPointerException e) {
-      LOGGER.warn("Impossible de trouver le Serveur : {}", server.getReference());
-      return null;
-    }
-  }
-
-  private TextChannel getChannel(Guild guild, String channel) {
-    try {
-      return guild.getTextChannelsByName(channel, true).get(0);
-    } catch (IndexOutOfBoundsException | NullPointerException e) {
-      LOGGER.debug("Le channel '{}' n'existe pas sur le serveur : {}", channel, guild.getId());
-      return null;
-    }
-  }
-
-  private boolean doSendMessage(String message, Server server, String channel) {
-    Guild guild = getGuild(server);
-    if (nonNull(guild)) {
-      TextChannel textChannel = getChannel(guild, channel);
-      if (nonNull(textChannel)) {
-        try {
-          return nonNull(textChannel.sendMessage(message).complete());
-        } catch (RuntimeException e) {
-          LOGGER.warn(
-            "Erreur lors de l'envoi d'un message. Serveur : {} ; longueur msg : {}",
-            server.getReference(), message.length());
-          return false;
-        }
-      }
-    }
-    return false;
-  }
-
-  private boolean doSendFile(byte[] fileData, String fileName, boolean isSpoiler, Server server, String channel) {
-    Guild guild = getGuild(server);
-    if (nonNull(guild)) {
-      TextChannel textChannel = getChannel(guild, channel);
-      if (nonNull(textChannel)) {
-        try {
-          MessageAction msg = isSpoiler ? textChannel.sendFile(fileData, fileName, AttachmentOption.SPOILER) : textChannel.sendFile(fileData, fileName);
-          return nonNull(msg.complete());
-        } catch (RuntimeException e) {
-          LOGGER.warn(
-            "Erreur lors de l'envoi d'un fichier. Serveur : {} ; Fichier : {}",
-            server.getReference(), fileName);
-          return false;
-        }
-      }
-    }
-    return false;
   }
 }

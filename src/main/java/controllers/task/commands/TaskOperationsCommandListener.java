@@ -176,8 +176,9 @@ public class TaskOperationsCommandListener extends CommandListener {
       }
     }
     res.put(MAP_DESCRIPTION, String.join(" ", description));
-    res.put(MAP_DUE_DATE, date.get(0));
+    res.put(MAP_DUE_DATE, verifyDate(date.get(0)));
     res.put(MAP_DUE_TIME, verifyTime(date.get(1)));
+
     return res;
   }
 
@@ -193,5 +194,18 @@ public class TaskOperationsCommandListener extends CommandListener {
       }
     }
     return time;
+  }
+
+  private static String verifyDate(String date) {
+    if (date.contains("-")) {
+      String[] split = date.split("-");
+      if (split.length == 3) {
+        int mois = parseInt(split[1]);
+        if (mois>12) {
+          throw new DateTimeException("La date doit être au format DD-MM-YYYY");
+        }
+      }
+    }
+    return date;
   }
 }

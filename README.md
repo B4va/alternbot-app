@@ -8,6 +8,8 @@ Bot *Discord* utile aux alternants de l'Université de Lorraine.
 
 Doit permettre un accès facile et rapide à des outils de collaboration et aux informations qui concernent la promotion.
 
+> [Site Web - Alternbot](https://alternbot-web.herokuapp.com/)
+
 ## Participants
 
 - [Zachary Arnaise](https://github.com/zacharyarnaise) : Responsable CI/CD & tests

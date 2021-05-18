@@ -175,13 +175,13 @@ public class TestSession implements TestModel {
     Session session = Session.read(ID_SESSION, Session.class);
     assertAll(
       () -> assertNotNull(session),
-      () -> assertEquals(session.getName(), SESSION.getName()),
-      () -> assertEquals(session.getTeacher(), SESSION.getTeacher()),
-      () -> assertEquals(session.getLocation(), SESSION.getLocation()),
-      () -> assertEquals(session.getSchedule().getId(), SESSION.getSchedule().getId()),
-      () -> assertEquals(session.getDate(), SESSION.getDate()),
-      () -> assertEquals(session.getStart(), SESSION.getStart()),
-      () -> assertEquals(session.getEnd(), SESSION.getEnd()),
+      () -> assertEquals(SESSION.getName(),session.getName()),
+      () -> assertEquals(SESSION.getTeacher(),session.getTeacher()),
+      () -> assertEquals(SESSION.getLocation(),session.getLocation()),
+      () -> assertEquals(SESSION.getSchedule().getId(),session.getSchedule().getId()),
+      () -> assertEquals(SESSION.getDate(),session.getDate()),
+      () -> assertEquals(SESSION.getStart(),session.getStart()),
+      () -> assertEquals(SESSION.getEnd(),session.getEnd()),
       () -> assertFalse(session.isUpdated())
     );
   }
@@ -260,12 +260,12 @@ public class TestSession implements TestModel {
     SESSION.update();
     SESSION = ModelDAO.read(ID_SESSION, Session.class);
     assertAll(
-      () -> assertEquals(SESSION.getName(), UPDATED_NAME),
-      () -> assertEquals(SESSION.getLocation(), UPDATED_LOCATION),
-      () -> assertEquals(SESSION.getTeacher(), UPDATED_TEACHER),
-      () -> assertEquals(SESSION.getDate(), stringToDate(UPDATED_DATE)),
-      () -> assertEquals(SESSION.getStart(), stringToTime(UPDATED_START)),
-      () -> assertEquals(SESSION.getEnd(), stringToTime(UPDATED_END)),
+      () -> assertEquals(UPDATED_NAME,SESSION.getName()),
+      () -> assertEquals(UPDATED_LOCATION,SESSION.getLocation()),
+      () -> assertEquals(UPDATED_TEACHER,SESSION.getTeacher()),
+      () -> assertEquals(stringToDate(UPDATED_DATE),SESSION.getDate()),
+      () -> assertEquals(stringToTime(UPDATED_START),SESSION.getStart()),
+      () -> assertEquals(stringToTime(UPDATED_END),SESSION.getEnd()),
       () -> assertTrue(SESSION.isUpdated())
     );
 

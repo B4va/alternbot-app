@@ -92,9 +92,9 @@ public class TestServer implements TestModel {
     Server s = ModelDAO.read(ID_SERVER, Server.class);
     assertAll(
       () -> assertNotNull(s),
-      () -> assertEquals(s.getId(), SERVER.getId()),
-      () -> assertEquals(s.getReference(), SERVER.getReference()),
-      () -> assertEquals(s.getSchedule().getId(), ID_SCHEDULE)
+      () -> assertEquals(SERVER.getId(),s.getId()),
+      () -> assertEquals(SERVER.getReference(),s.getReference()),
+      () -> assertEquals(ID_SCHEDULE,s.getSchedule().getId())
     );
   }
 
@@ -118,7 +118,7 @@ public class TestServer implements TestModel {
     SERVER.update();
     SERVER = ModelDAO.read(ID_SERVER, Server.class);
     assertNotNull(SERVER);
-    assertEquals(SERVER.getReference(), UPDATED_REFERENCE);
+    assertEquals(UPDATED_REFERENCE,SERVER.getReference());
   }
 
   @Test

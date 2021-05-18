@@ -13,6 +13,7 @@ public class TaskWorkersHandler extends WorkersHandler {
   @Override
   public WorkersHandler init() {
     runnables.add(new TasksPublicationWorker(DAILY_HOUR, DAILY_MINUTE, 0));
+    runnables.add(new TaskDeleteWorker(DAILY_HOUR,DAILY_MINUTE,0));
     return this;
   }
 }

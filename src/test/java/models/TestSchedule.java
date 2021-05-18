@@ -76,9 +76,9 @@ public class TestSchedule implements TestModel {
     Schedule schedule = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertAll(
       () -> assertNotNull(schedule),
-      () -> assertEquals(schedule.getId(), SCHEDULE.getId()),
-      () -> assertEquals(schedule.getPromotion(), SCHEDULE.getPromotion()),
-      () -> assertEquals(schedule.getUrl(), SCHEDULE.getUrl())
+      () -> assertEquals(SCHEDULE.getId(),schedule.getId()),
+      () -> assertEquals(SCHEDULE.getPromotion(),schedule.getPromotion()),
+      () -> assertEquals(SCHEDULE.getUrl(),schedule.getUrl())
     );
   }
 
@@ -89,10 +89,10 @@ public class TestSchedule implements TestModel {
     ID_SESSION = new Session(SESSION_NAME, SESSION_TEACHER, SESSION_LOCATION, new Date(), new Date(), new Date(), SCHEDULE).create();
     Schedule finalSchedule = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertAll(
-      () -> assertEquals(finalSchedule.getServers().size(), 1),
-      () -> assertEquals(new ArrayList<>(finalSchedule.getServers()).get(0).getId(), ID_SERVER),
-      () -> assertEquals(finalSchedule.getSessions().size(), 1),
-      () -> assertEquals(new ArrayList<>(finalSchedule.getSessions()).get(0).getId(), ID_SESSION)
+      () -> assertEquals(1,finalSchedule.getServers().size()),
+      () -> assertEquals(ID_SERVER,new ArrayList<>(finalSchedule.getServers()).get(0).getId()),
+      () -> assertEquals(1,finalSchedule.getSessions().size()),
+      () -> assertEquals(ID_SESSION,new ArrayList<>(finalSchedule.getSessions()).get(0).getId())
     );
   }
 
@@ -122,8 +122,8 @@ public class TestSchedule implements TestModel {
     SCHEDULE = ModelDAO.read(ID_SCHEDULE, Schedule.class);
     assertNotNull(SCHEDULE);
     assertAll(
-      () -> assertEquals(SCHEDULE.getPromotion(), PROMOTION_UPDATE),
-      () -> assertEquals(SCHEDULE.getUrl(), URL_UPDATE)
+      () -> assertEquals(PROMOTION_UPDATE,SCHEDULE.getPromotion()),
+      () -> assertEquals(URL_UPDATE,SCHEDULE.getUrl())
     );
   }
 

@@ -57,7 +57,7 @@ public class TestSessionsPurgeProcess {
     int nbSessions = ModelDAO.readAll(Session.class).size();
     PROCESS.purgeAllUpdated();
     int updatedNbSessions = ModelDAO.readAll(Session.class).size();
-    assertEquals(updatedNbSessions, nbSessions - 1);
+    assertEquals(nbSessions - 1,updatedNbSessions);
   }
 
   @Test
@@ -68,7 +68,7 @@ public class TestSessionsPurgeProcess {
     int nbSessions = ModelDAO.readAll(Session.class).size();
     PROCESS.purgeAllUpdated();
     int updatedNbSessions = ModelDAO.readAll(Session.class).size();
-    assertEquals(updatedNbSessions, nbSessions);
+    assertEquals(nbSessions,updatedNbSessions);
   }
 
   @Test

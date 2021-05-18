@@ -67,19 +67,19 @@ public class TestScheduleExportSessionSelectionProcess {
   @Test
   public void testSelect_empty_schedule() throws ParseException {
     final List<Session> listeVide = new ArrayList<>();
-    assertEquals(listeVide, PROCESS.select(EMPTY_SCHEDULE, stringToDate(DATE_ALL_MATCH)));
+    assertEquals(PROCESS.select(EMPTY_SCHEDULE, stringToDate(DATE_ALL_MATCH)),listeVide);
   }
 
   @Test
   public void testSelect_invalid_schedule() throws ParseException {
     final List<Session> listeVide = new ArrayList<>();
-    assertEquals(listeVide, PROCESS.select(INVALID_SCHEDULE, stringToDate(DATE_ALL_MATCH)));
+    assertEquals(PROCESS.select(INVALID_SCHEDULE, stringToDate(DATE_ALL_MATCH)),listeVide);
   }
 
   @Test
   public void testSelect_no_matching_session() throws ParseException {
     final List<Session> listeVide = new ArrayList<>();
-    assertEquals(listeVide, PROCESS.select(VALID_SCHEDULE, stringToDate(DATE_NO_MATCH)));
+    assertEquals(PROCESS.select(VALID_SCHEDULE, stringToDate(DATE_NO_MATCH)),listeVide);
   }
 
   @Test

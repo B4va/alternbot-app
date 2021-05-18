@@ -11,7 +11,7 @@ import utils.EnvironmentVariablesUtils;
 public class WorkersController extends Runner<WorkersHandler> {
 
   public static final int DAILY_HOUR = EnvironmentVariablesUtils.getInt(EnvironmentVariablesUtils.DAILY_HOUR, 18);
-  public static final int DAILY_MINUTE = EnvironmentVariablesUtils.getInt(EnvironmentVariablesUtils.DAILY_MINUTE, 18);
+  public static final int DAILY_MINUTE = EnvironmentVariablesUtils.getInt(EnvironmentVariablesUtils.DAILY_MINUTE, 00);
 
   @Override
   public Runner<WorkersHandler> init() {

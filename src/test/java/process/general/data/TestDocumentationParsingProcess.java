@@ -21,7 +21,7 @@ public class TestDocumentationParsingProcess {
   @Test
   public void testParse() {
     String test = PROCESS.parse(DOCUMENTATION_TEST_FILE);
-    assertEquals(test, DOCUMENTATION_TEST);
+    assertEquals(DOCUMENTATION_TEST,test);
   }
 
   @Test

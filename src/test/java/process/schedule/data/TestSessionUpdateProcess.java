@@ -123,9 +123,9 @@ public class TestSessionUpdateProcess {
     int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions + 1),
-      () -> assertEquals(finalChanges.size(), 1),
-      () -> assertEquals(finalChanges.get(0).getNewSession(), SESSION_TEST)
+      () -> assertEquals(nbSessions + 1,updatedNbSessions),
+      () -> assertEquals(1,finalChanges.size()),
+      () -> assertEquals(SESSION_TEST,finalChanges.get(0).getNewSession())
     );
   }
 
@@ -138,9 +138,9 @@ public class TestSessionUpdateProcess {
     int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions + 1),
-      () -> assertEquals(finalChanges.size(), 1),
-      () -> assertEquals(finalChanges.get(0).getNewSession(), SESSION_TEST)
+      () -> assertEquals(nbSessions + 1,updatedNbSessions),
+      () -> assertEquals(1,finalChanges.size()),
+      () -> assertEquals(SESSION_TEST,finalChanges.get(0).getNewSession())
     );
   }
 
@@ -154,10 +154,10 @@ public class TestSessionUpdateProcess {
     Session oldSession = ModelDAO.read(SESSION_OL_END.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertEquals(nbSessions + 1,updatedNbSessions),
       () -> assertTrue(oldSession.isUpdated()),
-      () -> assertEquals(finalChanges.size(), 1),
-      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(1,finalChanges.size()),
+      () -> assertEquals(1,finalChanges.get(0).getReplacedSessions().size()),
       () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
       () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OL_END))
     );
@@ -173,10 +173,10 @@ public class TestSessionUpdateProcess {
     Session oldSession = ModelDAO.read(SESSION_OL_START.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertEquals(nbSessions + 1,updatedNbSessions),
       () -> assertTrue(oldSession.isUpdated()),
-      () -> assertEquals(finalChanges.size(), 1),
-      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(1,finalChanges.size()),
+      () -> assertEquals(1,finalChanges.get(0).getReplacedSessions().size()),
       () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
       () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OL_START))
     );
@@ -193,11 +193,11 @@ public class TestSessionUpdateProcess {
     Session oldSession2 = ModelDAO.read(SESSION_OL_START.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertEquals(nbSessions + 1,updatedNbSessions),
       () -> assertTrue(oldSession1.isUpdated()),
       () -> assertTrue(oldSession2.isUpdated()),
-      () -> assertEquals(finalChanges.size(), 1),
-      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 2),
+      () -> assertEquals(1,finalChanges.size()),
+      () -> assertEquals(1,finalChanges.get(0).getReplacedSessions().size()),
       () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
       () -> assertTrue(finalChanges.get(0).getReplacedSessions()
         .containsAll(Arrays.asList(SESSION_OL_START, SESSION_OL_END)))
@@ -216,7 +216,7 @@ public class TestSessionUpdateProcess {
     int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions),
+      () -> assertEquals(nbSessions,updatedNbSessions),
       () -> assertFalse(alreadySaved.isUpdated()),
       () -> assertTrue(finalChanges.isEmpty())
     );
@@ -233,10 +233,10 @@ public class TestSessionUpdateProcess {
     int updatedNbSessions = ModelDAO.readAll(Session.class).size();
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertEquals(nbSessions + 1,updatedNbSessions),
       () -> assertTrue(SESSION_OL_START.isUpdated()),
-      () -> assertEquals(finalChanges.size(), 1),
-      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(1,finalChanges.size()),
+      () -> assertEquals(1,finalChanges.get(0).getReplacedSessions().size()),
       () -> assertEquals(sameTimeSession, finalChanges.get(0).getNewSession()),
       () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OL_START))
     );
@@ -252,10 +252,10 @@ public class TestSessionUpdateProcess {
     Session oldSession = ModelDAO.read(SESSION_OVER.getId(), Session.class);
     List<SessionChange> finalChanges = changes;
     assertAll(
-      () -> assertEquals(updatedNbSessions, nbSessions + 1),
+      () -> assertEquals(nbSessions + 1,updatedNbSessions),
       () -> assertTrue(oldSession.isUpdated()),
-      () -> assertEquals(finalChanges.size(), 1),
-      () -> assertEquals(finalChanges.get(0).getReplacedSessions().size(), 1),
+      () -> assertEquals(1,finalChanges.size()),
+      () -> assertEquals(1,finalChanges.get(0).getReplacedSessions().size()),
       () -> assertEquals(SESSION_TEST, finalChanges.get(0).getNewSession()),
       () -> assertTrue(finalChanges.get(0).getReplacedSessions().contains(SESSION_OVER))
     );
@@ -306,7 +306,7 @@ public class TestSessionUpdateProcess {
     PROCESS.updateFromOld(OLD_SESSION, newSessions, changes);
     assertAll(
       () -> assertFalse(OLD_SESSION.isUpdated()),
-      () -> assertEquals(changes.size(), 1)
+      () -> assertEquals(1,changes.size())
     );
   }
 }

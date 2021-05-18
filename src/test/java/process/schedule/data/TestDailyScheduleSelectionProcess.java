@@ -76,7 +76,7 @@ public class TestDailyScheduleSelectionProcess {
     List<Session> selection = PROCESS.select(SCHEDULE, DATE);
     assertAll(
       () -> assertEquals(1, selection.size()),
-      () -> assertEquals(selection.get(0).getId(), CS_1_ID)
+      () -> assertEquals(CS_1_ID,selection.get(0).getId())
     );
   }
 

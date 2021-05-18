@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -84,5 +85,24 @@ public class Task extends ModelDAO {
 
   public void setDueTime(Date dueTime) {
     this.dueTime = dueTime;
+  }
+
+  /**
+   * Indique si la date de la tache est passée d'au moins le nombre de jours donné.
+   * @param nbDays Nombre de jours.
+   * @return true si la date de la tache est passée d'au moins le nombre de jours donné (sans prise en compte de l'horaire)
+   */
+  public boolean isPast(int nbDays) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_MONTH, -nbDays);
+    return dueDate.equals(calendar.getTime()) || dueDate.before(calendar.getTime());
+  }
+
+  /**
+   * Indique si la tache est considéré comme passé.
+   * @return true si la date de la tache précède le jour actuel (sans prise en compte de l'horaire)
+   */
+  public boolean isPast() {
+    return this.isPast(1);
   }
 }

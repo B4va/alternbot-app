@@ -93,8 +93,8 @@ public class TestTasksSelectionProcess {
   public void testSelect_one_corresponding_task() {
     List<Task> selection = PROCESS.select(SERVER_ONE_TASK);
     assertAll(
-      () -> assertEquals(selection.size(), 1),
-      () -> assertEquals(selection.get(0).getId(), TASK1.getId())
+      () -> assertEquals(1,selection.size()),
+      () -> assertEquals(TASK1.getId(),selection.get(0).getId())
     );
   }
 
@@ -102,7 +102,7 @@ public class TestTasksSelectionProcess {
   public void testSelect_mutiple_corresponding_tasks() {
     List<Task> selection = PROCESS.select(SERVER_MULTIPLE_TASKS);
     assertAll(
-      () -> assertEquals(selection.size(), 2),
+      () -> assertEquals(2,selection.size()),
       () -> assertTrue(selection.stream().anyMatch(t -> t.getId() == TASK2.getId())),
       () -> assertTrue(selection.stream().anyMatch(t -> t.getId() == TASK3.getId()))
     );
@@ -118,10 +118,10 @@ public class TestTasksSelectionProcess {
   public void testSelect_sorted_list_by_date() {
     List<Task> selection = PROCESS.select(SERVER_NOT_SORTED_TASKS);
     assertAll(
-      () -> assertEquals(selection.size(), 3),
-      () -> assertEquals(selection.get(0).getId(), TASK6.getId()),
-      () -> assertEquals(selection.get(1).getId(), TASK5.getId()),
-      () -> assertEquals(selection.get(2).getId(), TASK4.getId())
+      () -> assertEquals(3,selection.size()),
+      () -> assertEquals(TASK6.getId(),selection.get(0).getId()),
+      () -> assertEquals(TASK5.getId(),selection.get(1).getId()),
+      () -> assertEquals(TASK4.getId(),selection.get(2).getId())
     );
   }
 }

@@ -65,9 +65,9 @@ public class TestTaskCreationProcess {
       .orElse(null);
     assertNotNull(task);
     assertAll(
-      () -> assertEquals(task.getDescription(), DESCRIPTION),
-      () -> assertEquals(task.getDueDate(), stringToDate(dueDate)),
-      () -> assertEquals(task.getDueTime(), stringToTime(dueTime))
+      () -> assertEquals(DESCRIPTION,task.getDescription()),
+      () -> assertEquals(stringToDate(dueDate),task.getDueDate()),
+      () -> assertEquals(stringToTime(dueTime),task.getDueTime())
     );
   }
 

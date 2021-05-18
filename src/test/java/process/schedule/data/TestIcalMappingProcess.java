@@ -82,12 +82,12 @@ public class TestIcalMappingProcess {
     List<Session> sessions = PROCESS.map(ICAL_DATA, SCHEDULE);
     assertAll(
       () -> assertFalse(sessions.isEmpty()),
-      () -> assertEquals(sessions.get(0).getName(), NAME),
-      () -> assertEquals(sessions.get(0).getLocation(), LOCATION),
-      () -> assertEquals(sessions.get(0).getSchedule().getId(), SCHEDULE.getId()),
-      () -> assertEquals(dateToString(sessions.get(0).getDate()), DATE),
-      () -> assertEquals(timeToString(sessions.get(0).getStart()), START),
-      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END)
+      () -> assertEquals(NAME,sessions.get(0).getName()),
+      () -> assertEquals(LOCATION,sessions.get(0).getLocation()),
+      () -> assertEquals(SCHEDULE.getId(),sessions.get(0).getSchedule().getId()),
+      () -> assertEquals(DATE,dateToString(sessions.get(0).getDate())),
+      () -> assertEquals(START,timeToString(sessions.get(0).getStart())),
+      () -> assertEquals(END,timeToString(sessions.get(0).getEnd()))
     );
   }
 
@@ -120,12 +120,12 @@ public class TestIcalMappingProcess {
     List<Session> sessions = PROCESS.map(ICAL_DATA_NO_LOCATION, SCHEDULE);
     assertAll(
       () -> assertFalse(sessions.isEmpty()),
-      () -> assertEquals(sessions.get(0).getName(), NAME),
+      () -> assertEquals(NAME,sessions.get(0).getName()),
       () -> assertNull(sessions.get(0).getLocation()),
-      () -> assertEquals(sessions.get(0).getSchedule().getId(), SCHEDULE.getId()),
-      () -> assertEquals(dateToString(sessions.get(0).getDate()), DATE),
-      () -> assertEquals(timeToString(sessions.get(0).getStart()), START),
-      () -> assertEquals(timeToString(sessions.get(0).getEnd()), END)
+      () -> assertEquals(SCHEDULE.getId(),sessions.get(0).getSchedule().getId()),
+      () -> assertEquals(DATE,dateToString(sessions.get(0).getDate())),
+      () -> assertEquals(START,timeToString(sessions.get(0).getStart())),
+      () -> assertEquals(END,timeToString(sessions.get(0).getEnd()))
     );
   }
 

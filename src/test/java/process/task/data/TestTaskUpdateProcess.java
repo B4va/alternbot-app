@@ -59,9 +59,9 @@ public class TestTaskUpdateProcess {
     PROCESS.update(TASK.getId(), VALID_DESCRIPTION, VALID_DUE_DATE, VALID_DUE_TIME, VALID_MEMBER, SERVER);
     Task task = ModelDAO.read(TASK.getId(), Task.class);
     assertAll(
-      () -> assertEquals(task.getDescription(), VALID_DESCRIPTION),
-      () -> assertEquals(task.getDueDate(), stringToDate(VALID_DUE_DATE)),
-      () -> assertEquals(task.getDueTime(), stringToTime(VALID_DUE_TIME))
+      () -> assertEquals(VALID_DESCRIPTION,task.getDescription()),
+      () -> assertEquals(stringToDate(VALID_DUE_DATE),task.getDueDate()),
+      () -> assertEquals(stringToTime(VALID_DUE_TIME),task.getDueTime())
     );
   }
 

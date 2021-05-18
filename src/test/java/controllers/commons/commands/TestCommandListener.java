@@ -38,7 +38,7 @@ public class TestCommandListener {
   public void testParseCommand_simple_command() {
     List<String> cmd = LISTENER.parseCommand(SIMPLE_COMMAND);
     assertAll(
-      () -> assertEquals(cmd.size(), 1),
+      () -> assertEquals(1,cmd.size()),
       () -> assertTrue(cmd.contains(SIMPLE_COMMAND))
     );
   }
@@ -47,7 +47,7 @@ public class TestCommandListener {
   public void testParseCommand_parameterized_command() {
     List<String> cmd = LISTENER.parseCommand(COMPLEX_COMMAND);
     assertAll(
-      () -> assertEquals(cmd.size(), 3),
+      () -> assertEquals(3,cmd.size()),
       () -> assertTrue(cmd.containsAll(Arrays.asList(SIMPLE_COMMAND, PARAMETER, PARAMETER_VALUE)))
     );
   }
@@ -68,7 +68,7 @@ public class TestCommandListener {
   public void testGetParameter_ok() {
     List<String> cmd = LISTENER.parseCommand(COMPLEX_COMMAND);
     String param = LISTENER.getParameter(cmd, PARAMETER);
-    assertEquals(param, PARAMETER_VALUE);
+    assertEquals(PARAMETER_VALUE,param);
   }
 
   @Test

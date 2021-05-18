@@ -54,26 +54,26 @@ public class TestTasksFormattingProcess {
 
   @Test
   public void testFormat_no_task() {
-    assertEquals(PROCESS.format(NO_TASK), RES_NO_TASK);
+    assertEquals(RES_NO_TASK,PROCESS.format(NO_TASK));
   }
 
   @Test
   public void testFormat_one_task() {
-    assertEquals(PROCESS.format(ONE_TASK), RES_ONE_TASK);
+    assertEquals(RES_ONE_TASK,PROCESS.format(ONE_TASK));
   }
 
   @Test
   public void testFormat_mutiple_tasks() {
-    assertEquals(PROCESS.format(MULTIPLE_TASKS), RES_MULTIPLE_TASKS);
+    assertEquals(RES_MULTIPLE_TASKS,PROCESS.format(MULTIPLE_TASKS));
   }
 
   @Test
   public void testFormat_period() {
-    assertEquals(PROCESS.format(ONE_TASK, 1), RES_PLUS_ONE_DAY);
+    assertEquals(RES_PLUS_ONE_DAY,PROCESS.format(ONE_TASK, 1));
   }
 
   @Test
   public void testFormat_period_no_tasks() {
-    assertEquals(PROCESS.format(NO_TASK, 1), RES_PLUS_ONE_DAY_NO_TASK);
+    assertEquals(RES_PLUS_ONE_DAY_NO_TASK,PROCESS.format(NO_TASK, 1));
   }
 }

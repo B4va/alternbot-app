@@ -49,7 +49,6 @@ Doit permettre un accès facile et rapide à des outils de collaboration et aux 
 ### Mise en place de l'environnement de développement
 
 **1. Cloner le repository**
-   
 
 **2. Configurer une base de données**
 
@@ -57,27 +56,27 @@ Nécessite une base de données PostgresSQL :
 
 - Installer un serveur PostgresSQL local ([https://www.postgresql.org/download/](https://www.postgresql.org/download/)) ou utiliser un service de management en ligne (exemple : [https://www.elephantsql.com/](https://www.elephantsql.com/)).
 - Configurer l'accès de l'application à la base de données :
-    - Créer un fichier `ENVIRONMENT.properties` dans le dossier `ressources/utils`.
+    - Créer un fichier `ENVIRONMENT.properties` dans le dossier `resources/utils`.
     - Renseigner les paramètres `DB_URL`, `DB_USER` et `DB_PASSWORD` avec les identifiants de connexion.
 
 **3. Lancer les opérations de migration et de seed**
 
 *Migration :*
 
-Exécuter le programme de migration via la classe `MigrationsLauncher` en ajoutant l'argument `-migrate`.
+Exécuter le programme de migration via la classe `programs.MigrationsLauncher` en ajoutant l'argument `-migrate`.
 
-→ Le script `V1__creation_table_test.sql` doit normalement être exécuté, est une table `Tests` doit avoir été créée.
+→ Les scripts de migration doivent avoir été exécutés.
 
 *Réinitialisation de la base :*
 
-Exécuter le programme de migration via la classe `MigrationsLauncher` en ajoutant l'argument `-clean`.
+Exécuter le programme de migration via la classe `programs.MigrationsLauncher` en ajoutant l'argument `-clean`.
 
 → La base de données doit normalement être réinitialisée.
 
 *Seed :*
 
 - Exécuter à nouveau l'opération de migration.
-- Exécuter le programme de seed via la classe `SeedLauncher`.
+- Exécuter le programme de seed via la classe `programs.SeedLauncher`.
 
 → Les tables de la base de données doivent contenir des données.
 
@@ -131,6 +130,8 @@ SCHEDULE_URL=https://dptinfo.iutmetz.univ-lorraine.fr/lna/agendas/ical.php?ical=
 CHANNEL_TEST=général
 ```
 
+**7. Lancer l'application** : via la classe `app.Launcher`.
+
 ### CI/CD & Mise en production
 
 Les développements sont réalisés via [pull requests](https://github.com/loicsteinmetz/alternbot-app/pulls).
@@ -147,9 +148,6 @@ Idem pour [l'interface web](https://github.com/loicsteinmetz/alternbot-web).
 ### Ressources complémentaires
 
 - [Hibernate](http://hibernate.org/orm/documentation/5.4/) : structuration et manipulation des modèles.
-
-  *La doc native n'est pas géniale ; le mieux reste encore Google et une recherche concernant directement l'opération à réaliser...*
-
 - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) : tests
 - [JDA](https://github.com/DV8FromTheWorld/JDA) : opérations via API Discord
 - [JDA utilities - command](https://github.com/JDA-Applications/JDA-Utilities/tree/master/command) : gestion spécifique des commandes Discord

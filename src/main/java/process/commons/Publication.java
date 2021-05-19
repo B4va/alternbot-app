@@ -36,6 +36,10 @@ public abstract class Publication {
     TextChannel textChannel = JDAUtils.getOrCreateTextChannel(guild, channel);
     if (isNull(textChannel)) return false;
 
+    if(message.contains("Aucun cours prévu ce jour.") || message.contains("Aucune tâche en cours")){
+      return false;
+    }
+
     if (message.length() > 2000) {
       for (String partieMessage : decomposerMessage(message))
         if (!doSendMessage(textChannel, partieMessage))
